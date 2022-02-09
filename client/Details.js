@@ -1,15 +1,10 @@
-
-
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Button } from 'react-native';
 
-export default function App() {
+export default function Details() {
   return (
     <View style={styles.container}>
-      <Text style={styles.assa}>헬스케어</Text>
-      <Button style={styles.startBtn} title="시작하기" 
-        onPress={() => alert('시작')}
-      />
+      <Text style={styles.assa}>detail</Text>
       <StatusBar style="auto" />
     </View>
   );
@@ -25,8 +20,5 @@ const styles = StyleSheet.create({
   assa:{
     color: '#f00',
     fontSize: 20
-  },
-  startBtn:{
-    borderBottomColor: '#f00'
   }
 });
