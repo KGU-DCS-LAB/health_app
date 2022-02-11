@@ -11,7 +11,7 @@ const { User } = require("./models/User");
 // app.use(bodyParser.json());
 
 const mongoose = require('mongoose')
-mongoose.connect('mongodb+srv://seonae:NewSt@healthapp.osrcs.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', {})
+mongoose.connect('mongodb+srv://soyoung:qnstksalcqudfufcjfl@cluster0.c7eeq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', {})
 .then(() => console.log('MongoDB Connected!!'))
 .catch(err => console.log(err))
 

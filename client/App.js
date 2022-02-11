@@ -1,32 +1,25 @@
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import Login from './components/Login';
+import Home from './components/Home';
 
-
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button } from 'react-native';
+// const Stack = createStackNavigator();
+const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.assa}>헬스케어</Text>
-      <Button style={styles.startBtn} title="시작하기" 
-        onPress={() => alert('시작')}
-      />
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator  initialRouteName='Home'>
+        <Stack.Screen 
+          name='Home'
+          component={Home}
+        />
+
+        <Stack.Screen
+          name='Login'
+          component={Login}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  assa:{
-    color: '#f00',
-    fontSize: 20
-  },
-  startBtn:{
-    borderBottomColor: '#f00'
-  }
-});
