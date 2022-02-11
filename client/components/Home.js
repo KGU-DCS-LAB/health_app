@@ -8,8 +8,11 @@ export default class Home extends Component {
       return(
         <View style={styles.container}>
           <Text style={styles.assa}>헬스케어</Text>
-          <Button style={styles.startBtn} title="시작하기" 
+          <Button style={styles.startBtn} title="로그인" 
             onPress={() => this.goLoginScreen()}
+          />
+          <Button style={styles.startBtn} title="회원가입" 
+            onPress={() => this.goSignInScreen()}
           />
           <StatusBar style="auto" />
         </View>
@@ -20,6 +23,10 @@ export default class Home extends Component {
   
     goLoginScreen() {
       this.props.navigation.navigate('Login');
+    }
+
+    goSignInScreen() {
+        this.props.navigation.navigate('SignIn');
     }
   }
   
