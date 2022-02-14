@@ -63,7 +63,7 @@ export default function Login() {
     const handleSubmitButton = () => {
         const today = new Date().format('yyyy-MM-dd');
         if(!UserId) {
-            alert('아이드를 입력해주세요.');
+            alert('아이디를 입력해주세요.');
             return;
         }
         if(!UserPassword) {
