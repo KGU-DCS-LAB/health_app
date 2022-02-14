@@ -62,12 +62,3 @@ export default function Login(){
         </NativeBaseProvider>
       )
 }
-
-const styles = StyleSheet.create({ 
-    title: {
-        flex: 1,
-        justifyContent: 'center',
-        fontSize: 30,
-        alignItems: 'center',
-    }
-})
