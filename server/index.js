@@ -15,6 +15,7 @@ const  usersRouter = require('./routes/Users');  // 추가된 코드
 // app.use(bodyParser.json());
 
 const mongoose = require('mongoose')
+console.log(dbpw.mongodbpw);
 
 mongoose.connect(`mongodb+srv://soyoung:${dbpw.mongodbpw}@cluster0.c7eeq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`, {})
 

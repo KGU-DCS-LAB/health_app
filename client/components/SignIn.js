@@ -35,7 +35,7 @@ export default function Login() {
     const [UserPassword, setUserPassword] = useState('');
     const [UserPasswordchk, setUserPasswordchk] = useState('');
     const [UserName, setUserName] = useState('');
-    const [UserBirthDay, setUserBirthDay] = useState(new Date());
+    const [UserBirthDay, setUserBirthDay] = useState(new Date().format('yyyy-MM-dd'));
     const [UserGender, setUserGender] = useState('male');
     const [UserResidence, setUserResidence] = useState('');
     const [isRegistraionSuccess, setIsRegistraionSuccess] = useState(false);
@@ -194,7 +194,7 @@ export default function Login() {
                     blurOnSubmit={false}
                 />
             </View>
-            <View style={{ flex: 0.5, justifyContent: 'center', marginBottom: 10  }}>
+            <View style={{ justifyContent: 'center', marginBottom: 10  }}>
                 {UserPassword !== UserPasswordchk ? (
                     <Text style={styles.TextValidation, {color: Colors.red600}}>
                         비밀번호가 일치하지 않습니다.
@@ -213,7 +213,7 @@ export default function Login() {
                 <TouchableOpacity onPress={showDatePicker}>
                     <TextInput 
                         pointerEvents="none"
-                        style={styles.textFormTop}
+                        style={styles.textInput}
                         placeholder={'생년월일'}
                         editable={false}
                         value={UserBirthDay}
@@ -275,7 +275,7 @@ const styles = StyleSheet.create({
         fontSize: 30
     },
     formArea: {
-        // flex: 0,
+        // flex: 0.5,
         justifyContent: 'center',
         alignItems: 'center',
     },
