@@ -6,6 +6,8 @@ const { User } = require("./models/User");
 require('dotenv').config();
 const dbpw = process.env;
 
+const  usersRouter = require('./routes/Users');  // 추가된 코드
+
 // //application/x-www-form-urlencoded
 // app.use(bodyParser.urlencoded({extended: true}));
 
@@ -26,3 +28,5 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
+
+app.use('/usersRouter', usersRouter);
