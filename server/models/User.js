@@ -34,7 +34,7 @@ const userSchema = mongoose.Schema({
     news_bookmark: {
         type: Number
     },
-    role: { // ����ڳ� ������ ����
+    role: { // 유저, 관리자 구분
         type: Number,
         default: 0
     }

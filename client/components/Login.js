@@ -1,8 +1,11 @@
-import React from "react";
-import {  StyleSheet } from "react-native";
+import React, { Component } from "react";
+import {  StyleSheet, Linking } from "react-native";
 import { Heading, Text, Box, Center, VStack, HStack, FormControl, Link, Button, NativeBaseProvider, Input } from 'native-base';
+import { useNavigation } from '@react-navigation/native';
 
 const LoginComponent = () => {
+    const navigation = useNavigation(); 
+
     return <Center w="100%">
         <Box safeArea p="2" py="8" w="90%" maxW="290">
           <Heading size="lg" fontWeight="600" color="coolGray.800" _dark={{
@@ -26,7 +29,7 @@ const LoginComponent = () => {
               fontSize: "xs",
               fontWeight: "500",
               color: "indigo.500"
-            }} alignSelf="flex-end" mt="1">
+            }} alignSelf="flex-end" mt="1" href="#" onPress={() => navigation.navigate('FindPW')}>
                 비밀번호 찾기
               </Link>
             </FormControl>
@@ -43,7 +46,7 @@ const LoginComponent = () => {
               color: "indigo.500",
               fontWeight: "medium",
               fontSize: "sm"
-            }} href="#">
+            }} href="#" onPress={() => navigation.navigate('SignIn')}>
                 회원가입
               </Link>
             </HStack>
@@ -52,6 +55,9 @@ const LoginComponent = () => {
       </Center>;
   };
 
+  function hello(){
+    console.log("hello");
+  }
 
 export default function Login(){
     return (
