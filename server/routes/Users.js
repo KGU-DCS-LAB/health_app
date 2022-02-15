@@ -17,9 +17,10 @@ router.get('/find', function(req, res, next) {
 
 /* POST */
 router.post('/save', function(req, res, next) {
-    let id = req.body.user_id;
-    let password = req.body.password;
-    console.log("id:", id, "pwd:", password); 
+    console.log('1', req.body);
+    // let id = req.body.user_id;
+    // let password = req.body.password;
+    // console.log("id:", id, "pwd:", password); 
     // res.render('result_page', { title: 'Express', id: id, age: password, method: "post" });
     // 데이터 저장
     var newUser = new User(req.body);
@@ -27,8 +28,12 @@ router.post('/save', function(req, res, next) {
     newUser.save(function(error, data){
         if(error){
             console.log(error);
+            return res.json({success: false, error})
         }else{
             console.log('Saved!')
+            return res.status(200).json({
+                success: true
+            })
         }
     });
 });

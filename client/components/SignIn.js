@@ -62,6 +62,7 @@ export default function Login() {
 
     const handleSubmitButton = () => {
         const today = new Date().format('yyyy-MM-dd');
+        console.log(today);
         if(!UserId) {
             alert('아이디를 입력해주세요.');
             return;
@@ -100,38 +101,41 @@ export default function Login() {
             residence: UserResidence
         };
         
-        let formBody = [];
+        // let formBody = [];
 
-        for (let key in dataToSend) {
-            const encodedKey = encodeURIComponent(key);
-            const encodedValue = encodeURIComponent(dataToSend[key]);
-            formBody.push(encodedKey + '=' + encodedValue);
-        }
-        formBody = formBody.join('&');
+        // for (let key in dataToSend) {
+        //     const encodedKey = encodeURIComponent(key);
+        //     const encodedValue = encodeURIComponent(dataToSend[key]);
+        //     formBody.push(encodedKey + '=' + encodedValue);
+        // }
+        // formBody = formBody.join('&');
 
-        fetch('http://127.0.0.1:5000/usersRouter/find', {
+        console.log('0');
+        fetch('http://169.254.109.164:5000/usersRouter/save', {
             method: 'POST',
             headers: {
                 //Header Defination
                 // 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-                Accept: 'application/json',
-                'Content-Type': "application/json"
+                // Accept: 'application/json',
+                'Content-Type': "application/json;"
             },
+            // body: dataToSend,
             body: JSON.stringify({
-                'user_id': UserId,
-                'password': UserPassword,
-                'user_name': UserName,
-                'birthday': UserBirthDay,
-                'gender': UserGender,
-                'residence': UserResidence
+                user_id: UserId,
+                password: UserPassword,
+                user_name: UserName,
+                birthday: UserBirthDay,
+                gender: UserGender,
+                residence: UserResidence
             }),
-            credentials: 'include',
+            // credentials: 'include',
         })
         .then((response) => {response.json(); console.log('1', response);})
         .then((responseJson) => {
             //Hide Loader
             // setLoading(false);
             // setErrortext2('');
+            console.log('3', responseJson);
             console.log(responseJson.status);
             // If server response message same as Data Matched
             // if (responseJson.status === 'success') {
