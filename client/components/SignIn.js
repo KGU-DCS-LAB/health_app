@@ -1,7 +1,9 @@
 import React, { Component, createRef, useState } from "react";
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import { View, StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import { Text, Box, Center, VStack, FormControl, Button, Input, Pressable, Radio, Stack, NativeBaseProvider, WarningOutlineIcon } from 'native-base';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { Colors, RadioButton } from "react-native-paper";
+// import { Colors, RadioButton } from "react-native-paper";
+
 
 Date.prototype.format = function(f) {
     if (!this.valueOf()) return " ";
@@ -30,7 +32,7 @@ String.prototype.string = function(len){var s = '', i = 0; while (i++ < len) { s
 String.prototype.zf = function(len){return "0".string(len - this.length) + this;};
 Number.prototype.zf = function(len){return this.toString().zf(len);};
 
-export default function Login() {
+function SignInComponent() {
     const [UserId, setUserId] = useState('');
     const [UserPassword, setUserPassword] = useState('');
     const [UserPasswordchk, setUserPasswordchk] = useState('');
@@ -44,6 +46,9 @@ export default function Login() {
     const passwordInputRef = createRef();
     const passwordchkInputRef = createRef();
     const nameInputRef = createRef();
+    const birthdayputRef = createRef();
+    const genderputRef = createRef();
+    const signInputRef = createRef();
 
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
@@ -154,115 +159,123 @@ export default function Login() {
         });
     }
 
+        return (
+        <Center w="100%">
+            <Box safeArea p="2" py="8" w="90%" maxW="290">
+                <VStack space={3} mt="5">
+                    <FormControl>
+                        <FormControl.Label>아이디</FormControl.Label>
+                        <Input 
+                            onChangeText={(UserId) => setUserId(UserId)}
+                            ref={idInputRef}
+                            returnKeyType="next"
+                            onSubmitEditing={() =>
+                                passwordInputRef.current && passwordInputRef.current.focus()
+                            }
+                            blurOnSubmit={false}
+                        />
+                    </FormControl>
+                    <FormControl>
+                        <FormControl.Label>비밀번호</FormControl.Label>
+                        <Input 
+                            onChangeText={(UserPassword) => setUserPassword(UserPassword)}
+                            ref={passwordInputRef}
+                            type="password"
+                            returnKeyType="next"
+                            onSubmitEditing={() =>
+                                passwordchkInputRef.current && passwordchkInputRef.current.focus()
+                            }
+                            blurOnSubmit={false}
+                        />
+                    </FormControl>
+                    <FormControl isInvalid>
+                        <FormControl.Label>비밀번호 확인</FormControl.Label>
+                        <Input 
+                            onChangeText={(UserPasswordchk) => setUserPasswordchk(UserPasswordchk)}
+                            ref={passwordchkInputRef}
+                            type="password"
+                            returnKeyType="next"
+                            onSubmitEditing={() =>
+                                nameInputRef.current && nameInputRef.current.focus()
+                            }
+                            blurOnSubmit={false}
+                        />
+                        {UserPassword !== UserPasswordchk ? (
+                            <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
+                                비밀번호가 일치하지 않습니다.
+                            </FormControl.ErrorMessage>
+                        ) : null}
+                    </FormControl>
+                    <FormControl>
+                        <FormControl.Label>이름</FormControl.Label>
+                        <Input 
+                            onChangeText={(UserName) => setUserName(UserName)}
+                            ref={nameInputRef}
+                            returnKeyType="next"
+                            onSubmitEditing={() =>
+                                birthdayputRef.current && birthdayputRef.current.focus()
+                            }
+                            blurOnSubmit={false}
+                        />
+                        <Pressable onPress={showDatePicker}>
+                            <FormControl.Label>생년월일</FormControl.Label>
+                            <Input 
+                                ref={birthdayputRef}
+                                value={UserBirthDay}
+                                returnKeyType="next"
+                                onSubmitEditing={() =>
+                                    genderputRef.current && genderputRef.current.focus()
+                                }
+                                editable={false}
+                                blurOnSubmit={false}
+                            />
+                            <DateTimePickerModal 
+                                isVisible={isDatePickerVisible}
+                                headerTextIOS={'생년월일'}
+                                mode="date"
+                                onConfirm={handleConfirm}
+                                onCancel={hideDatePicker}
+                            />
+                        </Pressable>
+                        <FormControl.Label>성별</FormControl.Label>
+                        <Radio.Group name="genderGroup" defaultValue="male" accessibilityLabel="pick your gneder" 
+                            onChangeText={(UserGender) => setUserGender(UserGender)}
+                        >
+                            <Stack direction={{
+                                base: "column",
+                                md: "row" }} 
+                                alignItems="center" space={4} w="75%" maxW="300px"
+                            >
+                                <Radio value="male" my={1} ref={genderputRef}>남자</Radio>
+                                <Radio value="female" my={1}>여자</Radio>
+                            </Stack>
+                        </Radio.Group>
+                            <FormControl.Label>거주지</FormControl.Label>
+                            <Input 
+                                onChangeText={(UserResidence) => setUserId(UserResidence)}
+                                returnKeyType="next"
+                                onSubmitEditing={() =>
+                                    signInputRef.current && signInputRef.current.focus()
+                                }
+                                blurOnSubmit={false}
+                            />
+                    </FormControl>
+                    <Button mt="2" colorScheme="indigo" ref={signInputRef}>
+                        회원가입
+                    </Button>
+                </VStack>
+            </Box>
+        </Center>
+    )
+}
+
+export default function SignIn() {
     return (
-        <View style={styles.container}>
-            <View style={styles.titleArea}>
-                <Text style={{ fontSize: 50 }}>SignIn Page</Text>
-            </View>
-            <View style={styles.formArea}>
-                <TextInput
-                    style={styles.textInput}
-                    placeholder={'아이디(5자 이상, 영문, 숫자)'}
-                    onChangeText={(UserId) => setUserId(UserId)}
-                    ref={idInputRef}
-                    returnKeyType="next"
-                    onSubmitEditing={() =>
-                        passwordInputRef.current && passwordInputRef.current.focus()
-                    }
-                    blurOnSubmit={false}
-                />
-                <TextInput
-                    style={styles.textInput}
-                    secureTextEntry={true}
-                    placeholder={'비밀번호(8자 이상)'}
-                    onChangeText={(UserPassword) => setUserPassword(UserPassword)}
-                    ref={passwordInputRef}
-                    returnKeyType="next"
-                    onSubmitEditing={() =>
-                        passwordchkInputRef.current && passwordchkInputRef.current.focus()
-                    }
-                    blurOnSubmit={false}
-                />
-                <TextInput
-                    style={styles.textInput}
-                    secureTextEntry={true}
-                    placeholder={'비밀번호 확인'}
-                    onChangeText={(UserPasswordchk) =>
-                        setUserPasswordchk(UserPasswordchk)
-                    }
-                    ref={passwordchkInputRef}
-                    returnKeyType="next"
-                    onSubmitEditing={() =>
-                        nameInputRef.current && nameInputRef.current.focus()
-                    }
-                    blurOnSubmit={false}
-                />
-            </View>
-            <View style={{ justifyContent: 'center', marginBottom: 10  }}>
-                {UserPassword !== UserPasswordchk ? (
-                    <Text style={styles.TextValidation, {color: Colors.red600}}>
-                        비밀번호가 일치하지 않습니다.
-                    </Text>
-                ) : null}
-            </View>
-            <View style={styles.formArea}>
-                <TextInput
-                    style={styles.textInput}
-                    placeholder={'이름'}
-                    onChangeText={(UserName) => setUserName(UserName)}
-                    ref={nameInputRef}
-                    returnKeyType="next"
-                    blurOnSubmit={false}
-                />
-                <TouchableOpacity onPress={showDatePicker}>
-                    <TextInput 
-                        pointerEvents="none"
-                        style={styles.textInput}
-                        placeholder={'생년월일'}
-                        editable={false}
-                        value={UserBirthDay}
-                        blurOnSubmit={false}
-                        underlineColorAndroid="transparent"
-                    />
-                    <DateTimePickerModal 
-                        isVisible={isDatePickerVisible}
-                        headerTextIOS={'생년월일'}
-                        mode="date"
-                        onConfirm={handleConfirm}
-                        onCancel={hideDatePicker}
-                    />
-                </TouchableOpacity>
-                <RadioButton.Group 
-                    onValueChange={newValue => setUserGender(newValue)} 
-                    value={UserGender}
-                >
-                    <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                        <RadioButton 
-                            value="male"
-                        />
-                        <Text>남자</Text>
-                        <RadioButton 
-                            value="female"
-                        />
-                        <Text>여자</Text>
-                    </View>
-                </RadioButton.Group>
-                <TextInput
-                    style={styles.textInput}
-                    placeholder={'거주지'}
-                    onChangeText={(UserResidence) => setUserResidence(UserResidence)}
-                    blurOnSubmit={false}
-                />
-            </View>
-            <View style={{ flex: 0.75 }}>
-                <View style={styles.btnArea}>
-                     {/* onPress={handleSubmitButton}> */}
-                    <TouchableOpacity style={styles.btn}  onPress={handleSubmitButton}>
-                        <Text style={{ color: 'black' }}>회원가입</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-        </View>
+        <NativeBaseProvider>
+          <Center flex={1} px="3">
+            <SignInComponent />
+          </Center>
+        </NativeBaseProvider>
     );
 }
 
