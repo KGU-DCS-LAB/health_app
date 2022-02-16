@@ -20,7 +20,6 @@ router.post('/save', function(req, res) {
     console.log(req.body);
     // 데이터 저장
     var newUser = new User(req.body.data);
-    console.log('3', newUser);
     newUser.save(function(error, data){
         if(error){
             console.log(error);

@@ -1,9 +1,12 @@
 import React, { Component, createRef, useState } from "react";
 import { View, StyleSheet, TextInput, TouchableOpacity } from "react-native";
-import { Text, Box, Center, VStack, FormControl, Button, Input, Pressable, Radio, Stack, NativeBaseProvider, WarningOutlineIcon } from 'native-base';
+import { Text, Box, Center, VStack, FormControl, Button, Input, Pressable, Radio, Stack, NativeBaseProvider, WarningOutlineIcon, Select, InputGroup, CheckIcon, InputRightAddon } from 'native-base';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import axios from 'axios';
 // import { Colors, RadioButton } from "react-native-paper";
+
+// const [showMain, setShowMain] = useState(true);
+// const [showSelectDiseasePage, setShowSelectDiseasePage] = useState(false);
 
 export default function SignIn() {
     return (
@@ -42,8 +45,10 @@ String.prototype.string = function (len) { var s = '', i = 0; while (i++ < len) 
 String.prototype.zf = function (len) { return "0".string(len - this.length) + this; };
 Number.prototype.zf = function (len) { return this.toString().zf(len); };
 
+
 function SignInComponent() {
     const [UserId, setUserId] = useState('');
+    const [domain, setDomain] = useState('')
     const [UserPassword, setUserPassword] = useState('');
     const [UserPasswordchk, setUserPasswordchk] = useState('');
     const [UserName, setUserName] = useState('');
@@ -51,7 +56,6 @@ function SignInComponent() {
     const [UserGender, setUserGender] = useState('male');
     const [UserResidence, setUserResidence] = useState('');
     const [isRegistraionSuccess, setIsRegistraionSuccess] = useState(false);
-    const [Errortext, setErrortext] = useState('');
 
     const idInputRef = createRef();
     const passwordInputRef = createRef();
@@ -60,6 +64,7 @@ function SignInComponent() {
     const birthdayputRef = createRef();
     const genderputRef = createRef();
     const signInputRef = createRef();
+    const nextputRef = createRef();
 
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
@@ -76,9 +81,13 @@ function SignInComponent() {
         hideDatePicker();
     }
 
+    const handleNextButton = () => {
+
+    }
+
     const handleSubmitButton = () => {
         const today = new Date().format('yyyy-MM-dd');
-        if (!UserId) {
+        if (!UserId || !domain) {
             alert('아이디를 입력해주세요.');
             return;
         }
@@ -107,20 +116,10 @@ function SignInComponent() {
             return;
         }
 
-        const dataToSend = {
-            user_id: UserId,
-            password: UserPassword,
-            user_name: UserName,
-            birthday: UserBirthDay,
-            gender: UserGender,
-            residence: UserResidence
-        };
-
         // const baseUrl = 'https://192.168.43.58:5000';
-
         axios.post('http://192.168.43.58:5000/usersRouter/save', {
             data: {
-                user_id: UserId,
+                user_id: UserId+'@'+domain,
                 password: UserPassword,
                 user_name: UserName,
                 birthday: UserBirthDay,
@@ -147,16 +146,29 @@ function SignInComponent() {
             <Box safeArea p="2" py="8" w="90%" maxW="290">
                 <VStack space={3} mt="5">
                     <FormControl>
-                        <FormControl.Label>아이디</FormControl.Label>
-                        <Input
-                            onChangeText={(UserId) => setUserId(UserId)}
+                        <FormControl.Label>이메일</FormControl.Label>
+                        <InputGroup>
+                            <Input w={{
+                                base: "50%",
+                                md: "100%"
+                            }} onChangeText={(userId) => setUserId(userId)}
                             ref={idInputRef}
                             returnKeyType="next"
-                            onSubmitEditing={() =>
-                                passwordInputRef.current && passwordInputRef.current.focus()
-                            }
-                            blurOnSubmit={false}
-                        />
+                            blurOnSubmit={false} />
+                            <InputRightAddon children={"@"} />
+                            <Select selectedValue={domain} accessibilityLabel="Choose Domain" placeholder="Choose Domain" _selectedItem={{
+                                bg: "teal.600",
+                                endIcon: <CheckIcon size="5" />
+                            }}  onValueChange={itemValue => setDomain(itemValue)}
+                            w={{
+                                base: "48%",
+                                md: "100%"
+                            }}>
+                                <Select.Item label="google.com" value="google.com" />
+                                <Select.Item label="naver.com" value="naver.com" />
+                                <Select.Item label="daum.net" value="daum.net" />
+                            </Select>
+                        </InputGroup>
                     </FormControl>
                     <FormControl>
                         <FormControl.Label>비밀번호</FormControl.Label>
@@ -239,13 +251,16 @@ function SignInComponent() {
                             onChangeText={(UserResidence) => setUserResidence(UserResidence)}
                             returnKeyType="next"
                             onSubmitEditing={() =>
-                                signInputRef.current && signInputRef.current.focus()
+                                nextputRef.current && nextputRef.current.focus()
                             }
                             blurOnSubmit={false}
                         />
                     </FormControl>
-                    <Button mt="2" colorScheme="indigo" ref={signInputRef} onPress={handleSubmitButton}>
+                    {/* <Button mt="2" colorScheme="indigo" ref={signInputRef} onPress={handleSubmitButton}>
                         회원가입
+                    </Button> */}
+                    <Button mt="2" colorScheme="indigo" ref={nextputRef} onPress={handleNextButton}>
+                        다음
                     </Button>
                 </VStack>
             </Box>
