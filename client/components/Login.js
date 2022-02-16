@@ -29,7 +29,7 @@ const LoginComponent = () => {
               fontSize: "xs",
               fontWeight: "500",
               color: "indigo.500"
-            }} alignSelf="flex-end" mt="1" href="#" onPress={() => navigation.navigate('FindPW')}>
+            }} alignSelf="flex-end" mt="1" href="#" onPress={() => navigation.navigate('FindPW')} >
                 비밀번호 찾기
               </Link>
             </FormControl>
