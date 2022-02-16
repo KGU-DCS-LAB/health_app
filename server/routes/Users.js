@@ -3,7 +3,7 @@ const router = express.Router();
 const bodyParser = require('body-parser');
 const { User } = require("../models/User");
 
-/* GET home page. */
+/* GET. */
 router.get('/find', function(req, res, next) {
     // 전체 데이터 가져오기
     User.find({} , {"_id" : 0}).then( (users) => {
@@ -15,25 +15,19 @@ router.get('/find', function(req, res, next) {
     });
 });
 
-/* POST */
-router.post('/save', function(req, res, next) {
-    console.log('1', req.body);
-    // let id = req.body.user_id;
-    // let password = req.body.password;
-    // console.log("id:", id, "pwd:", password); 
-    // res.render('result_page', { title: 'Express', id: id, age: password, method: "post" });
+/* POST 미구현*/
+router.post('/save', function(req, res) {
+    console.log(req.body);
     // 데이터 저장
-    var newUser = new User(req.body);
+    var newUser = new User(req.body.data);
     console.log('3', newUser);
     newUser.save(function(error, data){
         if(error){
             console.log(error);
-            return res.json({success: false, error})
+            return res.json({status: 'duplicated', error})
         }else{
             console.log('Saved!')
-            return res.status(200).json({
-                success: true
-            })
+            return res.json({status: 'success'})
         }
     });
 });

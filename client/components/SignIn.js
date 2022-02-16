@@ -2,16 +2,26 @@ import React, { Component, createRef, useState } from "react";
 import { View, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import { Text, Box, Center, VStack, FormControl, Button, Input, Pressable, Radio, Stack, NativeBaseProvider, WarningOutlineIcon } from 'native-base';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import axios from 'axios';
 // import { Colors, RadioButton } from "react-native-paper";
 
+export default function SignIn() {
+    return (
+        <NativeBaseProvider>
+            <Center flex={1} px="3">
+                <SignInComponent />
+            </Center>
+        </NativeBaseProvider>
+    );
+}
 
-Date.prototype.format = function(f) {
+Date.prototype.format = function (f) {
     if (!this.valueOf()) return " ";
- 
+
     var weekName = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"];
     var d = this;
-     
-    return f.replace(/(yyyy|yy|MM|dd|E|hh|mm|ss|a\/p)/gi, function($1) {
+
+    return f.replace(/(yyyy|yy|MM|dd|E|hh|mm|ss|a\/p)/gi, function ($1) {
         switch ($1) {
             case "yyyy": return d.getFullYear();
             case "yy": return (d.getFullYear() % 1000).zf(2);
@@ -26,11 +36,11 @@ Date.prototype.format = function(f) {
             default: return $1;
         }
     });
-};
- 
-String.prototype.string = function(len){var s = '', i = 0; while (i++ < len) { s += this; } return s;};
-String.prototype.zf = function(len){return "0".string(len - this.length) + this;};
-Number.prototype.zf = function(len){return this.toString().zf(len);};
+}
+
+String.prototype.string = function (len) { var s = '', i = 0; while (i++ < len) { s += this; } return s; };
+String.prototype.zf = function (len) { return "0".string(len - this.length) + this; };
+Number.prototype.zf = function (len) { return this.toString().zf(len); };
 
 function SignInComponent() {
     const [UserId, setUserId] = useState('');
@@ -41,6 +51,7 @@ function SignInComponent() {
     const [UserGender, setUserGender] = useState('male');
     const [UserResidence, setUserResidence] = useState('');
     const [isRegistraionSuccess, setIsRegistraionSuccess] = useState(false);
+    const [Errortext, setErrortext] = useState('');
 
     const idInputRef = createRef();
     const passwordInputRef = createRef();
@@ -67,32 +78,31 @@ function SignInComponent() {
 
     const handleSubmitButton = () => {
         const today = new Date().format('yyyy-MM-dd');
-        console.log(today);
-        if(!UserId) {
+        if (!UserId) {
             alert('아이디를 입력해주세요.');
             return;
         }
-        if(!UserPassword) {
+        if (!UserPassword) {
             alert('비밀번호를 입력해주세요.');
             return;
         }
-        if(UserPassword !== UserPasswordchk) {
+        if (UserPassword !== UserPasswordchk) {
             alert('비밀번호가 일치하지 않습니다.');
             return;
         }
-        if(!UserName) {
+        if (!UserName) {
             alert('이름을 입력해주세요.');
             return;
         }
-        if(UserBirthDay === today) {
+        if (UserBirthDay === today) {
             alert('생년월일을 입력해주세요.');
             return;
         }
-        if(!UserGender) {
+        if (!UserGender) {
             alert('성별을 입력해주세요.');
             return;
         }
-        if(!UserResidence) {
+        if (!UserResidence) {
             alert('거주지 입력해주세요.');
             return;
         }
@@ -105,67 +115,40 @@ function SignInComponent() {
             gender: UserGender,
             residence: UserResidence
         };
-        
-        // let formBody = [];
 
-        // for (let key in dataToSend) {
-        //     const encodedKey = encodeURIComponent(key);
-        //     const encodedValue = encodeURIComponent(dataToSend[key]);
-        //     formBody.push(encodedKey + '=' + encodedValue);
-        // }
-        // formBody = formBody.join('&');
+        // const baseUrl = 'https://192.168.43.58:5000';
 
-        console.log('0');
-        fetch('http://169.254.109.164:5000/usersRouter/save', {
-            method: 'POST',
-            headers: {
-                //Header Defination
-                // 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-                // Accept: 'application/json',
-                'Content-Type': "application/json;"
-            },
-            // body: dataToSend,
-            body: JSON.stringify({
+        axios.post('http://192.168.43.58:5000/usersRouter/save', {
+            data: {
                 user_id: UserId,
                 password: UserPassword,
                 user_name: UserName,
                 birthday: UserBirthDay,
                 gender: UserGender,
                 residence: UserResidence
-            }),
-            // credentials: 'include',
+            }
         })
-        .then((response) => {response.json(); console.log('1', response);})
-        .then((responseJson) => {
-            //Hide Loader
-            // setLoading(false);
-            // setErrortext2('');
-            console.log('3', responseJson);
-            console.log(responseJson.status);
-            // If server response message same as Data Matched
-            // if (responseJson.status === 'success') {
-            //     setIsRegistraionSuccess(true);
-            //     console.log('Registration Successful. Please Login to proceed');
-            // } else if (responseJson.status === 'duplicate') {
-            //     // setErrortext2('이미 존재하는 아이디입니다.');
-            //     console.log('이미 존재하는 아이디입니다.');
-            // }
-            console.log('2')
-        })
-        .catch((error) => {
-            //Hide Loader
-            // setLoading(false);
-            console.error(error);
-        });
+            .then((response) => {
+                if (response.data.status === 'success') {
+                    setIsRegistraionSuccess(true)
+                    console.log('Registration Successful. Please Login to proceed');
+                } else if (response.data.status === 'duplicated') {
+                    console.log('이미 존재하는 아이디입니다.');
+                    alert('이미 존재하는 아이디 또는 이메일입니다.');
+                }
+            }).catch(function (error) {
+                // 오류발생시 실행
+                console.log(error);
+            });
     }
 
-        return (
+    return (
         <Center w="100%">
             <Box safeArea p="2" py="8" w="90%" maxW="290">
                 <VStack space={3} mt="5">
                     <FormControl>
                         <FormControl.Label>아이디</FormControl.Label>
-                        <Input 
+                        <Input
                             onChangeText={(UserId) => setUserId(UserId)}
                             ref={idInputRef}
                             returnKeyType="next"
@@ -177,7 +160,7 @@ function SignInComponent() {
                     </FormControl>
                     <FormControl>
                         <FormControl.Label>비밀번호</FormControl.Label>
-                        <Input 
+                        <Input
                             onChangeText={(UserPassword) => setUserPassword(UserPassword)}
                             ref={passwordInputRef}
                             type="password"
@@ -190,7 +173,7 @@ function SignInComponent() {
                     </FormControl>
                     <FormControl isInvalid>
                         <FormControl.Label>비밀번호 확인</FormControl.Label>
-                        <Input 
+                        <Input
                             onChangeText={(UserPasswordchk) => setUserPasswordchk(UserPasswordchk)}
                             ref={passwordchkInputRef}
                             type="password"
@@ -208,7 +191,7 @@ function SignInComponent() {
                     </FormControl>
                     <FormControl>
                         <FormControl.Label>이름</FormControl.Label>
-                        <Input 
+                        <Input
                             onChangeText={(UserName) => setUserName(UserName)}
                             ref={nameInputRef}
                             returnKeyType="next"
@@ -219,7 +202,7 @@ function SignInComponent() {
                         />
                         <Pressable onPress={showDatePicker}>
                             <FormControl.Label>생년월일</FormControl.Label>
-                            <Input 
+                            <Input
                                 ref={birthdayputRef}
                                 value={UserBirthDay}
                                 returnKeyType="next"
@@ -229,7 +212,7 @@ function SignInComponent() {
                                 editable={false}
                                 blurOnSubmit={false}
                             />
-                            <DateTimePickerModal 
+                            <DateTimePickerModal
                                 isVisible={isDatePickerVisible}
                                 headerTextIOS={'생년월일'}
                                 mode="date"
@@ -238,29 +221,30 @@ function SignInComponent() {
                             />
                         </Pressable>
                         <FormControl.Label>성별</FormControl.Label>
-                        <Radio.Group name="genderGroup" defaultValue="male" accessibilityLabel="pick your gneder" 
+                        <Radio.Group name="genderGroup" defaultValue="male" accessibilityLabel="pick your gneder"
                             onChangeText={(UserGender) => setUserGender(UserGender)}
                         >
                             <Stack direction={{
                                 base: "column",
-                                md: "row" }} 
+                                md: "row"
+                            }}
                                 alignItems="center" space={4} w="75%" maxW="300px"
                             >
                                 <Radio value="male" my={1} ref={genderputRef}>남자</Radio>
                                 <Radio value="female" my={1}>여자</Radio>
                             </Stack>
                         </Radio.Group>
-                            <FormControl.Label>거주지</FormControl.Label>
-                            <Input 
-                                onChangeText={(UserResidence) => setUserId(UserResidence)}
-                                returnKeyType="next"
-                                onSubmitEditing={() =>
-                                    signInputRef.current && signInputRef.current.focus()
-                                }
-                                blurOnSubmit={false}
-                            />
+                        <FormControl.Label>거주지</FormControl.Label>
+                        <Input
+                            onChangeText={(UserResidence) => setUserResidence(UserResidence)}
+                            returnKeyType="next"
+                            onSubmitEditing={() =>
+                                signInputRef.current && signInputRef.current.focus()
+                            }
+                            blurOnSubmit={false}
+                        />
                     </FormControl>
-                    <Button mt="2" colorScheme="indigo" ref={signInputRef}>
+                    <Button mt="2" colorScheme="indigo" ref={signInputRef} onPress={handleSubmitButton}>
                         회원가입
                     </Button>
                 </VStack>
@@ -269,17 +253,7 @@ function SignInComponent() {
     )
 }
 
-export default function SignIn() {
-    return (
-        <NativeBaseProvider>
-          <Center flex={1} px="3">
-            <SignInComponent />
-          </Center>
-        </NativeBaseProvider>
-    );
-}
-
-const styles = StyleSheet.create({ 
+const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
@@ -297,20 +271,20 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     textInput: {
-        marginBottom:  10,
+        marginBottom: 10,
         fontSize: 16,
         // color: '#000000',
-        height: 50, 
-        width: 300, 
-        borderColor: '#000000', 
-        borderWidth: 1, 
+        height: 50,
+        width: 300,
+        borderColor: '#000000',
+        borderWidth: 1,
         borderRadius: 12,
         padding: 10
     },
     btnArea: {
         justifyContent: 'center',
-        borderWidth: 1, 
+        borderWidth: 1,
         borderRadius: 12,
         padding: 10
     }
-})
+});
