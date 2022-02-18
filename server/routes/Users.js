@@ -2,6 +2,8 @@ const express = require('express')
 const router = express.Router();
 const bodyParser = require('body-parser');
 const { User } = require("../models/User");
+const nodemailer = require("nodemailer");
+const senderInfo = require('../config/SenderInfo.json');
 
 /* GET. */
 router.get('/find', function(req, res, next) {
@@ -30,7 +32,6 @@ router.post('/save', function(req, res) {
         }
     });
 });
-
 
 router.get('/findOne/', function(req, res, next) {
     // 특정 아이디값 가져오기
@@ -77,6 +78,39 @@ router.get('/delete/', function(req, res, next) {
             */
         console.log('--- deleted ---');
     });
+});
+
+// 메일 인증번호 보내기
+router.post('/mail', function(req, res, next) {
+    const num = 123;
+    const transport = nodemailer.createTransport({
+        service: 'gmail',
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
+        auth: {
+          user: senderInfo.user,
+          pass: senderInfo.pass,
+        },
+      })
+
+    transport.sendMail({
+        from: `HealthApp <kguhealthapp@gmail.com>`,
+        to: req.body.data.user_email,
+        subject: '[HealthApp] 인증번호가 도착했습니다.',
+        text: '123456',
+        html: `<div 
+            style='
+            text-align: center; 
+            width: 50%; 
+            height: 60%;
+            margin: 15%;
+            padding: 20px;
+            box-shadow: 1px 1px 3px 0px #999;
+            '>
+            <h2>${req.body.data.user_id} 님, 안녕하세요.</h2> <br/> <h2 style="color: #FA5882">HealthApp</h2> <br/><h3>인증번호 : ${num} </h3><br/><br/><br/><br/></div>`})
+        .then(res.json({status: 'success'}))
+        .catch(err => next(err))
 });
 
 module.exports = router;

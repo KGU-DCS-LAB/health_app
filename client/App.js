@@ -17,13 +17,13 @@ export default function App() {
         />
 
         <Stack.Screen
-          name='Login'
-          component={Login}
+          name='SignIn'
+          component={SignIn}
         />
 
         <Stack.Screen
-          name='SignIn'
-          component={SignIn}
+          name='Login'
+          component={Login}
         />
 
         <Stack.Screen

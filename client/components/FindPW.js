@@ -1,15 +1,37 @@
-import React, { Component, useState } from "react";
-import { Heading, Box, Center, VStack, FormControl, Link, Button, NativeBaseProvider, Input } from 'native-base';
-import { Alert, View } from 'react-native';
+import React, { useState, createRef } from "react";
+import { Heading, Box, Center, VStack, FormControl, Link, Button, NativeBaseProvider, Input,  Select, InputGroup, CheckIcon, InputRightAddon } from 'native-base';
+import { Alert } from 'react-native';
+import axios from 'axios';
 
   const FindPWComponent = () => {
-    const [UserEmail, setUserEmail] = useState('');
+    const [UserId, setUserId] = useState('');
+    const [domain, setDomain] = useState('')
     const [emailText, setEmailText] = useState('이메일 확인');
     const [disable, setDisable] = useState(true);
-    const [sendNum, setsendNum] = useState('');
+    const idInputRef = createRef();
+
+    const sendEmail = () => {
+      
+      const user_email = UserId+"@"+domain;
+
+      axios.post('http://192.168.35.37:5000/usersRouter/mail',{
+        data:{
+          user_email : user_email,
+          user_id : UserId
+          }
+        })
+        .then((response) => {
+          if (response.data.status === 'Success') {
+            Alert.alert('인증번호를 메일로 전송하였습니다.');
+          }
+        }).catch(function (error) {
+          console.log('dddd');
+      });
+    }
 
     const checkIdcomp = () => {
-      if(UserEmail == "a"){
+      let userEmail = UserId + "@" + domain;
+      if(userEmail == "ellie5508@naver.com"){
         setEmailText('이메일 확인 완료');
         Alert.alert('이메일이 확인되었습니다.');
         setDisable(false);
@@ -28,12 +50,33 @@ import { Alert, View } from 'react-native';
           <VStack space={3} mt="5">
             <FormControl>
               <FormControl.Label>이메일</FormControl.Label>
-              <Input  onChangeText={(UserEmail) => setUserEmail(UserEmail)}/>
+              <InputGroup>
+                <Input w={{
+                  base: "50%",
+                  md: "100%"
+                  }} onChangeText={(userId) => setUserId(userId)}
+                  ref={idInputRef}
+                  returnKeyType="next"
+                  blurOnSubmit={false} />
+                  <InputRightAddon children={"@"} />
+                  <Select selectedValue={domain} accessibilityLabel="Choose Domain" placeholder="Choose Domain" _selectedItem={{
+                    bg: "teal.600",
+                    endIcon: <CheckIcon size="5" />
+                }}  onValueChange={itemValue => setDomain(itemValue)}
+               w={{
+                    base: "48%",
+                    md: "100%"
+                    }}>
+                    <Select.Item label="google.com" value="google.com" />
+                    <Select.Item label="naver.com" value="naver.com" />
+                    <Select.Item label="daum.net" value="daum.net" />
+                  </Select>
+                </InputGroup>
             </FormControl>
             <Button mt="2" colorScheme="indigo" onPress={() => {checkIdcomp()}}>
               {emailText}
             </Button>
-            <Button mt="2" colorScheme="indigo" isDisabled={disable}>
+            <Button mt="2" colorScheme="indigo" isDisabled={disable} onPress={() => sendEmail()}>
               이메일로 인증번호 보내기
             </Button>
           </VStack>
