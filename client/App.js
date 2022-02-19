@@ -4,6 +4,7 @@ import Login from './components/Login';
 import Home from './components/Home';
 import SignIn from './components/SignIn';
 import FindPW from './components/FindPW';
+import Main from './components/Main';
 
 const Stack = createStackNavigator();
 
@@ -29,6 +30,11 @@ export default function App() {
         <Stack.Screen
           name='FindPW'
           component={FindPW}
+        />
+
+        <Stack.Screen
+          name='Main'
+          component={Main}
         />
       </Stack.Navigator>
     </NavigationContainer>

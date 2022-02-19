@@ -11,7 +11,6 @@ import axios from 'axios';
     const idInputRef = createRef();
 
     const sendEmail = () => {
-      
       const user_email = UserId+"@"+domain;
 
       axios.post('http://192.168.35.37:5000/usersRouter/mail',{
@@ -29,6 +28,7 @@ import axios from 'axios';
       });
     }
 
+    //이메일 확인
     const checkIdcomp = () => {
       let userEmail = UserId + "@" + domain;
 
