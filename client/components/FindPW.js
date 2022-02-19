@@ -1,10 +1,12 @@
 import React, { useState, createRef } from "react";
 import { Heading, Box, Center, VStack, FormControl, Link, Button, NativeBaseProvider, Input,  Select, InputGroup, CheckIcon, InputRightAddon } from 'native-base';
 import { Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 
   const FindPWComponent = () => {
     const [UserId, setUserId] = useState('');
+    const navigation = useNavigation(); 
     const [domain, setDomain] = useState('')
     const [emailText, setEmailText] = useState('이메일 확인');
     const [disable, setDisable] = useState(true);
@@ -18,13 +20,12 @@ import axios from 'axios';
           user_email : user_email,
           user_id : UserId
           }
-        })
-        .then((response) => {
+        }).then((response) => {
           if (response.data.status === 'Success') {
             Alert.alert('인증번호를 메일로 전송하였습니다.');
           }
         }).catch(function (error) {
-          console.log('dddd');
+          console.log('error');
       });
     }
 
@@ -50,6 +51,11 @@ import axios from 'axios';
           console.log(error);
       });
   };
+
+  const handleClick = () => {
+    Alert.alert('인증번호 확인')
+    navigation.navigate('ChangePW')
+  }
 
     return <Center w="100%">
         <Box safeArea p="2" w="90%" maxW="290" py="8">
@@ -90,6 +96,10 @@ import axios from 'axios';
             <Button mt="2" colorScheme="indigo" isDisabled={disable} onPress={() => sendEmail()}>
               이메일로 인증번호 보내기
             </Button>
+            <Input w="100%" mt="2" maxW="300px" py="0" InputRightElement={<Button size="xs" rounded="none" w="1/6" h="full" colorScheme="indigo"  isDisabled={disable} onPress={handleClick}>
+            {"확인"}
+          </Button>} placeholder="인증번호를 입력해주세요" />
+
           </VStack>
         </Box>
       </Center>;

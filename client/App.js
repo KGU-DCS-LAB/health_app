@@ -1,3 +1,4 @@
+import React, {Component} from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Login from './components/Login';
@@ -5,6 +6,7 @@ import Home from './components/Home';
 import SignIn from './components/SignIn';
 import FindPW from './components/FindPW';
 import Main from './components/Main';
+import ChangePW from './components/ChangePW';
 
 const Stack = createStackNavigator();
 
@@ -36,6 +38,12 @@ export default function App() {
           name='Main'
           component={Main}
         />
+
+        <Stack.Screen
+          name='ChangePW'
+          component={ChangePW}
+        />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

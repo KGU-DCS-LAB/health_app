@@ -109,8 +109,7 @@ router.post('/mail', function(req, res, next) {
             box-shadow: 1px 1px 3px 0px #999;
             '>
             <h2>${req.body.data.user_id} 님, 안녕하세요.</h2> <br/> <h2 style="color: #FA5882">HealthApp</h2> <br/><h3>인증번호 : ${num} </h3><br/><br/><br/><br/></div>`})
-        .then(res.json({status: 'success'}))
-        .catch(err => next(err))
+        return res.json({status: 'Success'})
 });
 
 module.exports = router;
