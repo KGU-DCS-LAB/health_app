@@ -31,13 +31,24 @@ import axios from 'axios';
 
     const checkIdcomp = () => {
       let userEmail = UserId + "@" + domain;
-      if(userEmail == "ellie5508@naver.com"){
-        setEmailText('이메일 확인 완료');
-        Alert.alert('이메일이 확인되었습니다.');
-        setDisable(false);
-      } else {
-        Alert.alert('이메일이 존재하지 않습니다.');
+
+      const callback = (arr) => {
+        // console.log(arr.find(x => x.user_id === userEmail));
+          if(arr.find(x => x.user_id === userEmail) == null){
+            Alert.alert('이메일이 존재하지 않습니다.');
+          } else {
+            setEmailText('이메일 확인 완료');
+            Alert.alert('이메일이 확인되었습니다.');
+            setDisable(false);
+          } 
       }
+
+      axios.get('http://192.168.35.37:5000/usersRouter/find')
+        .then((response) => {
+          callback(response.data);
+        }).catch(function (error) {
+          console.log(error);
+      });
   };
 
     return <Center w="100%">
