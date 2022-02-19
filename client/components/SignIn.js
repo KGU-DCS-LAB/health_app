@@ -1,18 +1,33 @@
 import React, { Component, createRef, useState } from "react";
 import { View, StyleSheet, TextInput, TouchableOpacity } from "react-native";
-import { Text, Box, Center, VStack, FormControl, Button, Input, Pressable, Radio, Stack, NativeBaseProvider, WarningOutlineIcon, Select, InputGroup, CheckIcon, InputRightAddon } from 'native-base';
+import { Text, Box, Center, VStack, FormControl, Button, Input, Pressable, Radio, Stack, Icon, NativeBaseProvider, WarningOutlineIcon, Select, InputGroup, CheckIcon, InputRightAddon } from 'native-base';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { useNavigation } from '@react-navigation/native';
+import { Ionicons } from "@expo/vector-icons";
 import axios from 'axios';
-// import { Colors, RadioButton } from "react-native-paper";
-
-// const [showMain, setShowMain] = useState(true);
-// const [showSelectDiseasePage, setShowSelectDiseasePage] = useState(false);
 
 export default function SignIn() {
+    const [showSignInComponent, setShowSignInComponent] = useState(true);
+    const [UserEmail, setUserEmail] = useState('');
+    const [UserPassword, setUserPassword] = useState('');
+    const [UserName, setUserName] = useState('');
+    const [UserBirthDay, setUserBirthDay] = useState('');
+    const [UserGender, setUserGender] = useState('');
+    const [UserResidence, setUserResidence] = useState('');
+
     return (
         <NativeBaseProvider>
             <Center flex={1} px="3">
-                <SignInComponent />
+                {showSignInComponent ? <SignInComponent 
+                setShowSignInComponent={setShowSignInComponent}
+                setEmail={setUserEmail} 
+                setPassword={setUserPassword} setName={setUserName} setBirthDay={setUserBirthDay}
+                setGender={setUserGender} setResidence={setUserResidence}
+                 /> : null}
+                {!showSignInComponent ? <AddDiseaseComponent
+                Email={UserEmail} Password={UserPassword} Name={UserName} BirthDay={UserBirthDay}
+                Gender={UserGender} Residence={UserResidence}
+                 /> : null}
             </Center>
         </NativeBaseProvider>
     );
@@ -46,16 +61,63 @@ String.prototype.zf = function (len) { return "0".string(len - this.length) + th
 Number.prototype.zf = function (len) { return this.toString().zf(len); };
 
 
-function SignInComponent() {
+function AddDiseaseComponent(props) {
+    const navigation = useNavigation();
+    const [isRegistraionSuccess, setIsRegistraionSuccess] = useState(false);
+
+    const handleSubmitButton = () => {
+        // const baseUrl = 'https://192.168.43.58:5000';
+        axios.post('http://172.30.1.36:5000/usersRouter/save', {
+            data: {
+                user_id: props.Email,
+                password: props.Password,
+                user_name: props.Name,
+                birthday: props.BirthDay,
+                gender: props.Gender,
+                residence: props.Residence
+            }
+        })
+            .then((response) => {
+                if (response.data.status === 'success') {
+                    setIsRegistraionSuccess(true)
+                    console.log('Registration Successful. Please Login to proceed');
+                } else if (response.data.status === 'duplicated') {
+                    console.log('이미 존재하는 아이디입니다.');
+                    alert('이미 존재하는 아이디 또는 이메일입니다.');
+                }
+                navigation.navigate('Main');
+            }).catch(function (error) {
+                // 오류발생시 실행
+                console.log(error);
+            });
+    }
+
+    return (
+        <Center w="100%">
+            <Box safeArea p="2" py="8" w="90%" maxW="290">
+                <VStack space={3} mt="5">
+                    <Input placeholder="Search" variant="filled" width="100%" borderRadius="10" py="1" px="2" borderWidth="0" 
+                        InputLeftElement={<Icon ml="2" size="4" color="gray.400" as={<Ionicons name="ios-search" />} />} />
+                    <View></View> 
+                    {/* 질병 리스트 들어옴 */}
+                    <Button mt="2" colorScheme="indigo" onPress={handleSubmitButton}>
+                        회원가입
+                    </Button>
+                </VStack>
+            </Box>
+        </Center>
+    )
+}
+
+function SignInComponent(props) {
     const [UserId, setUserId] = useState('');
-    const [domain, setDomain] = useState('')
+    const [Domain, setDomain] = useState('')
     const [UserPassword, setUserPassword] = useState('');
     const [UserPasswordchk, setUserPasswordchk] = useState('');
     const [UserName, setUserName] = useState('');
     const [UserBirthDay, setUserBirthDay] = useState(new Date().format('yyyy-MM-dd'));
     const [UserGender, setUserGender] = useState('male');
     const [UserResidence, setUserResidence] = useState('');
-    const [isRegistraionSuccess, setIsRegistraionSuccess] = useState(false);
 
     const idInputRef = createRef();
     const passwordInputRef = createRef();
@@ -63,8 +125,6 @@ function SignInComponent() {
     const nameInputRef = createRef();
     const birthdayputRef = createRef();
     const genderputRef = createRef();
-    const signInputRef = createRef();
-    const nextputRef = createRef();
 
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
@@ -82,12 +142,8 @@ function SignInComponent() {
     }
 
     const handleNextButton = () => {
-
-    }
-
-    const handleSubmitButton = () => {
         const today = new Date().format('yyyy-MM-dd');
-        if (!UserId || !domain) {
+        if (!UserId || !Domain) {
             alert('아이디를 입력해주세요.');
             return;
         }
@@ -116,29 +172,13 @@ function SignInComponent() {
             return;
         }
 
-        // const baseUrl = 'https://192.168.43.58:5000';
-        axios.post('http://192.168.43.58:5000/usersRouter/save', {
-            data: {
-                user_id: UserId+'@'+domain,
-                password: UserPassword,
-                user_name: UserName,
-                birthday: UserBirthDay,
-                gender: UserGender,
-                residence: UserResidence
-            }
-        })
-            .then((response) => {
-                if (response.data.status === 'success') {
-                    setIsRegistraionSuccess(true)
-                    console.log('Registration Successful. Please Login to proceed');
-                } else if (response.data.status === 'duplicated') {
-                    console.log('이미 존재하는 아이디입니다.');
-                    alert('이미 존재하는 아이디 또는 이메일입니다.');
-                }
-            }).catch(function (error) {
-                // 오류발생시 실행
-                console.log(error);
-            });
+        props.setShowSignInComponent(false);
+        props.setEmail(UserId+'@'+Domain);
+        props.setPassword(UserPassword);
+        props.setName(UserName);
+        props.setBirthDay(UserBirthDay);
+        props.setGender(UserBirthDay);
+        props.setResidence(UserResidence);
     }
 
     return (
@@ -156,7 +196,7 @@ function SignInComponent() {
                             returnKeyType="next"
                             blurOnSubmit={false} />
                             <InputRightAddon children={"@"} />
-                            <Select selectedValue={domain} accessibilityLabel="Choose Domain" placeholder="Choose Domain" _selectedItem={{
+                            <Select selectedValue={Domain} accessibilityLabel="Choose Domain" placeholder="Choose Domain" _selectedItem={{
                                 bg: "teal.600",
                                 endIcon: <CheckIcon size="5" />
                             }}  onValueChange={itemValue => setDomain(itemValue)}
@@ -250,16 +290,10 @@ function SignInComponent() {
                         <Input
                             onChangeText={(UserResidence) => setUserResidence(UserResidence)}
                             returnKeyType="next"
-                            onSubmitEditing={() =>
-                                nextputRef.current && nextputRef.current.focus()
-                            }
                             blurOnSubmit={false}
                         />
                     </FormControl>
-                    {/* <Button mt="2" colorScheme="indigo" ref={signInputRef} onPress={handleSubmitButton}>
-                        회원가입
-                    </Button> */}
-                    <Button mt="2" colorScheme="indigo" ref={nextputRef} onPress={handleNextButton}>
+                    <Button mt="2" colorScheme="indigo" onPress={handleNextButton}>
                         다음
                     </Button>
                 </VStack>
