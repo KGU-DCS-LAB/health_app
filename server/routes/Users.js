@@ -81,8 +81,8 @@ router.get('/delete/', function(req, res, next) {
 });
 
 // 메일 인증번호 보내기
-router.post('/mail', function(req, res, next) {
-    const num = 123;
+router.post('/mail', function(req, res) {
+    const num = req.body.data.randomNum;
     const transport = nodemailer.createTransport({
         service: 'gmail',
         host: 'smtp.gmail.com',
