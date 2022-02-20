@@ -16,10 +16,6 @@ const MainComponent = () => {
       </Center>;
   };
 
-  function hello(){
-    console.log("hello");
-  }
-
 export default function Main(){
     return (
         <NativeBaseProvider>

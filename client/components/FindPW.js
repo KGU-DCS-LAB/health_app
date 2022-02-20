@@ -3,6 +3,7 @@ import { Heading, Box, Center, VStack, FormControl, Link, Button, NativeBaseProv
 import { Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
+import { createStackNavigator } from 'react-navigation-stack';
 
   const FindPWComponent = () => {
     const [UserId, setUserId] = useState('');
@@ -66,11 +67,11 @@ import axios from 'axios';
   };
 
   const handleClick = () => {
-    console.log("cert: " + certN);
-    console.log("userCertNum: " + userCertNum);
     if(certN == userCertNum){
       Alert.alert('인증번호 확인')
-      navigation.navigate('ChangePW')
+      navigation.navigate('ChangePW',{
+        user_id: UserId + "@" + domain
+      })
     } else {
       Alert.alert('인증번호를 확인해주세요')
     }
@@ -118,7 +119,6 @@ import axios from 'axios';
             <Input w="100%" mt="2" maxW="300px" py="0" InputRightElement={<Button size="xs" rounded="none" w="1/6" h="full" colorScheme="indigo"  isDisabled={disable} onPress={handleClick}>
             {"확인"}
           </Button>} placeholder="인증번호를 입력해주세요" onChangeText={(num) => setCertNum(num)}/>
-
           </VStack>
         </Box>
       </Center>;

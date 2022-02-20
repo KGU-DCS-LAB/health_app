@@ -112,4 +112,18 @@ router.post('/mail', function(req, res) {
         return res.json({status: 'Success'})
 });
 
+router.get('/modifyPw/', function(req, res) {
+    const userId = req.body.data.user_id;
+    const userPw = req.body.data.password;
+
+    User.findById({user_id: userId}, function(error,user){
+        if(error) {  
+            res.redirect('/');
+          } else {
+            user.updateOne({$set : {password : userPw}}).exec();
+            return res.json({status: 'success'})
+          }
+    });
+});
+
 module.exports = router;
