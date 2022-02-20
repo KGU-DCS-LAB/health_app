@@ -8,24 +8,37 @@ import axios from 'axios';
     const [UserId, setUserId] = useState('');
     const navigation = useNavigation(); 
     const [domain, setDomain] = useState('')
+    const [userCertNum, setCertNum] = useState('')
     const [emailText, setEmailText] = useState('이메일 확인');
     const [disable, setDisable] = useState(true);
     const idInputRef = createRef();
+    const [certN, setCertN] = useState('');
+  
+    const generateRandomCode = (n) => {
+      let str = ''
+      for (let i = 0; i < n; i++) {
+        str += Math.floor(Math.random() * 10)
+      }
+      setCertN(str);
+      return str;
+    }
 
     const sendEmail = () => {
       const user_email = UserId+"@"+domain;
+      const certificationNum = generateRandomCode(6)
 
       axios.post('http://192.168.35.37:5000/usersRouter/mail',{
         data:{
           user_email : user_email,
-          user_id : UserId
+          user_id : UserId,
+          randomNum : certificationNum
           }
         }).then((response) => {
           if (response.data.status === 'Success') {
             Alert.alert('인증번호를 메일로 전송하였습니다.');
           }
         }).catch(function (error) {
-          console.log('error');
+          console.log(error);
       });
     }
 
@@ -53,8 +66,14 @@ import axios from 'axios';
   };
 
   const handleClick = () => {
-    Alert.alert('인증번호 확인')
-    navigation.navigate('ChangePW')
+    console.log("cert: " + certN);
+    console.log("userCertNum: " + userCertNum);
+    if(certN == userCertNum){
+      Alert.alert('인증번호 확인')
+      navigation.navigate('ChangePW')
+    } else {
+      Alert.alert('인증번호를 확인해주세요')
+    }
   }
 
     return <Center w="100%">
@@ -98,7 +117,7 @@ import axios from 'axios';
             </Button>
             <Input w="100%" mt="2" maxW="300px" py="0" InputRightElement={<Button size="xs" rounded="none" w="1/6" h="full" colorScheme="indigo"  isDisabled={disable} onPress={handleClick}>
             {"확인"}
-          </Button>} placeholder="인증번호를 입력해주세요" />
+          </Button>} placeholder="인증번호를 입력해주세요" onChangeText={(num) => setCertNum(num)}/>
 
           </VStack>
         </Box>
