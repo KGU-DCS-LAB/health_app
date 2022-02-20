@@ -36,8 +36,8 @@ export default function SignIn() {
 Date.prototype.format = function (f) {
     if (!this.valueOf()) return " ";
 
-    var weekName = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"];
-    var d = this;
+    const weekName = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"];
+    let d = this;
 
     return f.replace(/(yyyy|yy|MM|dd|E|hh|mm|ss|a\/p)/gi, function ($1) {
         switch ($1) {
