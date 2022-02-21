@@ -120,6 +120,31 @@ const MainComponent = (props) => {
   </Center>;
 };
 
+const NewsComponent = () => {
+  const user = "ellie5508"
+
+  return <Center w="100%">
+      <Box safeArea p="1" w="100%" maxW="290" py="8">
+      <View style={{borderBottomColor: 'black', borderBottomWidth: 3,}}/>
+        <Heading mt='5' size="sm" color="coolGray.800" _dark={{
+        color: "warmGray.50"
+      }} fontWeight="semibold">
+          {user}님을 위한 건강 뉴스
+        </Heading>
+        <Box alignSelf="center">
+        <HStack space={3} mt="5">
+        <Button mt="2"  w="50%" colorScheme="indigo" >
+            나의 뉴스
+          </Button>
+          <Button mt="2" w="50%" colorScheme="indigo" >
+            가족 뉴스
+          </Button>
+        </HStack>
+        </Box>
+      </Box>
+    </Center>;
+};
+
 
 function Main(props) {
   return (
@@ -127,6 +152,7 @@ function Main(props) {
     <ScrollView>
       <Center flex={1} px="3">
       <MainComponent latitude={props.latitude} longitude={props.longitude} />
+      <NewsComponent/>
       </Center>
       </ScrollView>
     </NativeBaseProvider>
