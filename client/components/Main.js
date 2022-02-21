@@ -7,39 +7,10 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Location from "expo-location";
 import { ScrollView } from 'react-native';
 
-// const GeoLocationAPI = async () => {
-//   const [latitude, setLatitude] = useState('');
-//   const [longitude, setLogitude] = useState('');
-
-//   try {
-    
-//     // �쐞移섏젙蹂� �궗�슜�븯�룄濡� �궗�슜�옄�뿉寃� �뿀媛� 諛쏄린
-//     const response =  await Location.requestForegroundPermissionsAsync();
-//     // console.log(response);
-
-//     // const location = await Location.getCurrentPositionAsync();
-//     // console.log(location);
-//     const { coords } = await Location.getCurrentPositionAsync();
-//     console.log(coords);
-//     setLatitude(coords.latitude);
-//     setLogitude(coords.longitude);     
-//     console.log(latitude+' '+longitude) ;
-//   } catch (e) {
-//     Alert.alert("�쐞移섏젙蹂대�� 媛��졇�삱 �닔 �뾾�뒿�땲�떎.");
-//   }
-  
-//   return (
-//     <View>
-//         <Text> latitude: {latitude} </Text>
-//         <Text> longitude: {longitude} </Text>
-//     </View>
-//   )
-// }
-
 Date.prototype.format = function (f) {
   if (!this.valueOf()) return " ";
 
-  const weekName = ["�씪�슂�씪", "�썡�슂�씪", "�솕�슂�씪", "�닔�슂�씪", "紐⑹슂�씪", "湲덉슂�씪", "�넗�슂�씪"];
+  const weekName = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"];
   let d = this;
   let h;
 
@@ -54,7 +25,7 @@ Date.prototype.format = function (f) {
           case "hh": return ((h = d.getHours() % 12) ? h : 12).zf(2);
           case "mm": return d.getMinutes().zf(2);
           case "ss": return d.getSeconds().zf(2);
-          case "a/p": return d.getHours() < 12 ? "�삤�쟾" : "�삤�썑";
+          case "a/p": return d.getHours() < 12 ? "오전" : "오후";
           default: return $1;
       }
   });
@@ -64,8 +35,28 @@ String.prototype.string = function (len) { var s = '', i = 0; while (i++ < len) 
 String.prototype.zf = function (len) { return "0".string(len - this.length) + this; };
 Number.prototype.zf = function (len) { return this.toString().zf(len); };
 
-const MainComponent = (props) => {
-  const today = new Date().format('MM�썡 dd�씪 E a/p hh:mm');
+const WeatherComponent = (props) => {
+  const today = new Date();
+  const today_string = today.format('MM월 dd일 E a/p hh:mm');
+  // const [weather, setWeather] = useState(getWeather);
+
+  const getWeather = () => {
+    getInfo = () => {
+      const base_date = today.format('yyyyMMdd');
+      let base_time = today.format('HHmm');
+      const url = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst?serviceKey=Wf%2B6YE3YI%2F6yksYpwxjJXgnT0o3BT82MFJwGCtiXtGfd1RDieWmwGSVMWy3Jz%2FBD7%2BPE%2BcAd73of0wK1QjTrWg%3D%3D&pageNo=1&numOfRows=1000&dataType=JSON&base_date="+base_date+"&base_time="+base_time+"&nx="+props.latitude+"&ny="+props.longitude;
+  
+      axios.get(url)
+        .then((response) => {
+          // this.setState({location: response.data.documents[1].address_name})
+          console.log(response);
+        }).catch(function (error) {
+          // 오류발생시 실행
+          console.log(error);
+        });
+    }
+  }
+
   return <Center w="100%">
     <Box safeArea p="2" py="8" w="95%">
       <Box w="47%" rounded="lg" overflow="hidden" borderColor="coolGray.200" borderWidth="1" _dark={{
@@ -81,7 +72,7 @@ const MainComponent = (props) => {
           <Center w="100%" >
             <Ionicons name="partly-sunny-outline" size={150} color="black" />
             <Text fontSize='5xl'>
-              湲곗삩째
+              기온°
             </Text>
           </Center>
         </Box>
@@ -89,18 +80,18 @@ const MainComponent = (props) => {
           <Stack space={2}>
             <Heading size="md" ml="-1">
               <Ionicons name="location-sharp" size={24} color="black" />
-              吏��뿭�씠由�
+                {props.location}
             </Heading>
             <Text fontSize="xs" _light={{
               color: "violet.500"
             }} _dark={{
               color: "violet.400"
             }} fontWeight="500" ml="-0.5" mt="-1" >
-              {today}
+              {today_string}
             </Text>
           </Stack>
-          <Text> latitude: {props.latitude} </Text>
-          <Text> longitude: {props.longitude} </Text>
+          <Text> x: {props.x} </Text>
+          <Text> y: {props.y} </Text>
           <Text fontWeight="400">
             Bengaluru (also called Bangalore) is the center of India's high-tech
             industry. The city is also known for its parks and nightlife.
@@ -151,7 +142,7 @@ function Main(props) {
     <NativeBaseProvider>
     <ScrollView>
       <Center flex={1} px="3">
-      <MainComponent latitude={props.latitude} longitude={props.longitude} />
+      <WeatherComponent x={props.x} y={props.y} location={props.location} />
       <NewsComponent/>
       </Center>
       </ScrollView>
@@ -162,23 +153,92 @@ function Main(props) {
 export default class extends React.Component {
   state = {
     latitude: '',
-    longitude: ''
+    longitude: '',
+    x: '',
+    y: '',
+    location: ''
+  }
+
+  map = {
+    Re : 6371.00877, // 지도반경
+    grid : 5.0, // 격자간격 (km)
+    slat1 : 30.0, // 표준위도 1
+    slat2 : 60.0, // 표준위도 2
+    olon : 126.0, // 기준점 경도
+    olat : 38.0, // 기준점 위도
+    xo : 210/5.0, // 기준점 X좌표
+    yo : 675/5.0, // 기준점 Y좌표
+    first : 0,
   }
 
   getLocation = async () => {
     try {
-      // �쐞移섏젙蹂� �궗�슜�븯�룄濡� �궗�슜�옄�뿉寃� �뿀媛� 諛쏄린
+      // 위치정보 제공 동의
       const response =  await Location.requestForegroundPermissionsAsync();
-      console.log(response);
   
-      // const location = await Location.getCurrentPositionAsync();
-      // console.log(location);
       const { coords } = await Location.getCurrentPositionAsync();
-      console.log(coords);
-      this.setState({latitude: coords.latitude, longitude: coords.longitude})   
-      console.log(this.state.latitude+' '+this.state.longitude) ;
+
+      this.setState({latitude: coords.latitude, longitude: coords.longitude});
+      this.getLamc();
+      this.getInfo();
     } catch (e) {
-      Alert.alert("�쐞移섏젙蹂대�� 媛��졇�삱 �닔 �뾾�뒿�땲�떎.");
+      Alert.alert("위치정보를 가져오지 못했습니다.");
+    }
+  }
+
+  // 위도 경도로 행정구역 정보 얻기
+  getInfo = () => {
+    const API_KEY = "cfe1945b43a5fdba22748a70b2c10ba1";
+    const url = "https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?input_coord=WGS84&output_coord=WGS84&x=" + this.state.longitude + "&y=" + this.state.latitude;
+
+    axios.get(url, {
+      headers: {
+        Authorization: 'KakaoAK cfe1945b43a5fdba22748a70b2c10ba1'
+      }
+    })
+      .then((response) => {
+        // console.log(response.data);
+        // console.log(response.data.documents[1].address_name);
+        this.setState({location: response.data.documents[1].address_name})
+        console.log(this.state.location);
+      }).catch(function (error) {
+        // 오류발생시 실행
+        console.log(error);
+      });
+  }
+
+  // 위도 경도로 x,y 좌표값 구하기
+  getLamc = () => {
+    let PI, DEGRAD, RADDEG;
+    let re, olon, olat, sn, sf, ro;
+    let slat1, slat2, alon, alat, xn, yn, ra, theta;
+
+    if (this.map.first == 0) {
+      PI = Math.asin(1.0)*2.0;
+      DEGRAD = PI/180.0;
+      RADDEG = 180.0/PI;
+
+      re = this.map.Re/this.map.grid;
+      slat1 = this.map.slat1 * DEGRAD;
+      slat2 = this.map.slat2 * DEGRAD;
+      olon = this.map.olon * DEGRAD;
+      olat = this.map.olat * DEGRAD;
+
+      sn = Math.tan(PI*0.25 + slat2*0.5)/Math.tan(PI*0.25 + slat1*0.5);
+      sn = Math.log(Math.cos(slat1)/Math.cos(slat2))/Math.log(sn);
+      sf = Math.tan(PI*0.25 + slat1*0.5);
+      sf = Math.pow(sf,sn)*Math.cos(slat1)/sn;
+      ro = Math.tan(PI*0.25 + olat*0.5);
+      ro = re*sf/Math.pow(ro,sn);
+
+      ra = Math.tan(PI*0.25+(this.state.latitude)*DEGRAD*0.5);
+      ra = re*sf/Math.pow(ra,sn);
+      theta = (this.state.longitude)*DEGRAD - olon;
+      if (theta > PI) theta -= 2.0*PI;
+      if (theta < -PI) theta += 2.0*PI;
+      theta *= sn;
+
+      this.setState({x: parseInt((ra*Math.sin(theta)) + this.map.xo + 1.5), y: parseInt((ro - ra*Math.cos(theta)) + this.map.yo + 1.5) })
     }
   }
 
@@ -187,6 +247,6 @@ export default class extends React.Component {
   }
 
   render() {
-    return <Main latitude={this.state.latitude} longitude={this.state.longitude} />
+    return <Main x={this.state.x} y={this.state.y} location={this.state.location} />
   }
 }
