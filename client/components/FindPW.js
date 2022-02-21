@@ -4,6 +4,7 @@ import { Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import { createStackNavigator } from 'react-navigation-stack';
+import { ScrollView } from 'react-native';
 
   const FindPWComponent = () => {
     const [UserId, setUserId] = useState('');

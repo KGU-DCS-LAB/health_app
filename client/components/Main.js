@@ -5,6 +5,7 @@ import { Alert } from 'react-native';
 import axios from 'axios';
 import { Ionicons } from '@expo/vector-icons';
 import * as Location from "expo-location";
+import { ScrollView } from 'react-native';
 
 // const GeoLocationAPI = async () => {
 //   const [latitude, setLatitude] = useState('');
@@ -119,26 +120,15 @@ const MainComponent = (props) => {
   </Center>;
 };
 
-<<<<<<< HEAD
-export default function Main(){
-    return (
-        <NativeBaseProvider>
-          <Center flex={1} px="3">
-            <MainComponent />
-          </Center>
-        </NativeBaseProvider>
-      )
-=======
-function hello() {
-  console.log("hello");
-}
 
 function Main(props) {
   return (
     <NativeBaseProvider>
+    <ScrollView>
       <Center flex={1} px="3">
-        <MainComponent latitude={props.latitude} longitude={props.longitude} />
+      <MainComponent latitude={props.latitude} longitude={props.longitude} />
       </Center>
+      </ScrollView>
     </NativeBaseProvider>
   )
 }
@@ -173,5 +163,4 @@ export default class extends React.Component {
   render() {
     return <Main latitude={this.state.latitude} longitude={this.state.longitude} />
   }
->>>>>>> fb9b04a0c8edc167ad0e14b0f0b379a1255c8aac
 }

@@ -8,14 +8,14 @@ const ChangeComponent = () => {
   const [UserPW, setUserPW] = useState('');
   const [UserPWConfirm, setUserPWConfirm] = useState('');
   const navigation = useNavigation(); 
-  const userId = useNavigationParam('user_id');
-  console.log(userId);
+  // const userId = useNavigationParam('user_id');
+
 
   const handleClick = () => {
     if(UserPW == UserPWConfirm){
       axios.post('http://192.168.35.37:5000/usersRouter/modifyPw',{
         data:{
-          user_id : userId,
+          // user_id : userId,
           user_pw : UserPW
           }
         }).then((response) => {
