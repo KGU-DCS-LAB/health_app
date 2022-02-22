@@ -6,6 +6,7 @@ import axios from 'axios';
 import { Ionicons } from '@expo/vector-icons';
 import * as Location from "expo-location";
 import { ScrollView } from 'react-native';
+import { weatherAPI_KEY, kakaoAPI_KEY } from '@env'
 
 Date.prototype.format = function (f) {
   if (!this.valueOf()) return " ";
@@ -44,7 +45,7 @@ const WeatherComponent = (props) => {
     getInfo = () => {
       const base_date = today.format('yyyyMMdd');
       let base_time = today.format('HHmm');
-      const url = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst?serviceKey=Wf%2B6YE3YI%2F6yksYpwxjJXgnT0o3BT82MFJwGCtiXtGfd1RDieWmwGSVMWy3Jz%2FBD7%2BPE%2BcAd73of0wK1QjTrWg%3D%3D&pageNo=1&numOfRows=1000&dataType=JSON&base_date="+base_date+"&base_time="+base_time+"&nx="+props.latitude+"&ny="+props.longitude;
+      const url = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst?serviceKey="+weatherAPI_KEY+"&pageNo=1&numOfRows=1000&dataType=JSON&base_date="+base_date+"&base_time="+base_time+"&nx="+props.latitude+"&ny="+props.longitude;
   
       axios.get(url)
         .then((response) => {
@@ -59,7 +60,7 @@ const WeatherComponent = (props) => {
 
   return <Center w="100%">
     <Box safeArea p="2" py="8" w="95%">
-      <Box w="47%" rounded="lg" overflow="hidden" borderColor="coolGray.200" borderWidth="1" _dark={{
+      <Box w="100%" rounded="lg" overflow="hidden" borderColor="coolGray.200" borderWidth="1" maxW='500' _dark={{
         borderColor: "coolGray.600",
         backgroundColor: "gray.700"
       }} _web={{
@@ -70,8 +71,8 @@ const WeatherComponent = (props) => {
       }}>
         <Box>
           <Center w="100%" >
-            <Ionicons name="partly-sunny-outline" size={150} color="black" />
-            <Text fontSize='5xl'>
+            <Ionicons name="partly-sunny-outline" size={50} color="black" />
+            <Text fontSize='lg'>
               기온°
             </Text>
           </Center>
@@ -188,12 +189,12 @@ export default class extends React.Component {
 
   // 위도 경도로 행정구역 정보 얻기
   getInfo = () => {
-    const API_KEY = "cfe1945b43a5fdba22748a70b2c10ba1";
+    const API_KEY = "KakaoAK " + kakaoAPI_KEY;
     const url = "https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?input_coord=WGS84&output_coord=WGS84&x=" + this.state.longitude + "&y=" + this.state.latitude;
 
     axios.get(url, {
       headers: {
-        Authorization: 'KakaoAK cfe1945b43a5fdba22748a70b2c10ba1'
+        Authorization: API_KEY
       }
     })
       .then((response) => {

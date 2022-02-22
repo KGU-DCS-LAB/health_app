@@ -280,7 +280,7 @@ function SignInComponent(props) {
                                 base: "column",
                                 md: "row"
                             }}
-                                alignItems="center" space={4} w="75%" maxW="300px"
+                                alignItems="center" space={4} w="100%" maxW="300px"
                             >
                                 <Radio value="male" my={1} ref={genderputRef}>남자</Radio>
                                 <Radio value="female" my={1}>여자</Radio>
