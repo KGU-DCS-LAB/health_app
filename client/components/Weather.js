@@ -4,7 +4,7 @@ import { Alert } from 'react-native';
 import axios from 'axios';
 import { Ionicons } from '@expo/vector-icons';
 import * as Location from "expo-location";
-import { weatherAPI_KEY, kakaoAPI_KEY } from '@env'
+import { weatherAPI_KEY, kakaoAPI_KEY, HealthWthrIdxAPI_KEY } from '@env'
 
 Date.prototype.format = function (f) {
     if (!this.valueOf()) return " ";
@@ -75,8 +75,13 @@ const WeatherComponent = (props) => {
                         </Text>
                     </Stack>
                     <Text fontWeight="400">
-                        Bengaluru (also called Bangalore) is the center of India's high-tech
-                        industry. The city is also known for its parks and nightlife.
+                        천식폐질환가능지수: {props.state.getAsthmaIdxV2}
+                        뇌졸중가능지수: {props.state.getStrokeIdxV2}
+                        식중독지수: {props.state.getFoodPoisoningIdxV2}
+                        꽃가루농도위험지수(참나무): {props.state.getOakPollenRiskIdxV2}
+                        꽃가루농도위험지수(소나무): {props.state.getPinePollenRiskIdxV2}
+                        꽃가루농도위험지수(잡초류): {props.state.getWeedsPollenRiskndxV2}
+                        감기가능지수: {props.state.getColdIdxV2}
                     </Text>
                     <HStack alignItems="center" space={4} justifyContent="space-between">
                         <HStack alignItems="center">
@@ -102,7 +107,14 @@ export default class extends React.Component {
         location: '',
         SKY: '',
         T1H: '',
-        PTY: ''
+        PTY: '',
+        getAsthmaIdxV2: '',
+        getAsthmaIdxV2: '',
+        getFoodPoisoningIdxV2: '',
+        getOakPollenRiskIdxV2: '',
+        getPinePollenRiskIdxV2: '',
+        getWeedsPollenRiskndxV2: '',
+        getColdIdxV2: ''
     }
 
     map = {
@@ -128,6 +140,7 @@ export default class extends React.Component {
             this.getLamc();
             this.getInfo();
             this.getWeather();
+            this.getHealthWthrIdx();
         } catch (e) {
             Alert.alert("위치정보를 가져오지 못했습니다.");
         }
@@ -216,6 +229,74 @@ export default class extends React.Component {
             }).catch(function (error) {
                 console.log(error);
             });
+    }
+
+    getHealthWthrIdx = () => {
+        const base_date = today.format('yyyyMMdd');
+        const hour = today.format("HH");
+        const month = parseInt(today.format('MM'));
+        let url_type = ['getAsthmaIdxV2', 'getStrokeIdxV2', 'getFoodPoisoningIdxV2'];
+        if(month > 3 && month < 7){
+            url_type = url_type.concat('getOakPollenRiskIdxV2');
+            url_type = url_type.concat('getPinePollenRiskIdxV2');
+        }
+        if(month > 7 && month < 11){
+            url_type = url_type.concat('getWeedsPollenRiskndxV2');
+        }
+        if(month > 8 || month < 5){
+            url_type = url_type.concat('getColdIdxV2');
+        }
+        const areaNo = '1162060500';
+        let base_time = '';
+        if (parseInt(hour) < 6) {
+            base_time = (parseInt(base_date) - 1) + '18';
+        } else {
+            base_time = base_date + '06';
+        }
+        let url = '';
+        let code;
+
+        url_type.map((type) => {
+            url = 'http://apis.data.go.kr/1360000/HealthWthrIdxServiceV2/' + type + '?serviceKey=' + HealthWthrIdxAPI_KEY + '&numOfRows=10&pageNo=1&dataType=JSON&areaNo=' + areaNo + '&time=' + base_time;
+            axios.get(url)
+                .then((response) => {
+                    // const value = response.data.response.body.items.item[18];
+                    // this.setState({ SKY: value.fcstValue })
+                    const items = response.data.response.body.items.item[0];
+                    // console.log(items);
+                    if (parseInt(hour) < 6) {
+                        code = items.tmorrow;
+                    } else {
+                        code = items.today;
+                    }
+                    switch(type) {
+                        case 'getAsthmaIdxV2':
+                            this.setState({ getAsthmaIdxV2: code });
+                            break;
+                        case 'getStrokeIdxV2':
+                            this.setState({ getStrokeIdxV2: code });
+                            break;
+                        case 'getFoodPoisoningIdxV2':
+                            this.setState({ getFoodPoisoningIdxV2: code });
+                            break;
+                        case 'getOakPollenRiskIdxV2':
+                            this.setState({ getOakPollenRiskIdxV2: code });
+                            break;
+                        case 'getPinePollenRiskIdxV2':
+                            this.setState({ getPinePollenRiskIdxV2: code });
+                            break;
+                        case 'getWeedsPollenRiskndxV2':
+                            this.setState({ getWeedsPollenRiskndxV2: code });
+                            break;
+                        case 'getColdIdxV2':
+                            this.setState({ getColdIdxV2: code });
+                            break;
+                    }
+                }).catch(function (error) {
+                    // 오류발생시 실행
+                    console.log(error);
+                });
+        })
     }
 
     componentDidMount() {
