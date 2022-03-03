@@ -3,6 +3,7 @@ import { Heading, Box, Center, VStack,HStack,  FormControl, Link, Button, Native
 import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
 import axios from 'axios';
+import { IP_address } from '@env'
 
 const ChangeComponent = () => {
   const [UserPW, setUserPW] = useState('');
@@ -13,7 +14,7 @@ const ChangeComponent = () => {
 
   const handleClick = () => {
     if(UserPW == UserPWConfirm){
-      axios.post('http://192.168.35.37:5000/usersRouter/modifyPw',{
+      axios.post('http://'+IP_address+':5000/usersRouter/modifyPw',{
         data:{
           // user_id : userId,
           user_pw : UserPW

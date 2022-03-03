@@ -5,6 +5,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from "@expo/vector-icons";
 import axios from 'axios';
+import { IP_address } from '@env'
 
 export default function SignIn() {
     const [showSignInComponent, setShowSignInComponent] = useState(true);
@@ -66,8 +67,7 @@ function AddDiseaseComponent(props) {
     const [isRegistraionSuccess, setIsRegistraionSuccess] = useState(false);
 
     const handleSubmitButton = () => {
-        // const baseUrl = 'https://192.168.43.58:5000';
-        axios.post('http://172.30.1.36:5000/usersRouter/save', {
+        axios.post('http://'+IP_address+':5000/usersRouter/save', {
             data: {
                 user_id: props.Email,
                 password: props.Password,
@@ -177,7 +177,7 @@ function SignInComponent(props) {
         props.setPassword(UserPassword);
         props.setName(UserName);
         props.setBirthDay(UserBirthDay);
-        props.setGender(UserBirthDay);
+        props.setGender(UserGender);
         props.setResidence(UserResidence);
     }
 
@@ -274,7 +274,7 @@ function SignInComponent(props) {
                         </Pressable>
                         <FormControl.Label>성별</FormControl.Label>
                         <Radio.Group name="genderGroup" defaultValue="male" accessibilityLabel="pick your gneder"
-                            onChangeText={(UserGender) => setUserGender(UserGender)}
+                            onChange={nextValue => { setUserGender(nextValue); }}
                         >
                             <Stack direction={{
                                 base: "column",

@@ -3,6 +3,7 @@ import { Heading, Box, Center, VStack, FormControl, Link, Button, NativeBaseProv
 import { Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
+import { IP_address } from '@env'
 import { createStackNavigator } from 'react-navigation-stack';
 import { ScrollView } from 'react-native';
 
@@ -29,7 +30,7 @@ import { ScrollView } from 'react-native';
       const user_email = UserId+"@"+domain;
       const certificationNum = generateRandomCode(6)
 
-      axios.post('http://192.168.35.37:5000/usersRouter/mail',{
+      axios.post('http://'+IP_address+':5000/usersRouter/mail',{
         data:{
           user_email : user_email,
           user_id : UserId,
@@ -59,7 +60,7 @@ import { ScrollView } from 'react-native';
           } 
       }
 
-      axios.get('http://192.168.35.37:5000/usersRouter/find')
+      axios.get('http://'+IP_address+':5000/usersRouter/find')
         .then((response) => {
           callback(response.data);
         }).catch(function (error) {

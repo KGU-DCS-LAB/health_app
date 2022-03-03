@@ -3,6 +3,7 @@ import { Heading, Box, Center, VStack,HStack,  FormControl, Link, Button, Native
 import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
 import axios from 'axios';
+import { IP_address } from '@env'
 
 const LoginComponent = () => {
     const navigation = useNavigation(); 
@@ -22,7 +23,7 @@ const LoginComponent = () => {
           }
       }
 
-      axios.get('http://192.168.35.37:5000/usersRouter/find')
+      axios.get('http://'+IP_address+':5000/usersRouter/find')
         .then((response) => {
           callback(response.data);
         }).catch(function (error) {

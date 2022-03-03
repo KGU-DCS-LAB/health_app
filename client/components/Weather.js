@@ -4,7 +4,7 @@ import { Alert } from 'react-native';
 import axios from 'axios';
 import { Ionicons } from '@expo/vector-icons';
 import * as Location from "expo-location";
-import { weatherAPI_KEY, kakaoAPI_KEY, HealthWthrIdxAPI_KEY } from '@env'
+import { weatherAPI_KEY, kakaoAPI_KEY, HealthWthrIdxAPI_KEY, IP_address } from '@env'
 
 Date.prototype.format = function (f) {
     if (!this.valueOf()) return " ";
