@@ -54,6 +54,9 @@ export default function NewsComponent(){
           </Button>
         </HStack>
         </Box>
+        <Box>
+          
+        </Box>
         {/* <SwiperComponent/> */}
         </Box>
       </Box>
