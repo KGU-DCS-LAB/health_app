@@ -4,7 +4,7 @@ const express = require('express')
 const router = express.Router();
 
 
-router.get('/news', function(res,req) {
+router.get('/news', function(req,res) {
     const getHTML = async (keyword) => {
         const browser = await puppeteer.launch({
             headless : true
@@ -12,11 +12,14 @@ router.get('/news', function(res,req) {
         const page = await browser.newPage();
     
         let data = [];
+
+        await page.goto('https://search.naver.com/search.naver?where=news&sm=tab_pge&query='+encodeURI(keyword)+'&sort=0&photo=0&field=0&pd=0&ds=&de=&cluster_rank=352&mynews=0&office_type=0&office_section_code=0&news_office_checked=&nso=so:r,p:all,a:all&start=1');
+        data.push(await parsing(page));
     
-        for(let idx = 1; idx<=121; idx+=10){
-            await page.goto('https://search.naver.com/search.naver?where=news&sm=tab_pge&query='+encodeURI(keyword)+'&sort=0&photo=0&field=0&pd=0&ds=&de=&cluster_rank=352&mynews=0&office_type=0&office_section_code=0&news_office_checked=&nso=so:r,p:all,a:all&start='+idx);
-            data.push(await parsing(page));
-        }
+        // for(let idx = 1; idx<=121; idx+=10){
+        //     await page.goto('https://search.naver.com/search.naver?where=news&sm=tab_pge&query='+encodeURI(keyword)+'&sort=0&photo=0&field=0&pd=0&ds=&de=&cluster_rank=352&mynews=0&office_type=0&office_section_code=0&news_office_checked=&nso=so:r,p:all,a:all&start='+idx);
+        //     data.push(await parsing(page));
+        // }
       };
     
       const parsing = async (page) =>{
@@ -43,7 +46,7 @@ router.get('/news', function(res,req) {
               })
           });
           console.log(news);
-          return news;
+          return res.send(news);
       }
       getHTML('코로나');
 })
