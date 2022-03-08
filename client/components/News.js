@@ -4,36 +4,30 @@ import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
 import axios from 'axios';
 import { StyleSheet, FlatList, Text } from 'react-native';
-import Swiper from 'react-native-swiper'
-import { ScrollView } from 'react-native';
 
 export default function NewsComponent(){
+  const navigation = useNavigation(); 
     const user = "ellie5508"
     
     const [dataArr, setDataArr] = useState('');
 
-    const arr = [1,2,3,4,5];
-    
     const callback = (data) => {
       setDataArr(data);
     }
-
- 
 
     let newsArr = Object.values(dataArr).map(news => news);
 
     function display(){
       return(
-<Box>
-      <Heading fontSize="xl" p="4" pb="3">
-        질병 뉴스 
-      </Heading>
+    <Box mt="3">
       <FlatList data={newsArr} renderItem={({
       item
-    }) => <Link href={item.newsUrl}>
+    }) => <Link href="#" onPress={() => navigation.navigate('NewsDetail', {
+            url: item.newsUrl
+          })} >
       <Box borderBottomWidth="1" _dark={{
       borderColor: "gray.600"
-    }} borderColor="coolGray.200" py="2">
+    }} borderColor="coolGray.200" py="2" >
             <HStack space={3} justifyContent="space-between">
               <Avatar size="48px" source={{
           uri: item.img
@@ -53,21 +47,12 @@ export default function NewsComponent(){
               <Spacer />
               
             </HStack>
-          </Box>
-    </Link>}  />
+          </Box></Link>}  />
     </Box>
       )
     }
     // console.log(Object.values(dataArr).map(news => (news.time)));
 
-    window.onload = function() {
-      axios.get('http://192.168.35.37:5000/newsRouter/news')
-        .then((res) => {
-          callback(res.data);
-        }).catch(function (error) {
-          console.log(error);
-      });
-    };
 
     const setShowNews = () => {
        // axios.get('http://'+IP_address+':5000/usersRouter/find')

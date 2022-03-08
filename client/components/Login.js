@@ -102,10 +102,6 @@ const LoginComponent = () => {
       </Center>;
   };
 
-  function hello(){
-    console.log("hello");
-  }
-
 export default function Login(){
     return (
         <NativeBaseProvider>
