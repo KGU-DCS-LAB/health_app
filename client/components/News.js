@@ -1,24 +1,76 @@
 import React, { useState, Component } from "react";
-import { View, Heading, Text, Box, Center, VStack, HStack, FormControl, Link, Button, NativeBaseProvider, Input, Select, InputGroup, CheckIcon, InputRightAddon, AspectRatio, Image, Stack } from 'native-base';
+import { View, Heading, Box, Center, VStack, HStack,  Button, Image, Stack, Avatar, Spacer} from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
 import axios from 'axios';
-import { StyleSheet, AppRegistry } from 'react-native';
+import { StyleSheet, FlatList, Text } from 'react-native';
 import Swiper from 'react-native-swiper'
+import { ScrollView } from 'react-native';
 
 export default function NewsComponent(){
     const user = "ellie5508"
-    // const [viewNews, setViewNews] = useState();
+    
+    const [dataArr, setDataArr] = useState('');
 
+    const arr = [1,2,3,4,5];
+    
     const callback = (data) => {
-        console.log(data);
-      }
+      setDataArr(data);
+    }
+
+ 
+
+    let newsArr = Object.values(dataArr).map(news => news);
+
+    function display(){
+      return(
+<Box>
+      <Heading fontSize="xl" p="4" pb="3">
+        질병 뉴스
+      </Heading>
+      <FlatList data={newsArr} renderItem={({
+      item
+    }) => <Box borderBottomWidth="1" _dark={{
+      borderColor: "gray.600"
+    }} borderColor="coolGray.200" pl="4" pr="5" py="2">
+            <HStack space={3} justifyContent="space-between">
+              <Avatar size="48px" source={{
+          uri: item.img
+        }} />
+              <VStack>
+                <Text _dark={{
+            color: "warmGray.50"
+          }} color="coolGray.800" bold>
+                  {item.title}
+                </Text>
+              </VStack>
+              <Spacer />
+              <Text fontSize="xs" _dark={{
+          color: "warmGray.50"
+        }} color="coolGray.800" alignSelf="flex-start">
+                {item.time}
+              </Text>
+            </HStack>
+          </Box>} />
+    </Box>
+      )
+    }
+    // console.log(Object.values(dataArr).map(news => (news.time)));
+
+    window.onload = function() {
+      axios.get('http://192.168.35.37:5000/newsRouter/news')
+        .then((res) => {
+          callback(res.data);
+        }).catch(function (error) {
+          console.log(error);
+      });
+    };
 
     const setShowNews = () => {
        // axios.get('http://'+IP_address+':5000/usersRouter/find')
         axios.get('http://192.168.35.37:5000/newsRouter/news')
-        .then((response) => {
-          callback(response.data);
+        .then((res) => {
+          callback(res.data);
         }).catch(function (error) {
           console.log(error);
       });
@@ -54,10 +106,7 @@ export default function NewsComponent(){
           </Button>
         </HStack>
         </Box>
-        <Box>
-          
-        </Box>
-        {/* <SwiperComponent/> */}
+        {display()}
         </Box>
       </Box>
     </Center>

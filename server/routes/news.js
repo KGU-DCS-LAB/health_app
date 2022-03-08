@@ -42,11 +42,11 @@ router.get('/news', function(req,res) {
                   title: $(node).find(".news_tit").text(),
                   time: $(node).find(".info_group > span").text(),
                   img: $(node).find(".dsc_thumb  > img").attr("src"),
-                  newUrl: $(node).find(".news_tit").attr("href")
+                  newsUrl: $(node).find(".news_tit").attr("href")
               })
           });
           console.log(news);
-          return res.send(news);
+          return res.json(news);
       }
       getHTML('코로나');
 })
