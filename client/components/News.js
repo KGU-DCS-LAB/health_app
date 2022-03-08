@@ -1,5 +1,5 @@
 import React, { useState, Component } from "react";
-import { View, Heading, Box, Center, VStack, HStack,  Button, Image, Stack, Avatar, Spacer} from 'native-base';
+import { View, Heading, Box, Center, VStack, HStack,  Button, Image, Stack, Avatar, Spacer, Link } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
 import axios from 'axios';
@@ -26,32 +26,35 @@ export default function NewsComponent(){
       return(
 <Box>
       <Heading fontSize="xl" p="4" pb="3">
-        질병 뉴스
+        질병 뉴스 
       </Heading>
       <FlatList data={newsArr} renderItem={({
       item
-    }) => <Box borderBottomWidth="1" _dark={{
+    }) => <Link href={item.newsUrl}>
+      <Box borderBottomWidth="1" _dark={{
       borderColor: "gray.600"
-    }} borderColor="coolGray.200" pl="4" pr="5" py="2">
+    }} borderColor="coolGray.200" py="2">
             <HStack space={3} justifyContent="space-between">
               <Avatar size="48px" source={{
           uri: item.img
         }} />
               <VStack>
-                <Text _dark={{
+                <Text numberOfLines={1} ellipsizeMode='tail' _dark={{
             color: "warmGray.50"
-          }} color="coolGray.800" bold>
+          }} color="coolGray.800" bold >
                   {item.title}
                 </Text>
-              </VStack>
-              <Spacer />
-              <Text fontSize="xs" _dark={{
+                <Text fontSize="xs" _dark={{
           color: "warmGray.50"
-        }} color="coolGray.800" alignSelf="flex-start">
+        }} color="coolGray.800" >
                 {item.time}
               </Text>
+              </VStack>
+              <Spacer />
+              
             </HStack>
-          </Box>} />
+          </Box>
+    </Link>}  />
     </Box>
       )
     }
@@ -152,5 +155,5 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 30,
     fontWeight: 'bold'
-  }
+  },
   });
