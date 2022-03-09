@@ -24,7 +24,7 @@ const LoginComponent = () => {
       }
 
       // axios.get('http://'+IP_address+':5000/usersRouter/find')
-      axios.get('http://192.168.35.37:5000/usersRouter/find')
+      axios.get('http://'+IP_address+':5000/usersRouter/find')
         .then((response) => {
           callback(response.data);
         }).catch(function (error) {

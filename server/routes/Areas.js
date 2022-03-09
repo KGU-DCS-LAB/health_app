@@ -7,11 +7,57 @@ const { Area } = require("../models/Area");
 router.get('/find', function(req, res, next) {
     // 전체 데이터 가져오기
     Area.find().then( (areas) => {
-        // console.log(diseases);
         res.json(areas)
     }).catch( (err) => {
         console.log(err);
         next(err)
+    });
+});
+
+router.get('/getByGroupLevel1/', function(req, res, next) {
+    // const level = req.body.data.level;
+    Area.aggregate([
+        {
+            $group:
+            {
+                _id: "$level1"
+            }
+        }
+    ]).then( (areas) =>{
+        res.json(areas)
+    }).catch( (err) => {
+        console.log(err);
+    });
+});
+
+router.post('/getByGroupLevel2/', function(req, res, next) {
+    const level1 = req.body.data.level;
+    Area.aggregate([
+        { $match : { level1 : level1, 
+            level2: {"$exists": true } }},
+        { $group: { _id: "$level2" }}
+    ])
+    // .equals('level1', level1).select('-_id level1 level2')
+    .then( (areas) =>{
+        console.log(areas);
+        res.json(areas)
+    }).catch( (err) => {
+        console.log(err);
+    });
+});
+
+router.post('/getByGroupLevel3/', function(req, res, next) {
+    const level2 = req.body.data.level;
+    Area.aggregate([
+        { $match : { level2 : level2, 
+            level3: {"$exists": true } }},
+        { $group: { _id: "$level3" }}
+    ])
+    .then( (areas) =>{
+        console.log(areas);
+        res.json(areas)
+    }).catch( (err) => {
+        console.log(err);
     });
 });
 

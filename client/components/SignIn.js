@@ -1,6 +1,6 @@
 import React, { Component, createRef, useState } from "react";
 import { View, StyleSheet, TextInput, TouchableOpacity } from "react-native";
-import { Text, Box, Center, VStack, FormControl, Button, Input, Pressable, Radio, Stack, Icon, NativeBaseProvider, WarningOutlineIcon, Select, InputGroup, CheckIcon, InputRightAddon } from 'native-base';
+import { Text, Box, Center, VStack, FormControl, Button, Input, Pressable, HStack, Radio, Stack, Icon, NativeBaseProvider, WarningOutlineIcon, Select, InputGroup, CheckIcon, InputRightAddon } from 'native-base';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from "@expo/vector-icons";
@@ -19,16 +19,16 @@ export default function SignIn() {
     return (
         <NativeBaseProvider>
             <Center flex={1} px="3">
-                {showSignInComponent ? <SignInComponent 
-                setShowSignInComponent={setShowSignInComponent}
-                setEmail={setUserEmail} 
-                setPassword={setUserPassword} setName={setUserName} setBirthDay={setUserBirthDay}
-                setGender={setUserGender} setResidence={setUserResidence}
-                 /> : null}
+                {showSignInComponent ? <SignInComponent
+                    setShowSignInComponent={setShowSignInComponent}
+                    setEmail={setUserEmail}
+                    setPassword={setUserPassword} setName={setUserName} setBirthDay={setUserBirthDay}
+                    setGender={setUserGender} setResidence={setUserResidence}
+                /> : null}
                 {!showSignInComponent ? <AddDiseaseComponent
-                Email={UserEmail} Password={UserPassword} Name={UserName} BirthDay={UserBirthDay}
-                Gender={UserGender} Residence={UserResidence}
-                 /> : null}
+                    Email={UserEmail} Password={UserPassword} Name={UserName} BirthDay={UserBirthDay}
+                    Gender={UserGender} Residence={UserResidence}
+                /> : null}
             </Center>
         </NativeBaseProvider>
     );
@@ -62,12 +62,12 @@ String.prototype.zf = function (len) { return "0".string(len - this.length) + th
 Number.prototype.zf = function (len) { return this.toString().zf(len); };
 
 
-function AddDiseaseComponent(props) {
+const AddDiseaseComponent = (props) => {
     const navigation = useNavigation();
     const [isRegistraionSuccess, setIsRegistraionSuccess] = useState(false);
 
     const handleSubmitButton = () => {
-        axios.post('http://'+IP_address+':5000/usersRouter/save', {
+        axios.post('http://' + IP_address + ':5000/usersRouter/save', {
             data: {
                 user_id: props.Email,
                 password: props.Password,
@@ -81,11 +81,11 @@ function AddDiseaseComponent(props) {
                 if (response.data.status === 'success') {
                     setIsRegistraionSuccess(true)
                     console.log('Registration Successful. Please Login to proceed');
+                    navigation.navigate('Main');
                 } else if (response.data.status === 'duplicated') {
                     console.log('이미 존재하는 아이디입니다.');
                     alert('이미 존재하는 아이디 또는 이메일입니다.');
                 }
-                navigation.navigate('Main');
             }).catch(function (error) {
                 // 오류발생시 실행
                 console.log(error);
@@ -96,9 +96,9 @@ function AddDiseaseComponent(props) {
         <Center w="100%">
             <Box safeArea p="2" py="8" w="90%" maxW="290">
                 <VStack space={3} mt="5">
-                    <Input placeholder="Search" variant="filled" width="100%" borderRadius="10" py="1" px="2" borderWidth="0" 
+                    <Input placeholder="Search" variant="filled" width="100%" borderRadius="10" py="1" px="2" borderWidth="0"
                         InputLeftElement={<Icon ml="2" size="4" color="gray.400" as={<Ionicons name="ios-search" />} />} />
-                    <View></View> 
+                    <View></View>
                     {/* 질병 리스트 들어옴 */}
                     <Button mt="2" colorScheme="indigo" onPress={handleSubmitButton}>
                         회원가입
@@ -109,7 +109,7 @@ function AddDiseaseComponent(props) {
     )
 }
 
-function SignInComponent(props) {
+const SignInComponent = (props) => {
     const [UserId, setUserId] = useState('');
     const [Domain, setDomain] = useState('')
     const [UserPassword, setUserPassword] = useState('');
@@ -117,7 +117,9 @@ function SignInComponent(props) {
     const [UserName, setUserName] = useState('');
     const [UserBirthDay, setUserBirthDay] = useState(new Date().format('yyyy-MM-dd'));
     const [UserGender, setUserGender] = useState('male');
-    const [UserResidence, setUserResidence] = useState('');
+    const [level1, setLevel1] = useState([]);
+    const [level2, setLevel2] = useState([]);
+    const [level3, setLevel3] = useState([]);
 
     const idInputRef = createRef();
     const passwordInputRef = createRef();
@@ -127,6 +129,27 @@ function SignInComponent(props) {
     const genderputRef = createRef();
 
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+
+    const getResidences = () => {
+        let result2 = [];
+        if(level1.length > 0){
+            return {level1: '', level2:'', level3:''};
+        }
+        axios.get('http://' + IP_address + ':5000/areasRouter/getByGroupLevel1', {
+        })
+            .then((response) => {
+                response.data.forEach((item, idx) => {
+                    result2.push(item._id);
+                });
+                setLevel1(result2);
+            }).catch(function (error) {
+                // 오류발생시 실행
+                console.log(error);
+            });
+        return {level1: '', level2:'', level3:''};
+    }
+
+    const [UserResidence, setUserResidence] = useState(getResidences());
 
     const showDatePicker = () => {
         setDatePickerVisibility(true);
@@ -173,37 +196,82 @@ function SignInComponent(props) {
         }
 
         props.setShowSignInComponent(false);
-        props.setEmail(UserId+'@'+Domain);
+        props.setEmail(UserId + '@' + Domain);
         props.setPassword(UserPassword);
         props.setName(UserName);
         props.setBirthDay(UserBirthDay);
         props.setGender(UserGender);
-        props.setResidence(UserResidence);
+        props.setResidence(UserResidence.level1+' '+UserResidence.level2+' '+UserResidence.level3);
+    }
+
+    const changeLevel1 = (item) => {
+        setUserResidence((prevState) => ({
+            ...prevState,
+            level1: item
+        }));
+        let result2 = [];
+        axios.post('http://' + IP_address + ':5000/areasRouter/getByGroupLevel2', {
+            data: {
+                level: item
+            }
+        })
+            .then((response) => {
+                response.data.forEach((item, idx) => {
+                    result2.push(item._id);
+                });
+                setLevel2(result2);
+            }).catch(function (error) {
+                // 오류발생시 실행
+                console.log(error);
+            });
+    }
+
+    const changeLevel2 = (item) => {
+        setUserResidence((prevState) => ({
+            ...prevState,
+            level2: item
+        }));
+        let result2 = [];
+        axios.post('http://' + IP_address + ':5000/areasRouter/getByGroupLevel3', {
+            data: {
+                level: item
+            }
+        })
+            .then((response) => {
+                response.data.forEach((item, idx) => {
+                    result2.push(item._id);
+                });
+                setLevel3(result2);
+                console.log(result2);
+            }).catch(function (error) {
+                // 오류발생시 실행
+                console.log(error);
+            });
     }
 
     return (
         <Center w="100%">
-            <Box safeArea p="2" py="8" w="90%" maxW="290">
+            <Box safeArea p="2" py="8" w="90%">
                 <VStack space={3} mt="5">
                     <FormControl>
                         <FormControl.Label>이메일</FormControl.Label>
                         <InputGroup>
                             <Input w={{
                                 base: "50%",
-                                md: "100%"
                             }} onChangeText={(userId) => setUserId(userId)}
-                            ref={idInputRef}
-                            returnKeyType="next"
-                            blurOnSubmit={false} />
-                            <InputRightAddon children={"@"} />
+                                ref={idInputRef}
+                                returnKeyType="next"
+                                blurOnSubmit={false} />
+                            <InputRightAddon children={"@"} w={{
+                                    base: "5%",
+                                }} />
                             <Select selectedValue={Domain} accessibilityLabel="Choose Domain" placeholder="Choose Domain" _selectedItem={{
                                 bg: "teal.600",
                                 endIcon: <CheckIcon size="5" />
-                            }}  onValueChange={itemValue => setDomain(itemValue)}
-                            w={{
-                                base: "48%",
-                                md: "100%"
-                            }}>
+                            }} onValueChange={itemValue => setDomain(itemValue)}
+                                w={{
+                                    base: "49%",
+                                }}>
                                 <Select.Item label="google.com" value="google.com" />
                                 <Select.Item label="naver.com" value="naver.com" />
                                 <Select.Item label="daum.net" value="daum.net" />
@@ -252,6 +320,8 @@ function SignInComponent(props) {
                             }
                             blurOnSubmit={false}
                         />
+                    </FormControl>
+                    <FormControl>
                         <Pressable onPress={showDatePicker}>
                             <FormControl.Label>생년월일</FormControl.Label>
                             <Input
@@ -272,6 +342,8 @@ function SignInComponent(props) {
                                 onCancel={hideDatePicker}
                             />
                         </Pressable>
+                    </FormControl>
+                    <FormControl>
                         <FormControl.Label>성별</FormControl.Label>
                         <Radio.Group name="genderGroup" defaultValue="male" accessibilityLabel="pick your gneder"
                             onChange={nextValue => { setUserGender(nextValue); }}
@@ -280,18 +352,53 @@ function SignInComponent(props) {
                                 base: "column",
                                 md: "row"
                             }}
-                                alignItems="center" space={4} w="100%" maxW="300px"
+                                alignItems="center" space={4} w="100%"
                             >
                                 <Radio value="male" my={1} ref={genderputRef}>남자</Radio>
                                 <Radio value="female" my={1}>여자</Radio>
                             </Stack>
                         </Radio.Group>
+                    </FormControl>
+                    <FormControl>
                         <FormControl.Label>거주지</FormControl.Label>
-                        <Input
-                            onChangeText={(UserResidence) => setUserResidence(UserResidence)}
-                            returnKeyType="next"
-                            blurOnSubmit={false}
-                        />
+                        {/* <HStack alignItems="center" space={1} w="100%"> */}
+                        <Select selectedValue={UserResidence.level1} accessibilityLabel="시/도" placeholder="시/도" _selectedItem={{
+                            bg: "teal.600",
+                            endIcon: <CheckIcon size="5" />
+                        }} onValueChange={itemValue => changeLevel1(itemValue)}
+                            w={{
+                                base: "30%",
+                            }}>
+                            {level1.map(level => (
+                                <Select.Item label={level} value={level} />
+                            ))}
+                        </Select>
+                            <Select selectedValue={UserResidence.level2} accessibilityLabel="Choose Domain" placeholder="Choose Domain" _selectedItem={{
+                                bg: "teal.600",
+                                endIcon: <CheckIcon size="5" />
+                            }} onValueChange={itemValue => changeLevel2(itemValue)}
+                                w={{
+                                    base: "30%",
+                                }}>
+                                {level2.map(level => (
+                                    <Select.Item label={level} value={level} />
+                                ))}                            
+                            </Select>
+                            <Select selectedValue={UserResidence.level3} accessibilityLabel="Choose Domain" placeholder="Choose Domain" _selectedItem={{
+                                bg: "teal.600",
+                                endIcon: <CheckIcon size="5" />
+                            }} onValueChange={itemValue => setUserResidence((prevState) => ({
+                                ...prevState,
+                                level3: itemValue
+                              }))}
+                                w={{
+                                    base: "30%",
+                                }}>
+                                {level3.map(level => (
+                                    <Select.Item label={level} value={level} />
+                                ))}   
+                            </Select>
+                        {/* </HStack> */}
                     </FormControl>
                     <Button mt="2" colorScheme="indigo" onPress={handleNextButton}>
                         다음
@@ -301,39 +408,3 @@ function SignInComponent(props) {
         </Center>
     )
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        flexDirection: 'column',
-        // backgroundColor: 'white',
-        alignItems: "center"
-    },
-    titleArea: {
-        flex: 1,
-        justifyContent: 'center',
-        fontSize: 30
-    },
-    formArea: {
-        // flex: 0.5,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    textInput: {
-        marginBottom: 10,
-        fontSize: 16,
-        // color: '#000000',
-        height: 50,
-        width: 300,
-        borderColor: '#000000',
-        borderWidth: 1,
-        borderRadius: 12,
-        padding: 10
-    },
-    btnArea: {
-        justifyContent: 'center',
-        borderWidth: 1,
-        borderRadius: 12,
-        padding: 10
-    }
-});
