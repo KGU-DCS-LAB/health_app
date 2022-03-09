@@ -83,15 +83,6 @@ const WeatherComponent = (props) => {
                         꽃가루농도위험지수(잡초류): {props.state.getWeedsPollenRiskndxV2}
                         감기가능지수: {props.state.getColdIdxV2}
                     </Text>
-                    <HStack alignItems="center" space={4} justifyContent="space-between">
-                        <HStack alignItems="center">
-                            <Text color="coolGray.600" _dark={{
-                                color: "warmGray.200"
-                            }} fontWeight="400">
-                                6 mins ago
-                            </Text>
-                        </HStack>
-                    </HStack>
                 </Stack>
             </Box>
         </Box>
@@ -207,7 +198,7 @@ export default class extends React.Component {
         const mins = today.format('mm');
         let base_time = today.format('HHmm');
         if(parseInt(mins) < 30){
-            base_time = (parseInt(hour)-1) + '59';
+            base_time = (parseInt(hour)-1) + '30';
         }
         const sky_url = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst?serviceKey=" + weatherAPI_KEY + "&pageNo=1&numOfRows=1000&dataType=JSON&base_date=" + base_date + "&base_time=" + base_time + "&nx=" + this.state.x + "&ny=" + this.state.y;
         const temp_url = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst?serviceKey="+weatherAPI_KEY+"&pageNo=1&numOfRows=1000&dataType=JSON&base_date=" + base_date + "&base_time=" + base_time + "&nx=" + this.state.x + "&ny=" + this.state.y;
@@ -216,6 +207,7 @@ export default class extends React.Component {
             .then((response) => {
                 const value = response.data.response.body.items.item[18];
                 this.setState({SKY: value.fcstValue})
+                console.log("1");
             }).catch(function (error) {
                 // 오류발생시 실행
                 console.log(error);

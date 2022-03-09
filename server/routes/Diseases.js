@@ -15,6 +15,17 @@ router.get('/find', function(req, res, next) {
     });
 });
 
+router.post('/findName', function(req, res, next) {
+    // 전체 데이터 가져오기
+    Disease.find({ $text : { $search : req.body.data.keyword } } ).sort( { "_id": 1 }).select('-_id 질병명').then( (diseases) => {
+        console.log(diseases);
+        res.json(diseases)
+    }).catch( (err) => {
+        console.log(err);
+        next(err)
+    });
+});
+
 /* POST 미구현*/
 router.post('/save', function(req, res) {
     console.log(req.body);

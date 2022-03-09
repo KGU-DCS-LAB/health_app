@@ -1,9 +1,9 @@
 import React, { Component, createRef, useState } from "react";
 import { View, StyleSheet, TextInput, TouchableOpacity } from "react-native";
-import { Text, Box, Center, VStack, FormControl, Button, Input, Pressable, HStack, Radio, Stack, Icon, NativeBaseProvider, WarningOutlineIcon, Select, InputGroup, CheckIcon, InputRightAddon } from 'native-base';
+import { Text, Box, Center, VStack, FormControl, Button, Input, Pressable, IconButton, ScrollView, HStack, Radio, Stack, Icon, NativeBaseProvider, WarningOutlineIcon, Select, InputGroup, CheckIcon, InputRightAddon } from 'native-base';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { useNavigation } from '@react-navigation/native';
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, AntDesign } from "@expo/vector-icons";
 import axios from 'axios';
 import { IP_address } from '@env'
 
@@ -65,6 +65,31 @@ Number.prototype.zf = function (len) { return this.toString().zf(len); };
 const AddDiseaseComponent = (props) => {
     const navigation = useNavigation();
     const [isRegistraionSuccess, setIsRegistraionSuccess] = useState(false);
+    const [input, setInput] = useState('');
+
+    const getDiseases = () => {
+        let result = []
+        console.log(diseases);
+        if(diseases.length > 0){
+            return;
+        }
+        axios.post('http://' + IP_address + ':5000/diseasesRouter/findName',{
+            data: {
+                keyword: input
+            }
+        }).then((response) => {
+            response.data.forEach((item, idx) => {
+                console.log(item);
+                result.push(item.질병명);
+            });
+            setDiesases(result);
+        }).catch(function (error) {
+            console.log(error);
+        })
+    }
+
+    const [diseases, setDiesases] = useState([]);
+    getDiseases()
 
     const handleSubmitButton = () => {
         axios.post('http://' + IP_address + ':5000/usersRouter/save', {
@@ -94,12 +119,39 @@ const AddDiseaseComponent = (props) => {
 
     return (
         <Center w="100%">
-            <Box safeArea p="2" py="8" w="90%" maxW="290">
+            <Box safeArea p="2" py="8" w="90%">
                 <VStack space={3} mt="5">
-                    <Input placeholder="Search" variant="filled" width="100%" borderRadius="10" py="1" px="2" borderWidth="0"
-                        InputLeftElement={<Icon ml="2" size="4" color="gray.400" as={<Ionicons name="ios-search" />} />} />
+                    <InputGroup width="100%">
+                        <Input placeholder="Search" variant="filled" width="90%" borderRadius="10" py="1" px="2" borderWidth="0" 
+                            value={input} onChange={(value) => setInput(value)}
+                            InputLeftElement={<Icon ml="2" size="4" color="gray.400" as={<Ionicons name="ios-search" />} />} />
+                        <IconButton colorScheme="indigo" key="outline" variant="outline" w="10%" _icon={{
+                            as: AntDesign,
+                            name: "search1"
+                        }} onPress={getDiseases()} />
+                    </InputGroup>
                     <View></View>
-                    {/* 질병 리스트 들어옴 */}
+                    <ScrollView w="100%" h="70%" _contentContainerStyle={{
+                        px: "20px",
+                        mb: "4",
+                        minW: "72"
+                    }}>
+                        
+                        {/* <VStack space={2}>
+                            {diseases.map((item, itemI) => <HStack w="100%" justifyContent="space-between" alignItems="center" key={item.title + itemI.toString()}>
+                                <Checkbox isChecked={item.isCompleted} onChange={() => handleStatusChange(itemI)} value={item.title}>
+                                    <Text mx="2" strikeThrough={item.isCompleted} _light={{
+                                        color: item.isCompleted ? "gray.400" : "coolGray.800"
+                                    }} _dark={{
+                                        color: item.isCompleted ? "gray.400" : "coolGray.50"
+                                    }}>
+                                        {item.title}
+                                    </Text>
+                                </Checkbox>
+                                <IconButton size="sm" colorScheme="trueGray" icon={<Icon as={Entypo} name="minus" size="xs" color="trueGray.400" />} onPress={() => handleDelete(itemI)} />
+                            </HStack>)}
+                        </VStack> */}
+                    </ScrollView>
                     <Button mt="2" colorScheme="indigo" onPress={handleSubmitButton}>
                         회원가입
                     </Button>
@@ -132,8 +184,8 @@ const SignInComponent = (props) => {
 
     const getResidences = () => {
         let result2 = [];
-        if(level1.length > 0){
-            return {level1: '', level2:'', level3:''};
+        if (level1.length > 0) {
+            return { level1: '', level2: '', level3: '' };
         }
         axios.get('http://' + IP_address + ':5000/areasRouter/getByGroupLevel1', {
         })
@@ -146,7 +198,7 @@ const SignInComponent = (props) => {
                 // 오류발생시 실행
                 console.log(error);
             });
-        return {level1: '', level2:'', level3:''};
+        return { level1: '', level2: '', level3: '' };
     }
 
     const [UserResidence, setUserResidence] = useState(getResidences());
@@ -166,34 +218,34 @@ const SignInComponent = (props) => {
 
     const handleNextButton = () => {
         const today = new Date().format('yyyy-MM-dd');
-        if (!UserId || !Domain) {
-            alert('아이디를 입력해주세요.');
-            return;
-        }
-        if (!UserPassword) {
-            alert('비밀번호를 입력해주세요.');
-            return;
-        }
-        if (UserPassword !== UserPasswordchk) {
-            alert('비밀번호가 일치하지 않습니다.');
-            return;
-        }
-        if (!UserName) {
-            alert('이름을 입력해주세요.');
-            return;
-        }
-        if (UserBirthDay === today) {
-            alert('생년월일을 입력해주세요.');
-            return;
-        }
-        if (!UserGender) {
-            alert('성별을 입력해주세요.');
-            return;
-        }
-        if (!UserResidence) {
-            alert('거주지 입력해주세요.');
-            return;
-        }
+        // if (!UserId || !Domain) {
+        //     alert('아이디를 입력해주세요.');
+        //     return;
+        // }
+        // if (!UserPassword) {
+        //     alert('비밀번호를 입력해주세요.');
+        //     return;
+        // }
+        // if (UserPassword !== UserPasswordchk) {
+        //     alert('비밀번호가 일치하지 않습니다.');
+        //     return;
+        // }
+        // if (!UserName) {
+        //     alert('이름을 입력해주세요.');
+        //     return;
+        // }
+        // if (UserBirthDay === today) {
+        //     alert('생년월일을 입력해주세요.');
+        //     return;
+        // }
+        // if (!UserGender) {
+        //     alert('성별을 입력해주세요.');
+        //     return;
+        // }
+        // if (!UserResidence) {
+        //     alert('거주지 입력해주세요.');
+        //     return;
+        // }
 
         props.setShowSignInComponent(false);
         props.setEmail(UserId + '@' + Domain);
@@ -201,7 +253,7 @@ const SignInComponent = (props) => {
         props.setName(UserName);
         props.setBirthDay(UserBirthDay);
         props.setGender(UserGender);
-        props.setResidence(UserResidence.level1+' '+UserResidence.level2+' '+UserResidence.level3);
+        props.setResidence(UserResidence.level1 + ' ' + UserResidence.level2 + ' ' + UserResidence.level3);
     }
 
     const changeLevel1 = (item) => {
@@ -263,8 +315,8 @@ const SignInComponent = (props) => {
                                 returnKeyType="next"
                                 blurOnSubmit={false} />
                             <InputRightAddon children={"@"} w={{
-                                    base: "5%",
-                                }} />
+                                base: "5%",
+                            }} />
                             <Select selectedValue={Domain} accessibilityLabel="Choose Domain" placeholder="Choose Domain" _selectedItem={{
                                 bg: "teal.600",
                                 endIcon: <CheckIcon size="5" />
@@ -373,31 +425,31 @@ const SignInComponent = (props) => {
                                 <Select.Item label={level} value={level} />
                             ))}
                         </Select>
-                            <Select selectedValue={UserResidence.level2} accessibilityLabel="Choose Domain" placeholder="Choose Domain" _selectedItem={{
-                                bg: "teal.600",
-                                endIcon: <CheckIcon size="5" />
-                            }} onValueChange={itemValue => changeLevel2(itemValue)}
-                                w={{
-                                    base: "30%",
-                                }}>
-                                {level2.map(level => (
-                                    <Select.Item label={level} value={level} />
-                                ))}                            
-                            </Select>
-                            <Select selectedValue={UserResidence.level3} accessibilityLabel="Choose Domain" placeholder="Choose Domain" _selectedItem={{
-                                bg: "teal.600",
-                                endIcon: <CheckIcon size="5" />
-                            }} onValueChange={itemValue => setUserResidence((prevState) => ({
-                                ...prevState,
-                                level3: itemValue
-                              }))}
-                                w={{
-                                    base: "30%",
-                                }}>
-                                {level3.map(level => (
-                                    <Select.Item label={level} value={level} />
-                                ))}   
-                            </Select>
+                        <Select selectedValue={UserResidence.level2} accessibilityLabel="Choose Domain" placeholder="Choose Domain" _selectedItem={{
+                            bg: "teal.600",
+                            endIcon: <CheckIcon size="5" />
+                        }} onValueChange={itemValue => changeLevel2(itemValue)}
+                            w={{
+                                base: "30%",
+                            }}>
+                            {level2.map(level => (
+                                <Select.Item label={level} value={level} />
+                            ))}
+                        </Select>
+                        <Select selectedValue={UserResidence.level3} accessibilityLabel="Choose Domain" placeholder="Choose Domain" _selectedItem={{
+                            bg: "teal.600",
+                            endIcon: <CheckIcon size="5" />
+                        }} onValueChange={itemValue => setUserResidence((prevState) => ({
+                            ...prevState,
+                            level3: itemValue
+                        }))}
+                            w={{
+                                base: "30%",
+                            }}>
+                            {level3.map(level => (
+                                <Select.Item label={level} value={level} />
+                            ))}
+                        </Select>
                         {/* </HStack> */}
                     </FormControl>
                     <Button mt="2" colorScheme="indigo" onPress={handleNextButton}>

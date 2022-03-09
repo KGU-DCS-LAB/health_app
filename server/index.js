@@ -11,10 +11,10 @@ const diseasesRouter = require('./routes/Diseases');
 const areasRouter = require('./routes/Areas');
 
 //application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({limit: "100mb", extended: true, parameterLimit: 50000}));
 
 //application/json
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: "100mb"}));
 
 const mongoose = require('mongoose');
 
