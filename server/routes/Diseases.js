@@ -15,10 +15,10 @@ router.get('/find', function(req, res, next) {
     });
 });
 
-router.post('/findName', function(req, res, next) {
+router.get('/findName', function(req, res, next) {
     // 전체 데이터 가져오기
-    Disease.find({ $text : { $search : req.body.data.keyword } } ).sort( { "_id": 1 }).select('-_id 질병명').then( (diseases) => {
-        console.log(diseases);
+    // Disease.find({ $text : { $search : req.body.data.keyword } } ).sort( { "_id": 1 }).select('-_id 질병명').then( (diseases) => {
+    Disease.find().select('-_id 번호 질병명 동의어').then( (diseases) => {
         res.json(diseases)
     }).catch( (err) => {
         console.log(err);

@@ -1,9 +1,9 @@
 import React, { Component, createRef, useState } from "react";
 import { View, StyleSheet, TextInput, TouchableOpacity } from "react-native";
-import { Text, Box, Center, VStack, FormControl, Button, Input, Pressable, IconButton, ScrollView, HStack, Radio, Stack, Icon, NativeBaseProvider, WarningOutlineIcon, Select, InputGroup, CheckIcon, InputRightAddon } from 'native-base';
+import { Text, Box, Center, VStack, FormControl, Spinner, Heading, Button, Input, Checkbox, Pressable, IconButton, ScrollView, HStack, Radio, Stack, Icon, NativeBaseProvider, WarningOutlineIcon, Select, InputGroup, CheckIcon, InputRightAddon } from 'native-base';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { useNavigation } from '@react-navigation/native';
-import { Ionicons, AntDesign } from "@expo/vector-icons";
+import { Ionicons, AntDesign, Entypo } from "@expo/vector-icons";
 import axios from 'axios';
 import { IP_address } from '@env'
 
@@ -61,35 +61,39 @@ String.prototype.string = function (len) { var s = '', i = 0; while (i++ < len) 
 String.prototype.zf = function (len) { return "0".string(len - this.length) + this; };
 Number.prototype.zf = function (len) { return this.toString().zf(len); };
 
-
 const AddDiseaseComponent = (props) => {
     const navigation = useNavigation();
     const [isRegistraionSuccess, setIsRegistraionSuccess] = useState(false);
     const [input, setInput] = useState('');
+    const [diseases, setDiseases] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     const getDiseases = () => {
         let result = []
-        console.log(diseases);
         if(diseases.length > 0){
             return;
         }
-        axios.post('http://' + IP_address + ':5000/diseasesRouter/findName',{
-            data: {
-                keyword: input
-            }
+        axios.get('http://' + IP_address + ':5000/diseasesRouter/findName',{
         }).then((response) => {
             response.data.forEach((item, idx) => {
-                console.log(item);
-                result.push(item.질병명);
+                const disease = {num: item.번호, name: item.질병명, checked: false}
+                result.push(disease);
             });
-            setDiesases(result);
+            setDiseases(result);
         }).catch(function (error) {
             console.log(error);
         })
     }
 
-    const [diseases, setDiesases] = useState([]);
-    getDiseases()
+    const handleStatusChange = (index) => {
+        setIsLoading(true);
+        const temp = diseases.map((item, itemI) => item.num !== index ? item : {
+            ...item,
+            checked: !item.checked
+        });
+        setDiseases(temp);
+        setIsLoading(false);
+    };
 
     const handleSubmitButton = () => {
         axios.post('http://' + IP_address + ':5000/usersRouter/save', {
@@ -117,6 +121,8 @@ const AddDiseaseComponent = (props) => {
             });
     }
 
+    getDiseases();
+
     return (
         <Center w="100%">
             <Box safeArea p="2" py="8" w="90%">
@@ -136,21 +142,30 @@ const AddDiseaseComponent = (props) => {
                         mb: "4",
                         minW: "72"
                     }}>
-                        
-                        {/* <VStack space={2}>
-                            {diseases.map((item, itemI) => <HStack w="100%" justifyContent="space-between" alignItems="center" key={item.title + itemI.toString()}>
-                                <Checkbox isChecked={item.isCompleted} onChange={() => handleStatusChange(itemI)} value={item.title}>
-                                    <Text mx="2" strikeThrough={item.isCompleted} _light={{
-                                        color: item.isCompleted ? "gray.400" : "coolGray.800"
-                                    }} _dark={{
-                                        color: item.isCompleted ? "gray.400" : "coolGray.50"
-                                    }}>
-                                        {item.title}
-                                    </Text>
-                                </Checkbox>
-                                <IconButton size="sm" colorScheme="trueGray" icon={<Icon as={Entypo} name="minus" size="xs" color="trueGray.400" />} onPress={() => handleDelete(itemI)} />
-                            </HStack>)}
-                        </VStack> */}
+                        {isLoading ?
+                            <HStack space={2} justifyContent="center">
+                                <Spinner accessibilityLabel="Loading posts" />
+                                <Heading color="primary.500" fontSize="md">
+                                    Loading
+                                </Heading>
+                            </HStack>
+                            :
+                            <VStack space={2}>
+                                {diseases.map((item, itemI) => 
+                                    <HStack w="100%" justifyContent="space-between" alignItems="center" key={item.num}>
+                                        <Checkbox isChecked={item.checked} onChange={() => handleStatusChange(item.num)} value={item.name}>
+                                            <Text mx="2" strikeThrough={item.checked} _light={{
+                                                color: item.checked ? "gray.400" : "coolGray.800"
+                                            }} _dark={{
+                                                color: item.checked ? "gray.400" : "coolGray.50"
+                                            }}>
+                                                {item.name}
+                                            </Text>
+                                        </Checkbox>
+                                    </HStack>
+                                ) }
+                            </VStack>
+                        }
                     </ScrollView>
                     <Button mt="2" colorScheme="indigo" onPress={handleSubmitButton}>
                         회원가입
@@ -294,7 +309,6 @@ const SignInComponent = (props) => {
                     result2.push(item._id);
                 });
                 setLevel3(result2);
-                console.log(result2);
             }).catch(function (error) {
                 // 오류발생시 실행
                 console.log(error);
