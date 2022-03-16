@@ -1,7 +1,6 @@
 import React, { useState, Component } from "react";
 import { View, Heading, Box, Center, VStack, HStack,  Button, Image, Stack, Avatar, Spacer, Link } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
-import { Alert } from 'react-native';
 import axios from 'axios';
 import { StyleSheet, FlatList, Text } from 'react-native';
 
@@ -56,7 +55,7 @@ export default function NewsComponent(){
 
     const setShowNews = () => {
        // axios.get('http://'+IP_address+':5000/usersRouter/find')
-        axios.get('http://192.168.35.37:5000/newsRouter/news')
+        axios.get('http://'+IP_address+':5000/newsRouter/news')
         .then((res) => {
           callback(res.data);
         }).catch(function (error) {

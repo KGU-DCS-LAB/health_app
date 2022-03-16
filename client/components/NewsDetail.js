@@ -4,7 +4,6 @@ import { useNavigation } from '@react-navigation/native';
 
 export default class MyWeb extends Component {
   render() {
-    const { navigation } = this.props;
     this.state = {
         url: this.props.route.params.url,
     };
