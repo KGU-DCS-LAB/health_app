@@ -8,6 +8,7 @@ import FindPW from './components/FindPW';
 import Main from './components/Main';
 import ChangePW from './components/ChangePW';
 import NewsDetail from './components/NewsDetail';
+import ChatBot from './components/ChatBot';
 import { Button } from 'react-native';
 import ModalDropdown from 'react-native-modal-dropdown';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -64,6 +65,11 @@ export default function App() {
             <Icon name={bookmark} size={30} color="#4F8EF7" onPress={() => changeBookmark()}/>
         ),
     }}
+        />
+
+        <Stack.Screen
+          name='ChatBot'
+          component={ChatBot}
         />
       </Stack.Navigator>
     </NavigationContainer>

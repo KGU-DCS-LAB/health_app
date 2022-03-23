@@ -1,0 +1,86 @@
+import React, {useState, useEffect, useCallback} from "react";
+import { GiftedChat } from 'react-native-gifted-chat'
+import { View, Text, Alert, VStack, HStack, Box, NativeBaseProvider } from "native-base";
+import { Dimensions } from 'react-native';
+
+const {height, width} = Dimensions.get("window")
+
+const ChatScreen = () => {
+    const [messages, setMessages] = useState([]);
+
+    useEffect(() => {
+        setMessages([
+            {
+                _id: 1,
+                text: '안녕하세요! 질병 유추 챗봇입니다. \n 증상을 입력해주시면 증상을 통해 가장 유사한 질병을 유추해드립니다. \n 이 기능은 통계를 통한 예측임으로 정확한 진단은 병원을 통해 확인하시길 바랍니다.',
+                createdAt: new Date(),
+                user: {
+                    _id: 2,
+                    name: 'React Native',
+                    avatar: 'https://placeimg.com/140/140/animals',
+                },
+            },
+        ])
+    }, [])
+
+    const onSend = useCallback((messages = []) => {
+        // console.log('previousMessages: ',previousMessages)
+        console.log('messages: ', messages[0].text)
+        setMessages(previousMessages => GiftedChat.append(previousMessages, messages))
+    }, [])
+    
+    return (
+        <View style={{ flex: 1}}>
+            <GiftedChat
+                    placeholder={'메세지를 입력하세요...'}
+                    alwaysShowSend={true}
+                    messages={messages}
+                    textInputProps={{ keyboardAppearance: 'dark', autoCorrect: false }}
+                    onSend={messages => onSend(messages)}
+                    user={{
+                        _id: 1,
+                    }}
+                />
+            {/* <VStack>
+                <Alert w="90%" maxW="400" status="info" colorScheme="info">
+                    <VStack space={2} flexShrink={1} w="100%">
+                        <HStack flexShrink={1} space={2} alignItems="center" justifyContent="space-between">
+                            <HStack flexShrink={1} space={2} alignItems="center">
+                                <Alert.Icon />
+                                <Text fontSize="md" fontWeight="medium" color="coolGray.800">
+                                    We are going live in July!
+                                </Text>
+                            </HStack>
+                        </HStack>
+                        <Box pl="6" _text={{
+                            color: "coolGray.600"
+                        }}>
+                            We are happy to announce that we are going live on July 28th. Get
+                            ready!
+                        </Box>
+                    </VStack>
+                </Alert>
+                <GiftedChat
+                    placeholder={'메세지를 입력하세요...'}
+                    alwaysShowSend={true}
+                    messages={messages}
+                    textInputProps={{ keyboardAppearance: 'dark', autoCorrect: false }}
+                    onSend={messages => onSend(messages)}
+                    user={{
+                        _id: 1,
+                    }}
+                />
+            </VStack> */}
+        </View>
+    )
+}
+
+export default class extends React.Component {
+    render() {
+        return (
+        <NativeBaseProvider>
+            <ChatScreen />
+        </NativeBaseProvider>
+        );
+    }
+}
