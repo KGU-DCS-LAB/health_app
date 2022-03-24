@@ -26,17 +26,20 @@ const ChatScreen = () => {
     }, [])
 
     const onSend = useCallback((messages = []) => {
-        console.log('messages: ', messages)
+        const query = messages[0].text + '';
+        console.log('messages: ', query)
         setMessages(previousMessages => GiftedChat.append(previousMessages, messages))
-        axios.post('http://' + IP_address + ':5000/chatbotRouter/getAnswer', {
+        axios.post('http://'+IP_address+':5000/chatbotRouter/getAnswer', {
             data: {
-                query: messages[0].text
+                query: query
             }
         }).then((response) => {
+            const text = response.data.message + '';
+            console.log(response.data);
             setMessages(previousMessages => GiftedChat.append(previousMessages, [
                 {
                     _id: Math.round(Math.random() * 1000),
-                    text: response.data.message,
+                    text: text,
                     createdAt: new Date(),
                     user: {
                         _id: 2,

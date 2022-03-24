@@ -50,7 +50,7 @@ async function detectIntent(
     return responses[0];
 }
 
-async function executeQueries(projectId, sessionId, query, languageCode) {
+async function executeQueries(projectId, sessionId, query, languageCode, callback) {
     // Keeping the context across queries let's us simulate an ongoing conversation with the bot
     let context;
     let intentResponse;
@@ -72,6 +72,7 @@ async function executeQueries(projectId, sessionId, query, languageCode) {
     } catch (error) {
         console.log(error);
     }
+    callback(intentResponse.queryResult.fulfillmentText);
     return intentResponse.queryResult.fulfillmentText;
 }
 
@@ -79,8 +80,12 @@ router.post('/getAnswer', function(req, res) {
     const query = req.body.data.query;
     console.log("query: ", query);
     // 데이터 저장
-    const message = executeQueries(projectId, sessionId, query, languageCode);
-    return res.json({message: message})
+    let message = '';
+    executeQueries(projectId, sessionId, query, languageCode, function(result){
+        message = result;
+        console.log("message: ", message);
+        return res.json({message: message});
+    });
 });
 
 module.exports = router;
