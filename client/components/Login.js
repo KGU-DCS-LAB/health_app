@@ -3,7 +3,8 @@ import { Heading, Box, Center, VStack,HStack,  FormControl, Link, Button, Native
 import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
 import axios from 'axios';
-import { IP_address } from '@env';
+const IP_address = process.env.IP_address
+// import { IP_address } from '@env';
 
 const LoginComponent = () => {
     const navigation = useNavigation(); 

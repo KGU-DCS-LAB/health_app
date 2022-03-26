@@ -1,21 +1,24 @@
-import React, { useState, Component } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Heading, Box, Center, VStack, HStack,  Button, Image, Stack, Avatar, Spacer, Link } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import { StyleSheet, FlatList, Text } from 'react-native';
+const IP_address = process.env.IP_address
+import AppLoading from "expo-app-loading";
 
 export default function NewsComponent(){
-  const navigation = useNavigation(); 
+    const navigation = useNavigation(); 
     const user = "ellie5508"
     
     const [dataArr, setDataArr] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const callback = (data) => {
       setDataArr(data);
     }
 
     let newsArr = Object.values(dataArr).map(news => news);
-
+  
     function display(){
       return(
     <Box mt="3">
@@ -50,20 +53,35 @@ export default function NewsComponent(){
     </Box>
       )
     }
+  
     // console.log(Object.values(dataArr).map(news => (news.time)));
 
-
-    const setShowNews = () => {
-       // axios.get('http://'+IP_address+':5000/usersRouter/find')
-        axios.get('http://'+IP_address+':5000/newsRouter/news')
-        .then((res) => {
-          callback(res.data);
-        }).catch(function (error) {
-          console.log(error);
-      });
+    const setShowNews = async () => {
+      try{
+        const response = await axios.get('http://'+IP_address+':5000/newsRouter/news')
+        callback(response.data);
+        setLoading(true);
+      } catch(err) {
+        console.log(err);
+      }
     }
 
+    // const setShowNews = () => {
+    //    // axios.get('http://'+IP_address+':5000/usersRouter/find')
+    //     axios.get('http://'+IP_address+':5000/newsRouter/news')
+    //     .then((res) => {
+    //       callback(res.data);
+    //     }).catch(function (error) {
+    //       console.log(error);
+    //   });
+    // }
+
+    useEffect(() => {
+      setShowNews();
+    }, []);
+
   return <Center w="100%">
+  <AppLoading />
       <Box safeArea p="1" w="100%" maxW="290" py="8">
       <View style={{borderBottomColor: 'black', borderBottomWidth: 3,}}/>
         <Heading mt='5' size="sm" color="coolGray.800" _dark={{

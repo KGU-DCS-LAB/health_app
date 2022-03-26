@@ -18,12 +18,6 @@ const Stack = createStackNavigator();
 
 export default function App() {
 
-  const [bookmark, setBookmark] = useState('bookmark-outline')
-
-  const changeBookmark = () => {
-    setBookmark('bookmark')
-  }
-
   return (
     <NavigationContainer>
       <Stack.Navigator  initialRouteName='Home'>
@@ -60,11 +54,6 @@ export default function App() {
         <Stack.Screen
           name='NewsDetail'
           component={NewsDetail}
-          options={{
-          headerRight: () => (
-            <Icon name={bookmark} size={30} color="#4F8EF7" onPress={() => changeBookmark()}/>
-        ),
-    }}
         />
 
         <Stack.Screen
