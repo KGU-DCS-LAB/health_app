@@ -66,15 +66,6 @@ export default function NewsComponent(){
       }
     }
 
-    // const setShowNews = () => {
-    //    // axios.get('http://'+IP_address+':5000/usersRouter/find')
-    //     axios.get('http://'+IP_address+':5000/newsRouter/news')
-    //     .then((res) => {
-    //       callback(res.data);
-    //     }).catch(function (error) {
-    //       console.log(error);
-    //   });
-    // }
 
     useEffect(() => {
       setShowNews();
@@ -116,25 +107,6 @@ export default function NewsComponent(){
       </Box>
     </Center>
 }
-
-// class SwiperComponent extends Component {
-//     render() {
-//       return (
-//         <Swiper showsButtons={true}>
-//           <View style={styles.slide1}>
-//             <Text style={styles.text}>Hello Swiper</Text>
-//           </View>
-//           <View style={styles.slide2}>
-//             <Text style={styles.text}>Beautiful</Text>
-//           </View>
-//           <View style={styles.slide3}>
-//             <Text style={styles.text}>And simple</Text>
-//           </View>
-//         </Swiper>
-//       )
-//     }
-//   }
-//   AppRegistry.registerComponent('myproject', () => SwiperComponent)
 
 const styles = StyleSheet.create({
     catSelectBtn: {
