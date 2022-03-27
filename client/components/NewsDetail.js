@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { WebView } from 'react-native-webview';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { View, Modal, Button, NativeBaseProvider} from 'native-base';
+import { View, Modal, Button, NativeBaseProvider ,Input } from 'native-base';
 
 
 export default class MyWeb extends Component {
@@ -43,6 +43,9 @@ export default class MyWeb extends Component {
           <Modal.CloseButton />
           <Modal.Header>북마크 저장하기</Modal.Header>
           <Modal.Body>
+            <Button>
+              북마크 추가하기
+            </Button>
           </Modal.Body>
           <Modal.Footer>
             
