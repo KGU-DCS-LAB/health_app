@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { WebView } from 'react-native-webview';
 import { useNavigation } from '@react-navigation/native';
-import { View } from 'react-native'
+import { View, Alert } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons';
 
 
@@ -20,12 +20,14 @@ export default class MyWeb extends Component {
     this.setState({
       bookmark : 'bookmark'
     })
+    Alert.alert('저장되었습니다.')
   }
 
   handleBookmarkOut(){
     this.setState({
       bookmark : 'bookmark-outline'
     })
+    Alert.alert('북마크 취소')
   }
 
   render() {

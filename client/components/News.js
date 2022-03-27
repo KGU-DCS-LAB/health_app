@@ -65,14 +65,18 @@ export default function NewsComponent(){
         console.log(err);
       }
     }
+    const onFinish = () => setLoading(false);
 
-
-    useEffect(() => {
-      setShowNews();
-    }, []);
+    // useEffect(() => {
+    //   setShowNews();
+    // }, []);
 
   return <Center w="100%">
-  <AppLoading />
+  <AppLoading
+        startAsync={setShowNews}
+        onError={console.warn}
+        onFinish={onFinish}
+      />
       <Box safeArea p="1" w="100%" maxW="290" py="8">
       <View style={{borderBottomColor: 'black', borderBottomWidth: 3,}}/>
         <Heading mt='5' size="sm" color="coolGray.800" _dark={{
