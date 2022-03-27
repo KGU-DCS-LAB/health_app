@@ -1,8 +1,10 @@
-import React, { useState,createRef } from "react";
+import React, { useState,createRef, useEffect } from "react";
 import { Heading, Box, Center, VStack,HStack,  FormControl, Link, Button, NativeBaseProvider, Input,  Select, InputGroup, CheckIcon, InputRightAddon } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
 import axios from 'axios';
+import AsyncStorage  from "@react-native-async-storage/async-storage";
+
 const IP_address = process.env.IP_address
 // import { IP_address } from '@env';
 
@@ -13,14 +15,33 @@ const LoginComponent = () => {
     const [domain, setDomain] = useState('')
     const idInputRef = createRef();
 
+    
+    useEffect(() => {
+      getData();
+    }, [])
+
+    const getData = () =>{
+      try{
+        AsyncStorage.getItem('UserId')
+        .then(value => {
+          if(value != null){
+            navigation.navigate('Main')
+          }
+        }
+        )
+      } catch(error){
+        console.log(error);
+      }
+    }
+
     const userLogin = () => {
       let userEmail = UserId + "@" + domain;
 
-      const callback = (arr) => {
+      const callback = async (arr) => {
           if(arr.find(x => x.user_id === userEmail && x.password == UserPassword) == null){
             Alert.alert('이메일 또는 비밀번호가 잘못 입력되었습니다.');
           } else {
-            navigation.navigate('Main')
+            setDate();
           }
       }
 
@@ -32,6 +53,16 @@ const LoginComponent = () => {
           console.log(error);
       });
   };
+
+  const setDate = async () => {
+      try{
+        await AsyncStorage.setItem('UserId', UserId);
+        navigation.navigate('Main')
+      } catch(error){
+        console.log(error);
+      }
+    
+}
 
     return <Center w="100%">
         <Box safeArea p="2" py="8" w="90%" maxW="290">

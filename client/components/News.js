@@ -2,13 +2,33 @@ import React, { useState, useEffect } from "react";
 import { View, Heading, Box, Center, VStack, HStack,  Button, Image, Stack, Avatar, Spacer, Link } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
-import { StyleSheet, FlatList, Text } from 'react-native';
+import { StyleSheet, FlatList, Text, Alert } from 'react-native';
 const IP_address = process.env.IP_address
 import AppLoading from "expo-app-loading";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function NewsComponent(){
     const navigation = useNavigation(); 
-    const user = "ellie5508"
+    const [user, setUser] = useState('')
+    // const user = "ellie5508"
+
+    useEffect(() => {
+      getData();
+    }, [])
+
+    const getData = () =>{
+      try{
+        AsyncStorage.getItem('UserId')
+        .then(value => {
+          if(value != null){
+            setUser(value);
+          }
+        }
+        )
+      } catch(error){
+        console.log(error);
+      }
+    }
     
     const [dataArr, setDataArr] = useState('');
     const [loading, setLoading] = useState(false);

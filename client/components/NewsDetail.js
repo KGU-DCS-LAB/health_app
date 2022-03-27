@@ -12,7 +12,7 @@ export default class MyWeb extends Component {
     this.handleBookmarkOut = this.handleBookmarkOut.bind(this);
   this.state={
     url: this.props.route.params.url,
-    bookmark: 'bookmark-outline'
+    bookmark: 'bookmark'
    }
   }
 
@@ -20,14 +20,14 @@ export default class MyWeb extends Component {
     this.setState({
       bookmark : 'bookmark'
     })
-    Alert.alert('저장되었습니다.')
+    Alert.alert('북마크 취소')
   }
 
   handleBookmarkOut(){
     this.setState({
       bookmark : 'bookmark-outline'
     })
-    Alert.alert('북마크 취소')
+    Alert.alert('저장되었습니다.')
   }
 
   render() {

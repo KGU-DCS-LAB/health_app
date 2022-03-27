@@ -9,10 +9,6 @@ import Main from './components/Main';
 import ChangePW from './components/ChangePW';
 import NewsDetail from './components/NewsDetail';
 import ChatBot from './components/ChatBot';
-import { Button } from 'react-native';
-import ModalDropdown from 'react-native-modal-dropdown';
-import DropDownPicker from 'react-native-dropdown-picker';
-import Icon from 'react-native-vector-icons/Ionicons';
 
 const Stack = createStackNavigator();
 
