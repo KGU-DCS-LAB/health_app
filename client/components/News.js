@@ -87,10 +87,6 @@ export default function NewsComponent(){
     }
     const onFinish = () => setLoading(false);
 
-    // useEffect(() => {
-    //   setShowNews();
-    // }, []);
-
   return <Center w="100%">
   <AppLoading
         startAsync={setShowNews}
