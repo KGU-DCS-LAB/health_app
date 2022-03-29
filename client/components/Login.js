@@ -21,10 +21,8 @@ const LoginComponent = () => {
     }, [])
 
     const getData = () =>{
-      AsyncStorage.clear()
       try{
         AsyncStorage.getItem('userInfo')
-        // AsyncStorage.getItem('UserId')
         .then(value => {
           if(value != null){
             navigation.navigate('Main')
@@ -43,7 +41,6 @@ const LoginComponent = () => {
           if(user == null){
             Alert.alert('이메일 또는 비밀번호가 잘못 입력되었습니다.');
           } else {
-            // console.log("x",user);
             setDate(user);
           }
       }
@@ -59,7 +56,6 @@ const LoginComponent = () => {
 
   const setDate = async (user) => {
       try{
-        // await AsyncStorage.setItem('UserId', UserId);
         console.log(user);
         await AsyncStorage.setItem('userInfo', JSON.stringify(user), () => {
           console.log(JSON.stringify(user));

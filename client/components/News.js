@@ -10,7 +10,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function NewsComponent(){
     const navigation = useNavigation(); 
     const [user, setUser] = useState('')
-    // const user = "ellie5508"
 
     useEffect(() => {
       getData();
@@ -21,7 +20,6 @@ export default function NewsComponent(){
         AsyncStorage.getItem('userInfo')
         .then(value => {
           if(value != null){
-            // setUser(value)
             const UserInfo = JSON.parse(value);
             setUser(UserInfo.user_name);
           }
