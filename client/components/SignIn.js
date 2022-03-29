@@ -6,6 +6,9 @@ import { useNavigation } from '@react-navigation/native';
 import { Ionicons, AntDesign, Entypo } from "@expo/vector-icons";
 import axios from 'axios';
 import { IP_address } from '@env'
+import {LogBox} from 'react-native';
+
+LogBox.ignoreLogs(['NativeBase:']);
 
 export default function SignIn() {
     const [showSignInComponent, setShowSignInComponent] = useState(true);
