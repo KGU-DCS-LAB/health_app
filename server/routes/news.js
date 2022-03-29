@@ -45,7 +45,7 @@ router.get('/news', function(req,res) {
                   newsUrl: $(node).find(".news_tit").attr("href")
               })
           });
-          console.log(news);
+        //   console.log(news);
           return res.json(news);
       }
       getHTML('코로나');

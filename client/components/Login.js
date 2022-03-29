@@ -5,8 +5,8 @@ import { Alert } from 'react-native';
 import axios from 'axios';
 import AsyncStorage  from "@react-native-async-storage/async-storage";
 
-const IP_address = process.env.IP_address
-// import { IP_address } from '@env';
+// const IP_address = process.env.IP_address
+import { IP_address } from '@env';
 
 const LoginComponent = () => {
     const navigation = useNavigation(); 
@@ -22,13 +22,12 @@ const LoginComponent = () => {
 
     const getData = () =>{
       try{
-        AsyncStorage.getItem('UserId')
+        AsyncStorage.getItem('userInfo')
         .then(value => {
           if(value != null){
             navigation.navigate('Main')
           }
-        }
-        )
+        })
       } catch(error){
         console.log(error);
       }
@@ -38,10 +37,11 @@ const LoginComponent = () => {
       let userEmail = UserId + "@" + domain;
 
       const callback = async (arr) => {
-          if(arr.find(x => x.user_id === userEmail && x.password == UserPassword) == null){
+        const user = arr.find(x => x.user_id === userEmail && x.password == UserPassword)
+          if(user == null){
             Alert.alert('이메일 또는 비밀번호가 잘못 입력되었습니다.');
           } else {
-            setDate();
+            setDate(user);
           }
       }
 
@@ -54,9 +54,13 @@ const LoginComponent = () => {
       });
   };
 
-  const setDate = async () => {
+  const setDate = async (user) => {
       try{
-        await AsyncStorage.setItem('UserId', UserId);
+        console.log(user);
+        await AsyncStorage.setItem('userInfo', JSON.stringify(user), () => {
+          console.log(JSON.stringify(user));
+          console.log('유저정보 저장 완료')
+        });
         navigation.navigate('Main')
       } catch(error){
         console.log(error);

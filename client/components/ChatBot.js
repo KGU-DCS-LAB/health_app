@@ -2,7 +2,7 @@ import React, {useState, useEffect, useCallback} from "react";
 import { GiftedChat } from 'react-native-gifted-chat'
 import { View, Text, Alert, VStack, HStack, Box, NativeBaseProvider } from "native-base";
 import { Dimensions } from 'react-native';
-import { IP_address } from '@env';
+const IP_address = process.env.IP_address
 import axios from 'axios';
 
 const {height, width} = Dimensions.get("window")

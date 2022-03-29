@@ -10,7 +10,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function NewsComponent(){
     const navigation = useNavigation(); 
     const [user, setUser] = useState('')
-    // const user = "ellie5508"
 
     useEffect(() => {
       getData();
@@ -18,10 +17,11 @@ export default function NewsComponent(){
 
     const getData = () =>{
       try{
-        AsyncStorage.getItem('UserId')
+        AsyncStorage.getItem('userInfo')
         .then(value => {
           if(value != null){
-            setUser(value);
+            const UserInfo = JSON.parse(value);
+            setUser(UserInfo.user_name);
           }
         }
         )
@@ -41,7 +41,7 @@ export default function NewsComponent(){
   
     function display(){
       return(
-    <Box mt="3">
+    <Box mt="3" flex={1}>
       <FlatList data={newsArr} renderItem={({
       item
     }) => <Link href="#" onPress={() => navigation.navigate('NewsDetail', {
