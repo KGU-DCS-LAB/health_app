@@ -18,18 +18,20 @@ export default function SignIn() {
 
     return (
         <NativeBaseProvider>
-            <Center flex={1} px="3">
-                {showSignInComponent ? <SignInComponent
-                    setShowSignInComponent={setShowSignInComponent}
-                    setEmail={setUserEmail}
-                    setPassword={setUserPassword} setName={setUserName} setBirthDay={setUserBirthDay}
-                    setGender={setUserGender} setResidence={setUserResidence}
-                /> : null}
-                {!showSignInComponent ? <AddDiseaseComponent
-                    Email={UserEmail} Password={UserPassword} Name={UserName} BirthDay={UserBirthDay}
-                    Gender={UserGender} Residence={UserResidence}
-                /> : null}
-            </Center>
+            <ScrollView>
+                <Center flex={1} px="3">
+                    {showSignInComponent ? <SignInComponent
+                        setShowSignInComponent={setShowSignInComponent}
+                        setEmail={setUserEmail}
+                        setPassword={setUserPassword} setName={setUserName} setBirthDay={setUserBirthDay}
+                        setGender={setUserGender} setResidence={setUserResidence}
+                    /> : null}
+                    {!showSignInComponent ? <AddDiseaseComponent
+                        Email={UserEmail} Password={UserPassword} Name={UserName} BirthDay={UserBirthDay}
+                        Gender={UserGender} Residence={UserResidence}
+                    /> : null}
+                </Center>
+            </ScrollView>
         </NativeBaseProvider>
     );
 }
