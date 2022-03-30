@@ -3,7 +3,7 @@ const router = express.Router();
 const bodyParser = require('body-parser');
 const { User } = require("../models/User");
 const nodemailer = require("nodemailer");
-const senderInfo = require('../config/SenderInfo.json');
+// const senderInfo = require('../config/SenderInfo.json');
 
 /* GET. */
 router.get('/find', function(req, res, next) {
