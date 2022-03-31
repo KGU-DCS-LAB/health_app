@@ -44,7 +44,7 @@ export default class MyWeb extends Component {
           <Modal.Header>북마크 저장하기</Modal.Header>
           <Modal.Body>
             <Button>
-              북마크 추가하기
+              보관함 추가하기
             </Button>
           </Modal.Body>
           <Modal.Footer>

@@ -3,7 +3,7 @@ import { SafeAreaView, StatusBar, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 
 
-// 레거시 코드 시작
+// �젅嫄곗떆 肄붾뱶 �떆�옉
 
 // import { createStackNavigator } from '@react-navigation/stack';
 // import Login from './components/Login';
@@ -69,9 +69,9 @@ import { NavigationContainer } from '@react-navigation/native';
 //   );
 // }
 
-// 레거시 코드 끝
+// �젅嫄곗떆 肄붾뱶 �걹
 
-// 새 코드 시작
+// �깉 肄붾뱶 �떆�옉
 import MainRoute from './src/routes/main/MainRoute'
 
 export default function App() {
@@ -85,7 +85,7 @@ export default function App() {
   );
 }
 
-//새 코드 끝
+//�깉 肄붾뱶 �걹
 
 const styles = StyleSheet.create({
   AndroidSafeArea: {

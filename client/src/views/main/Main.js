@@ -8,16 +8,15 @@ import WeatherComponent from './Weather'
 import NewsComponent from './News';
 import { ScrollView } from 'react-native';
 import MyPage from './MyPage';
+import BookmarkStorage from './BookmarkStorage';
 
 function MainScreen() {
   const navigation = useNavigation(); 
   
   return (
     <NativeBaseProvider>
-      <ScrollView>
       <WeatherComponent />
       <NewsComponent/>
-      </ScrollView>
       <Fab renderInPortal={false} shadow={2} size="sm" onPress={() => navigation.navigate('ChatBot')} icon={<Icon color="white" as={<AntDesign name="wechat" />} size="lg" />} />
     </NativeBaseProvider>
   )
@@ -31,6 +30,7 @@ export default function Main() {
       <Drawer.Navigator initialRouteName="Main">
         <Drawer.Screen name="Main" component={MainScreen} />
         <Drawer.Screen name="MyPage" component={MyPage} />
+        <Drawer.Screen name="BookmarkStorage" component={BookmarkStorage} />
       </Drawer.Navigator>
   )
 }

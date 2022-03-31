@@ -10,6 +10,7 @@ const usersRouter = require('./routes/Users');
 const diseasesRouter = require('./routes/Diseases');
 const areasRouter = require('./routes/Areas');
 const chatbotRouter = require('./routes/Chatbot');
+const bookmarkRouter = require('./routes/Bookmark');
 
 //application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({limit: "50mb", extended: true}));
@@ -37,3 +38,4 @@ app.use('/diseasesRouter', diseasesRouter);
 app.use('/areasRouter', areasRouter);
 app.use('/newsRouter', newsRouter);
 app.use('/chatbotRouter', chatbotRouter);
+app.use('/bookmarkRouter', bookmarkRouter);

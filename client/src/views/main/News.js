@@ -6,6 +6,7 @@ import { StyleSheet, FlatList, Text, Alert } from 'react-native';
 const IP_address = process.env.IP_address
 import AppLoading from "expo-app-loading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ScrollView } from 'react-native';
 
 export default function NewsComponent(){
     const navigation = useNavigation(); 
@@ -41,7 +42,7 @@ export default function NewsComponent(){
   
     function display(){
       return(
-    <Box mt="3" flex={1}>
+    <View styles={{paddingBottom: 20}}>
       <FlatList data={newsArr} renderItem={({
       item
     }) => <Link href="#" onPress={() => navigation.navigate('NewsDetail', {
@@ -67,10 +68,9 @@ export default function NewsComponent(){
               </Text>
               </VStack>
               <Spacer />
-              
             </HStack>
           </Box></Link>}  />
-    </Box>
+    </View>
       )
     }
   
@@ -122,9 +122,10 @@ export default function NewsComponent(){
           </Button>
         </HStack>
         </Box>
-        {display()}
         </Box>
+        {display()}
       </Box>
+      
     </Center>
 }
 
