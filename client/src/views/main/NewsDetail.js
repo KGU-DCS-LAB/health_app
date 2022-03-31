@@ -66,18 +66,6 @@ export default class MyWeb extends Component {
     } else {
       bkIcon = <Icon name='bookmark-outline' size={30} color="#4F8EF7" style={{alignSelf: 'flex-end'}} onPress={() => this.handleBookmark()} />
     }
-    // const url = route.navigation.getParam('url', 'NO-url');
-    // console.log(this.state.url);
-
-  //  function BmStorageList() {
-  //    return(
-  //      <View>
-  //        {this.state.bookmarks.map((bmS) => (
-  //         <Text>{bmS.bookmark_name}</Text>
-  //        ))}
-  //      </View>
-  //    )
-  //  }
 
   let bmSArr = Object.values(this.state.bookmarks).map(bmS => bmS);
 
