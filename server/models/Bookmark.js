@@ -8,8 +8,8 @@ const bookmark = mongoose.Schema({
         required: true
     },
     bookmark_url: {
-        type: String,
-        maxlength: 50,
+        type: Array,
+        urls : [{url : String}]
     },
 })
 

@@ -17,6 +17,15 @@ router.post('/save', function(req, res) {
     });
 });
 
+router.post('/urlSave', function(req, res) {
+    console.log(req.body);
+    let bookmarkName = req.body.data.bookmark_name
+    Bookmark.findOneAndUpdate({bookmark_name: bookmarkName}, {'$set' : {
+        'bookmark_url.url' :  req.body.data.bookmark_url
+    }});
+    
+});
+
 router.get('/find', function(req, res, next) {
     // 전체 데이터 가져오기
     Bookmark.find().then( (bookmarks) => {

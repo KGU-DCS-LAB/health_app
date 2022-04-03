@@ -73,13 +73,34 @@ export default class MyWeb extends Component {
 
   let bmSArr = Object.values(this.state.bookmarks).map(bmS => bmS);
 
+    function saveNews(bmN) {
+      console.log(this.state.url);
+      // Alert.alert('저장?????');
+      axios.post('http://' + IP_address + ':5000/bookmarkRouter/urlSave', {
+      data: {
+          bookmark_name: bmN,
+          url: this.state.url,
+      }
+    })
+      .then((response) => {
+          if (response.data.status === 'success') {
+              console.log('Successful.');
+          } else if (response.data.status === 'duplicated') {
+              console.log('이미 존재하는 Url');
+              Alert.alert('이미 존재하는 Url');
+          }
+      }).catch(function (error) {
+          // 오류발생시 실행
+          console.log(error);
+      })
+    }
+
     function GetBmStorage(){
-      
       return(
         <View >
       <FlatList data={bmSArr} keyExtractor={(item) => item.bookmark_name} renderItem={({
       item
-    }) => <Link href="#">
+    }) => <Link href="#" onPress={() => saveNews(item.bookmark_name)}>
       <Box borderBottomWidth="1" _dark={{
       borderColor: "gray.600"
     }} borderColor="coolGray.200" py="2" >
