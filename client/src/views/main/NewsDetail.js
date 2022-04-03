@@ -35,17 +35,14 @@ export default class MyWeb extends Component {
   addStorage = () => {
     Alert.prompt('보관함 이름을 입력해주세요', null, (text) =>
     {this.setState({ bmsName: text }),
-    // console.log('You entered ' + text),
     axios.post('http://' + IP_address + ':5000/bookmarkRouter/save', {
       data: {
           bookmark_name: text,
       }
-  })
+    })
       .then((response) => {
           if (response.data.status === 'success') {
-              setIsRegistraionSuccess(true)
-              console.log('Registration Successful. Please Login to proceed');
-              navigation.navigate('Main');
+              console.log('Successful.');
           } else if (response.data.status === 'duplicated') {
               console.log('이미 존재하는 보관함 이름');
               Alert.alert('이미 존재하는 보관함 이름입니다.');
@@ -53,7 +50,14 @@ export default class MyWeb extends Component {
       }).catch(function (error) {
           // 오류발생시 실행
           console.log(error);
-      });}
+      })
+      axios.get('http://'+IP_address+':5000/bookmarkRouter/find')
+      .then((response) => {
+      this.setState({ bookmarks : response.data })
+      }).catch(function (error) {
+      console.log(error);
+      });
+      ;}
     );
   }
 
@@ -73,7 +77,7 @@ export default class MyWeb extends Component {
       
       return(
         <View >
-      <FlatList data={bmSArr} renderItem={({
+      <FlatList data={bmSArr} keyExtractor={(item) => item.bookmark_name} renderItem={({
       item
     }) => <Link href="#">
       <Box borderBottomWidth="1" _dark={{

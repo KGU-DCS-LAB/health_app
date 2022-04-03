@@ -42,13 +42,13 @@ export default function NewsComponent(){
   
     function display(){
       return(
-    <View styles={{paddingBottom: 20}}>
+    <View styles={{paddingBottom: 20}} >
       <FlatList data={newsArr} renderItem={({
       item
     }) => <Link href="#" onPress={() => navigation.navigate('NewsDetail', {
             url: item.newsUrl
           })} >
-      <Box borderBottomWidth="1" _dark={{
+      <Box key={item.newsUrl} borderBottomWidth="1" _dark={{
       borderColor: "gray.600"
     }} borderColor="coolGray.200" py="2" >
             <HStack space={3} justifyContent="space-between">
