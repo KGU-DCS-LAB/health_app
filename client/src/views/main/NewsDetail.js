@@ -61,6 +61,27 @@ export default class MyWeb extends Component {
     );
   }
 
+saveNews = (bmN) => {
+      // console.log(this.state.url);
+      axios.post('http://' + IP_address + ':5000/bookmarkRouter/urlSave', {
+      data: {
+          bookmark_name: bmN,
+          bookmark_url: this.state.url,
+      }
+    })
+      .then((response) => {
+          if (response.data.status === 'success') {
+              console.log('Successful.');
+          } else if (response.data.status === 'error') {
+              console.log('error');
+          }
+      }).catch(function (error) {
+          // 오류발생시 실행
+          console.log(error);
+      })
+    }
+    
+
   render() {
     const isBookmarked = this.state.bookmark;
     let bkIcon;
@@ -72,50 +93,6 @@ export default class MyWeb extends Component {
     }
 
   let bmSArr = Object.values(this.state.bookmarks).map(bmS => bmS);
-
-    function saveNews(bmN) {
-      console.log(this.state.url);
-      // Alert.alert('저장?????');
-      axios.post('http://' + IP_address + ':5000/bookmarkRouter/urlSave', {
-      data: {
-          bookmark_name: bmN,
-          url: this.state.url,
-      }
-    })
-      .then((response) => {
-          if (response.data.status === 'success') {
-              console.log('Successful.');
-          } else if (response.data.status === 'duplicated') {
-              console.log('이미 존재하는 Url');
-              Alert.alert('이미 존재하는 Url');
-          }
-      }).catch(function (error) {
-          // 오류발생시 실행
-          console.log(error);
-      })
-    }
-
-    function GetBmStorage(){
-      return(
-        <View >
-      <FlatList data={bmSArr} keyExtractor={(item) => item.bookmark_name} renderItem={({
-      item
-    }) => <Link href="#" onPress={() => saveNews(item.bookmark_name)}>
-      <Box borderBottomWidth="1" _dark={{
-      borderColor: "gray.600"
-    }} borderColor="coolGray.200" py="2" >
-            <HStack space={3} justifyContent="space-between">
-                <Text numberOfLines={1} ellipsizeMode='tail' _dark={{
-            color: "warmGray.50"
-          }} color="coolGray.800" bold >
-                  {item.bookmark_name}
-                </Text>
-              <Spacer />
-            </HStack>
-          </Box></Link>}  />
-    </View>
-      )
-    }
 
     return (
       <NativeBaseProvider>
@@ -130,7 +107,23 @@ export default class MyWeb extends Component {
             <Button onPress={() => this.addStorage()} >
               보관함 추가하기
             </Button>
-            <GetBmStorage/>
+            <View >
+            <FlatList data={bmSArr} keyExtractor={(item) => item.bookmark_name} renderItem={({
+            item
+          }) => <Link href="#" onPress={() => this.saveNews(item.bookmark_name)}>
+            <Box borderBottomWidth="1" _dark={{
+            borderColor: "gray.600"
+          }} borderColor="coolGray.200" py="2" >
+                  <HStack space={3} justifyContent="space-between">
+                      <Text numberOfLines={1} ellipsizeMode='tail' _dark={{
+                  color: "warmGray.50"
+                }} color="coolGray.800" bold >
+                        {item.bookmark_name}
+                      </Text>
+              <Spacer />
+            </HStack>
+          </Box></Link>}  />
+          </View>
           </Modal.Body>
           <Modal.Footer>
             
