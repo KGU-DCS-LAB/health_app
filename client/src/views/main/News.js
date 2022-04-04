@@ -10,7 +10,8 @@ import { ScrollView } from 'react-native';
 
 export default function NewsComponent(){
     const navigation = useNavigation(); 
-    const [user, setUser] = useState('')
+    const [userId, setUserId] = useState('')
+    const [userBirth, setUserBirth] = useState('')
 
     useEffect(() => {
       getData();
@@ -22,7 +23,8 @@ export default function NewsComponent(){
         .then(value => {
           if(value != null){
             const UserInfo = JSON.parse(value);
-            setUser(UserInfo.user_name);
+            setUserId(UserInfo.user_name);
+            setUserBirth(UserInfo.birthday.split('T')[0]);
           }
         }
         )
@@ -76,9 +78,46 @@ export default function NewsComponent(){
   
     // console.log(Object.values(dataArr).map(news => (news.time)));
 
-    const setShowNews = async () => {
+    const setShowDiseasesNews = async () => {
       try{
-        const response = await axios.get('http://'+IP_address+':5000/newsRouter/news')
+        const response = await axios.get('http://'+IP_address+':5000/newsRouter/news', {
+          params: {
+            keyword: '코로나'
+          }
+        })
+        callback(response.data);
+        setLoading(true);
+      } catch(err) {
+        console.log(err);
+      }
+    }
+
+    const setShowAgeNews = async () => {
+      const age = new Date().getFullYear() -  userBirth.split('-')[0]
+      let ageGroup = ''
+      if(age<10) ageGroup = '어린이 + 코로나';
+      else if(age >= 10) ageGroup = age/10+'0대 + 코로나'
+
+      try{
+        const response = await axios.get('http://'+IP_address+':5000/newsRouter/news', {
+          params: {
+            keyword: ageGroup
+          }
+        })
+        callback(response.data);
+        setLoading(true);
+      } catch(err) {
+        console.log(err);
+      }
+    }
+
+    const setShowFHistoryNews = async () => {
+      try{
+        const response = await axios.get('http://'+IP_address+':5000/newsRouter/news', {
+          params: {
+            keyword: '췌장암'
+          }
+        })
         callback(response.data);
         setLoading(true);
       } catch(err) {
@@ -89,7 +128,7 @@ export default function NewsComponent(){
 
   return <Center w="100%">
   <AppLoading
-        startAsync={setShowNews}
+        startAsync={setShowDiseasesNews}
         onError={console.warn}
         onFinish={onFinish}
       />
@@ -98,7 +137,7 @@ export default function NewsComponent(){
         <Heading mt='5' size="sm" color="coolGray.800" _dark={{
         color: "warmGray.50"
       }} fontWeight="semibold">
-          {user}님을 위한 건강 뉴스
+          {userId}님을 위한 건강 뉴스
         </Heading>
         <Box alignSelf="center">
         <HStack space={3} mt="5">
@@ -111,13 +150,13 @@ export default function NewsComponent(){
         </HStack>
         <Box alignSelf="center">
         <HStack space={3} mt="3" mb="3">
-        <Button mt="2"  style={styles.catSelectBtn} onPress={() => {setShowNews()}}>
+        <Button mt="2"  style={styles.catSelectBtn} onPress={() => {setShowDiseasesNews()}}>
             질병
           </Button>
-          <Button mt="2" style={styles.catSelectBtn}>
+          <Button mt="2" style={styles.catSelectBtn} onPress={() => {setShowAgeNews()}}>
             나이
           </Button>
-          <Button mt="2"  style={styles.catSelectBtn} >
+          <Button mt="2"  style={styles.catSelectBtn} onPress={() => {setShowFHistoryNews()}}>
             가족력
           </Button>
         </HStack>

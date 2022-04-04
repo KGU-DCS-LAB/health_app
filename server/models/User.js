@@ -37,6 +37,10 @@ const userSchema = mongoose.Schema({
     role: { // 유저, 관리자 구분
         type: Number,
         default: 0
+    },
+    user_diseases: {
+        type: Array,
+        diseases : [{disease : String}]
     }
 })
 
