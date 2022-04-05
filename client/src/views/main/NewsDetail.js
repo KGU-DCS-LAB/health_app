@@ -14,6 +14,8 @@ export default class MyWeb extends Component {
     this.handleBookmarkOut = this.handleBookmarkOut.bind(this);
     this.state={
      url: this.props.route.params.url,
+     title: this.props.route.params.title,
+     img: this.props.route.params.img,
      bookmark: 'bookmark',
      modal: false,
      bmsName: "",
@@ -66,12 +68,15 @@ saveNews = (bmN) => {
       axios.post('http://' + IP_address + ':5000/bookmarkRouter/urlSave', {
       data: {
           bookmark_name: bmN,
-          bookmark_url: this.state.url,
+          news_url: this.state.url,
+          news_title: this.state.title,
+          news_img: this.state.img,
       }
     })
       .then((response) => {
           if (response.data.status === 'success') {
               console.log('Successful.');
+              Alert.alert('저장되었습니다.')
           } else if (response.data.status === 'error') {
               console.log('error');
           }
@@ -108,7 +113,7 @@ saveNews = (bmN) => {
               보관함 추가하기
             </Button>
             <View >
-            <FlatList data={bmSArr} keyExtractor={(item) => item.bookmark_name} renderItem={({
+            <FlatList data={bmSArr} renderItem={({
             item
           }) => <Link href="#" onPress={() => this.saveNews(item.bookmark_name)}>
             <Box borderBottomWidth="1" _dark={{

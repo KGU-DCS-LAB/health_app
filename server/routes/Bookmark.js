@@ -3,8 +3,7 @@ const router = express.Router();
 const { Bookmark } = require("../models/Bookmark");
 
 router.post('/save', function(req, res) {
-    console.log(req.body);
-    // 데이터 저장
+    // console.log(req.body);
     var newBmStorage = new Bookmark(req.body.data);
     newBmStorage.save(function(error, data){
         if(error){
@@ -18,11 +17,14 @@ router.post('/save', function(req, res) {
 });
 
 router.post('/urlSave', function(req, res) {
-    // console.log(req.body);
     Bookmark.updateOne(
         { bookmark_name: req.body.data.bookmark_name }, 
-        { $push: { bookmark_url: req.body.data.bookmark_url } }, 
-        (error, person) => {
+        {$push: {bookmark_info: {
+            "img": req.body.data.news_img, 
+            "url": req.body.data.news_img,
+            "title": req.body.data.news_title,
+        }}}).exec();
+        (error, url)=>{
             if(error){
                 console.log(error);
                 return res.json({status: 'error', error})
@@ -30,7 +32,7 @@ router.post('/urlSave', function(req, res) {
                 console.log('Saved!')
                 return res.json({status: 'success'})
             }
-        });
+        };
 });
 
 router.get('/find', function(req, res, next) {

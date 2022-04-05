@@ -48,7 +48,9 @@ export default function NewsComponent(){
       <FlatList data={newsArr} renderItem={({
       item
     }) => <Link href="#" onPress={() => navigation.navigate('NewsDetail', {
-            url: item.newsUrl
+            url: item.newsUrl,
+            title: item.title,
+            img: item.img
           })} >
       <Box key={item.newsUrl} borderBottomWidth="1" _dark={{
       borderColor: "gray.600"
