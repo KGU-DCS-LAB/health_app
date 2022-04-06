@@ -94,37 +94,37 @@ export default function NewsComponent(){
       }
     }
 
-    const setShowAgeNews = async () => {
+    const setShowAgeNews = () => {
       const age = new Date().getFullYear() -  userBirth.split('-')[0]
       let ageGroup = ''
       if(age<10) ageGroup = '어린이 + 코로나';
       else if(age >= 10) ageGroup = age/10+'0대 + 코로나'
-
-      try{
-        const response = await axios.get('http://'+IP_address+':5000/newsRouter/news', {
+      axios.get('http://'+IP_address+':5000/newsRouter/news', {
           params: {
             keyword: ageGroup
           }
         })
-        callback(response.data);
-        setLoading(true);
-      } catch(err) {
-        console.log(err);
-      }
+        .then((response) => {
+          callback(response.data);
+      }).catch(function (error) {
+          // 오류발생시 실행
+          console.log(error);
+      })
+        
     }
 
-    const setShowFHistoryNews = async () => {
-      try{
-        const response = await axios.get('http://'+IP_address+':5000/newsRouter/news', {
+    const setShowFHistoryNews = () => {
+      axios.get('http://'+IP_address+':5000/newsRouter/news', {
           params: {
             keyword: '췌장암'
           }
         })
-        callback(response.data);
-        setLoading(true);
-      } catch(err) {
-        console.log(err);
-      }
+        .then((response) => {
+          callback(response.data);
+      }).catch(function (error) {
+          // 오류발생시 실행
+          console.log(error);
+      })
     }
     const onFinish = () => setLoading(false);
 

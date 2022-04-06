@@ -27,6 +27,7 @@ export default class MyWeb extends Component {
     this.setState({ bookmark : 'bookmark', modal: true })
     axios.get('http://'+IP_address+':5000/bookmarkRouter/find')
     .then((response) => {
+      console.log(response.data);
       this.setState({ bookmarks : response.data })
     }).catch(function (error) {
       console.log(error);
@@ -74,15 +75,7 @@ saveNews = (bmN) => {
       }
     })
       .then((response) => {
-          if (response.data.status === 'success') {
-              console.log('Successful.');
-              Alert.alert('저장되었습니다.')
-          } else if (response.data.status === 'error') {
-              console.log('error');
-          }
-      }).catch(function (error) {
-          // 오류발생시 실행
-          console.log(error);
+        Alert.alert('저장되었습니다.')
       })
     }
     

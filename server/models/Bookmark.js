@@ -8,11 +8,12 @@ const bookmark = mongoose.Schema({
         required: true
     },
     bookmark_info: [{
-        img: {type: String},
-        url: {type: String},
-        title: {type: String},
+        img: String,
+        url: String,
+        title: String,
     }]
-})
+}
+)
 
 const Bookmark = mongoose.model('Bookmark', bookmark)
 
