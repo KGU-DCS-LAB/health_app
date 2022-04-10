@@ -7,8 +7,8 @@ import ChangePW from '../../views/main/ChangePW';
 import NewsDetail from '../../views/main/NewsDetail';
 import ChatBot from '../../views/main/ChatBot';
 import BookmarkStorage from '../../views/main/BookmarkStorage';
-import { createStackNavigator } from '@react-navigation/stack';
 import FamilyManagement from '../../views/main/FamilyManagement';
+import { createStackNavigator } from '@react-navigation/stack';
 
 const Stack = createStackNavigator();
 

@@ -121,7 +121,12 @@ export default function BookmarkStorage() {
       />
       <Button onPress={() => addStorage()}>보관함 추가하기</Button>
 
-      <FlatList data={bmSArr} renderItem={({
+      <FlatList 
+      data={bmSArr} 
+      keyExtractor= {(item) => {
+                  return item._id;
+      }}
+      renderItem={({
       item
     }) => <Link href="#" onPress={() => showNewsList(item.bookmark_name)} >
       <Box key={item.bookmark_info._id} borderBottomWidth="1" _dark={{

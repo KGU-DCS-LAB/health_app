@@ -1,7 +1,7 @@
 import React, {Component, useState} from 'react';
 import { SafeAreaView, StatusBar, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-
+import {SSRProvider} from '@react-aria/ssr';
 
 // �젅嫄곗떆 肄붾뱶 �떆�옉
 
@@ -79,7 +79,10 @@ export default function App() {
   return (
     <SafeAreaView style={styles.AndroidSafeArea}>
       <NavigationContainer>
-        <MainRoute/>
+      <SSRProvider>
+      <MainRoute/>
+      </SSRProvider>
+        
       </NavigationContainer>
     </SafeAreaView>
   );
