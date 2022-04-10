@@ -41,7 +41,11 @@ const userSchema = mongoose.Schema({
     user_diseases: {
         type: Array,
         diseases : [{disease : String}]
-    }
+    },
+    user_family_list: [{
+        user_id: String,
+        nickname: String
+    }]
 })
 
 const User = mongoose.model('User', userSchema)
