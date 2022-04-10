@@ -4,29 +4,66 @@ import { Alert, FlatList, SafeAreaView } from 'react-native';
 import AppLoading from "expo-app-loading";
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage  from "@react-native-async-storage/async-storage";
 const IP_address = process.env.IP_address
 
 const AddFamily = () =>{
     const [modalVisible, setModalVisible] = React.useState(false);
     const initialRef = React.useRef(null);
     const finalRef = React.useRef(null);
-    const [UserId, setUserId] = useState('');
+    const [familyUserId, setFamilyUserId] = useState('');
     // const [familyIEmail, setFamilyIEmail] = useState('');
     const [familyINickname, setFamilyINickname] = useState('');
     const [domain, setDomain] = useState('')
     const idInputRef = createRef();
+    const [userId, setUserId] = useState('')
+
+    useEffect(() => {
+      getData();
+    }, [])
+
+    const getData = () =>{
+      try{
+        AsyncStorage.getItem('userInfo')
+        .then(value => {
+          if(value != null){
+            const UserInfo = JSON.parse(value);
+            setUserId(UserInfo.user_id);
+          }
+        }
+        )
+      } catch(error){
+        console.log(error);
+      }
+    }
+
+    console.log(userId);
+    
+
+    let userEmail = familyUserId + "@" + domain;
+
+    const saveFamilyInfo = () => {
+
+        axios.post('http://' + IP_address + ':5000/usersRouter/familySave', {
+      data: {
+        user_id: userId,
+        family_user_id: userEmail,
+        nickname: familyINickname
+      }
+    })
+            Alert.alert('가족이 추가되었습니다.');
+            setModalVisible(false);
+    }
 
     const checkIdcomp = () => {
-        let userEmail = UserId + "@" + domain;
-  
+
         const callback = (arr) => {
           // console.log(arr.find(x => x.user_id === userEmail));
             if(arr.find(x => x.user_id === userEmail) == null){
               Alert.alert('이메일이 존재하지 않습니다.');
             } else {
             //   setEmailText('이메일 확인 완료');
-              Alert.alert('이메일이 확인되었습니다.');
-               setModalVisible(false);
+              saveFamilyInfo();
             } 
         }
   
@@ -37,7 +74,7 @@ const AddFamily = () =>{
             console.log(error);
         });
     };
-    
+
     return <View>
         <Modal isOpen={modalVisible} onClose={() => setModalVisible(false)} initialFocusRef={initialRef} finalFocusRef={finalRef}>
           <Modal.Content>
@@ -51,7 +88,7 @@ const AddFamily = () =>{
                 <Input w={{
                   base: "50%",
                   md: "100%"
-                  }} onChangeText={(userId) => setUserId(userId)}
+                  }} onChangeText={(userId) => setFamilyUserId(userId)}
                   ref={idInputRef}
                   returnKeyType="next"
                   blurOnSubmit={false} />

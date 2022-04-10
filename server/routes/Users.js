@@ -126,4 +126,22 @@ router.get('/modifyPw/', function(req, res) {
     });
 });
 
+router.post('/familySave', function(req, res) {
+    User.updateOne(
+        { user_id: req.body.data.user_id }, 
+        {$push: {user_family_list: {
+            "user_id": req.body.data.family_user_id, 
+            "nickname": req.body.data.nickname,
+        }}}).exec();
+        (error, family)=>{
+            if(error){
+                console.log(error);
+                return res.json({status: 'error', error})
+            }else{
+                console.log('Saved!')
+                return res.json({status: 'Success'})
+            }
+        };
+});
+
 module.exports = router;
