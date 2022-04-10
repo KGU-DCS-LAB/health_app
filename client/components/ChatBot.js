@@ -9,6 +9,7 @@ const {height, width} = Dimensions.get("window")
 
 const ChatScreen = () => {
     const [messages, setMessages] = useState([]);
+    // 테스트
 
     useEffect(() => {
         setMessages([
