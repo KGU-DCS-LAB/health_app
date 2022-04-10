@@ -8,6 +8,7 @@ import NewsDetail from '../../views/main/NewsDetail';
 import ChatBot from '../../views/main/ChatBot';
 import BookmarkStorage from '../../views/main/BookmarkStorage';
 import { createStackNavigator } from '@react-navigation/stack';
+import FamilyManagement from '../../views/main/FamilyManagement';
 
 const Stack = createStackNavigator();
 
@@ -57,6 +58,11 @@ const MainRoute = () =>{
             <Stack.Screen
             name='BookmarkStorage'
             component={BookmarkStorage}
+            />
+
+            <Stack.Screen
+            name='FamilyManagement'
+            component={FamilyManagement}
             />
         </Stack.Navigator>
     )

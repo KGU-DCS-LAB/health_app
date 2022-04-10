@@ -9,6 +9,7 @@ import NewsComponent from './News';
 import { ScrollView } from 'react-native';
 import MyPage from './MyPage';
 import BookmarkStorage from './BookmarkStorage';
+import FamilyManagement from "./FamilyManagement";
 
 function MainScreen() {
   const navigation = useNavigation(); 
@@ -31,6 +32,7 @@ export default function Main() {
         <Drawer.Screen name="Main" component={MainScreen} />
         <Drawer.Screen name="MyPage" component={MyPage} />
         <Drawer.Screen name="BookmarkStorage" component={BookmarkStorage} />
+        <Drawer.Screen name="FamilyManagement" component={FamilyManagement} />
       </Drawer.Navigator>
   )
 }
