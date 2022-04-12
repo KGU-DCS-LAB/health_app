@@ -1,4 +1,4 @@
-import React, { Component, createRef, useState } from "react";
+import React, { Component, createRef, useEffect, useState } from "react";
 import { View, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import { Text, Box, Center, VStack, FormControl, Spinner, Heading, Button, Input, Checkbox, Pressable, IconButton, ScrollView, HStack, Radio, Stack, Icon, NativeBaseProvider, WarningOutlineIcon, Select, InputGroup, CheckIcon, InputRightAddon } from 'native-base';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -72,27 +72,31 @@ const AddDiseaseComponent = (props) => {
     const [input, setInput] = useState('');
     const [diseases, setDiseases] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    
+    useEffect(() => {
+        getDiseases();
+    }, [])
 
     const getDiseases = () => {
         let result = []
-        if(diseases.length > 0){
-            return;
-        }
         axios.get('http://' + IP_address + ':5000/diseasesRouter/findName',{
         }).then((response) => {
-            response.data.forEach((item, idx) => {
-                const disease = {num: item.번호, name: item.질병명, checked: false}
+            console.log(response.data.length());
+            response.data.map((item, idx) => {
+                const disease = {key: item.번호, name: item.질병명, checked: false}
+                console.log(disease.key);
                 result.push(disease);
             });
             setDiseases(result);
         }).catch(function (error) {
             console.log(error);
         })
+        console.log(result);
     }
 
     const handleStatusChange = (index) => {
         setIsLoading(true);
-        const temp = diseases.map((item, itemI) => item.num !== index ? item : {
+        const temp = diseases.map((item, itemI) => item.key !== index ? item : {
             ...item,
             checked: !item.checked
         });
@@ -141,8 +145,7 @@ const AddDiseaseComponent = (props) => {
                             name: "search1"
                         }} onPress={getDiseases()} />
                     </InputGroup>
-                    <View></View>
-                    <ScrollView w="100%" h="70%" _contentContainerStyle={{
+                    <ScrollView w="100%" h="50%" _contentContainerStyle={{
                         px: "20px",
                         mb: "4",
                         minW: "72"
@@ -155,10 +158,10 @@ const AddDiseaseComponent = (props) => {
                                 </Heading>
                             </HStack>
                             :
-                            <VStack space={2}>
-                                {diseases.map((item, itemI) => 
-                                    <HStack w="100%" justifyContent="space-between" alignItems="center" key={item.num}>
-                                        <Checkbox isChecked={item.checked} onChange={() => handleStatusChange(item.num)} value={item.name}>
+                            <VStack space={1}>
+                                {diseases.map(item => 
+                                    <HStack w="100%" justifyContent="space-between" alignItems="center" key={item.key}>
+                                        <Checkbox isChecked={item.checked} onChange={() => handleStatusChange(item.key)} value={item.name} key={item.key}>
                                             <Text mx="2" strikeThrough={item.checked} _light={{
                                                 color: item.checked ? "gray.400" : "coolGray.800"
                                             }} _dark={{
@@ -440,8 +443,8 @@ const SignInComponent = (props) => {
                             w={{
                                 base: "30%",
                             }}>
-                            {level1.map(level => (
-                                <Select.Item label={level} value={level} />
+                            {level1.map((level, idx) => (
+                                <Select.Item key={idx} label={level} value={level} />
                             ))}
                         </Select>
                         <Select selectedValue={UserResidence.level2} accessibilityLabel="Choose Domain" placeholder="Choose Domain" _selectedItem={{
@@ -451,8 +454,8 @@ const SignInComponent = (props) => {
                             w={{
                                 base: "30%",
                             }}>
-                            {level2.map(level => (
-                                <Select.Item label={level} value={level} />
+                            {level2.map((level, idx) => (
+                                <Select.Item key={idx} label={level} value={level} />
                             ))}
                         </Select>
                         <Select selectedValue={UserResidence.level3} accessibilityLabel="Choose Domain" placeholder="Choose Domain" _selectedItem={{
@@ -465,8 +468,8 @@ const SignInComponent = (props) => {
                             w={{
                                 base: "30%",
                             }}>
-                            {level3.map(level => (
-                                <Select.Item label={level} value={level} />
+                            {level3.map((level, idx) => (
+                                <Select.Item key={idx} label={level} value={level} />
                             ))}
                         </Select>
                         {/* </HStack> */}

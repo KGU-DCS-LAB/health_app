@@ -24,6 +24,32 @@ const ChatScreen = () => {
                 },
             },
         ])
+        setMessages(previousMessages => GiftedChat.append(previousMessages, [
+            {
+                _id: 2,
+                text: '증상 입력 방식을 선택하세요.',
+                createdAt: new Date(),
+                user: {
+                    _id: 2,
+                    name: 'React Native',
+                    avatar: 'https://placeimg.com/140/140/animals',
+                },
+                quickReplies: {
+                    type: 'radio', // or 'checkbox',
+                    keepIt: true,
+                    values: [
+                      {
+                        title: '키보드로 입력',
+                        value: 'input',
+                      },
+                      {
+                        title: '버튼으로 선택',
+                        value: 'button',
+                      }
+                    ],
+                  }
+            },
+        ]))
     }, [])
 
     const onSend = useCallback((messages = []) => {
