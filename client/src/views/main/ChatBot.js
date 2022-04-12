@@ -21,37 +21,53 @@ const ChatScreen = () => {
                     result.push(symptom);
                 });
                 setReplies(result);
-                setSymptoms(response.data);
             }).catch(function (error) {
                 console.log(error);
             });
     }
 
     const getDetail = (title) => {
-        console.log(symptoms);
-        if(symptoms.find(x => x.body_part === title)){
-            console.log(x);
-            setMessages(previousMessages =>
-                GiftedChat.append(previousMessages, 
-                    [{
-                        _id: 2,
-                        text: '증상을 선택헤주세요.',
-                        createdAt: new Date(),
-                        quickReplies: {
-                            type: 'radio', // or 'checkbox',
-                            keepIt: true,
-                            values: x.symptoms,
-                        },
-                        user: {
-                            _id: 2,
-                            name: 'React Native',
-                            avatar: 'https://placeimg.com/140/140/animals',
-                        },
-                    }]
-                )
-            );
-        }
+        let result = [];
+        axios.post('http://' + IP_address + ':5000/symptomsRouter/findOne', {
+                data : {bodyPart: title}
+            }).then((response) => {
+                response.data.symptoms.map((item, idx) => {
+                    const symptom = {
+                        title: item,
+                        value: idx
+                    }
+                    result.push(symptom);
+                });
+                setSymptoms(result);
+            }).catch(function (error) {
+                console.log(error);
+            });
+        // if(symptoms.find(x => x.body_part === title)){
+        //     console.log(x);
+        // }
     }
+
+    useEffect(() => {
+        setMessages(previousMessages =>
+            GiftedChat.append(previousMessages, 
+                [{
+                    _id: Math.round(Math.random() * 1000),
+                    text: '증상을 선택헤주세요.',
+                    createdAt: new Date(),
+                    quickReplies: {
+                        type: 'radio', // or 'checkbox',
+                        keepIt: false,
+                        values: symptoms,
+                    },
+                    user: {
+                        _id: 2,
+                        name: 'React Native',
+                        avatar: 'https://placeimg.com/140/140/animals',
+                    },
+                }]
+            )
+        );
+    }, [symptoms]);
 
     useEffect(() => {
         let msg = {

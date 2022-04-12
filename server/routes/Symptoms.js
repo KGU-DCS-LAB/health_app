@@ -42,14 +42,15 @@ router.post('/save', function(req, res) {
     });
 });
 
-router.get('/findOne/', function(req, res, next) {
+router.post('/findOne/', function(req, res, next) {
     // 특정 아이디값 가져오기
-    Symptom.findOne({body_part:'눈'}, function(error,symptom){
+    Symptom.findOne({body_part:req.body.data.bodyPart}, function(error,symptom){
         console.log('--- Read one ---');
         if(error){
             console.log(error);
         }else{
-            console.log(disease);
+            // console.log(symptom);
+            res.json(symptom)
         }
     });
 });
