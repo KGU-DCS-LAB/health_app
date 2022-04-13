@@ -1,146 +1,13 @@
 import React, {useEffect, useState, createRef} from "react";
 import { Modal, Button, NativeBaseProvider, Link, Box, Spacer,  Avatar, Center, VStack, HStack, FormControl, Input, InputGroup, Select, InputRightAddon, CheckIcon } from 'native-base';
-import {StyleSheet,Text,TouchableOpacity,TouchableHighlight,View,Alert
+import {StyleSheet,Text,TouchableOpacity,TouchableHighlight,View,Alert, FlatList
 } from 'react-native';
 import AppLoading from "expo-app-loading";
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage  from "@react-native-async-storage/async-storage";
 import { SwipeListView } from 'react-native-swipe-list-view';
-
 const IP_address = process.env.IP_address
-
-const FamilyList = () => {
-        const [listData, setListData] = useState(
-            Array(20)
-                .fill('')
-                .map((_, i) => ({ key: `${i}`, text: `item #${i}` }))
-        );
-    
-        const closeRow = (rowMap, rowKey) => {
-            if (rowMap[rowKey]) {
-                rowMap[rowKey].closeRow();
-            }
-        };
-    
-        const deleteRow = (rowMap, rowKey) => {
-            closeRow(rowMap, rowKey);
-            const newData = [...listData];
-            const prevIndex = listData.findIndex(item => item.key === rowKey);
-            newData.splice(prevIndex, 1);
-            setListData(newData);
-        };
-    
-        const onRowDidOpen = rowKey => {
-            console.log('This row opened', rowKey);
-        };
-    
-        const renderItem = data => (
-            <TouchableHighlight
-                onPress={() => console.log('You touched me')}
-                style={styles.rowFront}
-                underlayColor={'#AAA'}
-            >
-                <View>
-                    <Text>I am {data.item.text} in a SwipeListView</Text>
-                </View>
-            </TouchableHighlight>
-        );
-    
-        const renderHiddenItem = (data, rowMap) => (
-            <View style={styles.rowBack}>
-                <Text>Left</Text>
-                <TouchableOpacity
-                    style={[styles.backRightBtn, styles.backRightBtnLeft]}
-                    onPress={() => closeRow(rowMap, data.item.key)}
-                >
-                    <Text style={styles.backTextWhite}>Close</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[styles.backRightBtn, styles.backRightBtnRight]}
-                    onPress={() => deleteRow(rowMap, data.item.key)}
-                >
-                    <Text style={styles.backTextWhite}>Delete</Text>
-                </TouchableOpacity>
-            </View>
-        );
-    
-        return (
-            <View style={styles.container}>
-                <SwipeListView
-                    data={listData}
-                    renderItem={renderItem}
-                    renderHiddenItem={renderHiddenItem}
-                    leftOpenValue={75}
-                    rightOpenValue={-150}
-                    previewRowKey={'0'}
-                    previewOpenValue={-40}
-                    previewOpenDelay={3000}
-                    onRowDidOpen={onRowDidOpen}
-                />
-            </View>
-        );
-        
-}
-const componentMap = {
-    FamilyList,
-};
-const FamilyListView = () => {
-    const [mode, setMode] = useState('FamilyList');
-    const renderExample = () => {
-        const Component = componentMap[mode];
-        return <Component />;
-    };
-
-    return (
-        <View style={styles.container}>
-            {renderExample()}
-        </View>
-    );
-}
-
-const styles = StyleSheet.create({
-    container: {
-        backgroundColor: 'white',
-        flex: 1,
-    },
-    backTextWhite: {
-        color: '#FFF',
-    },
-    rowFront: {
-        alignItems: 'center',
-        backgroundColor: '#CCC',
-        borderBottomColor: 'black',
-        borderBottomWidth: 1,
-        justifyContent: 'center',
-        height: 50,
-    },
-    rowBack: {
-        alignItems: 'center',
-        backgroundColor: '#DDD',
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingLeft: 15,
-    },
-    backRightBtn: {
-        alignItems: 'center',
-        bottom: 0,
-        justifyContent: 'center',
-        position: 'absolute',
-        top: 0,
-        width: 75,
-    },
-    backRightBtnLeft: {
-        backgroundColor: 'blue',
-        right: 75,
-    },
-    backRightBtnRight: {
-        backgroundColor: 'red',
-        right: 0,
-    },
-});
-
 
 const AddFamily = () =>{
     const [modalVisible, setModalVisible] = React.useState(false);
@@ -172,7 +39,7 @@ const AddFamily = () =>{
       }
     }
 
-    console.log(userId);
+    // console.log(userId);
     
 
     let userEmail = familyUserId + "@" + domain;
@@ -272,14 +139,141 @@ const AddFamily = () =>{
         }}>
             가족 추가하기
           </Button>
-          <FamilyListView/>
       </View>;
   }
+
+  const exampleee=[{
+    user_id: "123",
+    nickname: "seonae1",
+  },{
+    user_id: "456",
+    nickname: "seonae2",
+  },{
+    user_id: "789",
+    nickname: "seonae3",
+  }]
+
+  const FamilyList = () => {
+    const [userId, setUserId] = useState('')
+    const [famliyList, setFamliyList] = useState();
+
+    useEffect(() => {
+      getData();
+    }, [])
+
+    const getData = () =>{
+      try{
+        AsyncStorage.getItem('userInfo')
+        .then(value => {
+          if(value != null){
+            const UserInfo = JSON.parse(value);
+            setUserId(UserInfo.user_id);
+          }
+        }
+        )
+      } catch(error){
+        console.log(error);
+      }
+    }
+
+    const callback = (data) => {
+      setFamliyList(data.user_famliy_list)
+    }
+  
+    useEffect(()=>{
+      axios.get('http://'+IP_address+':5000/usersRouter/findOne/',{
+        params: {
+          user_id: userId,
+        }
+      })
+    .then((response) => {
+      console.log(response.data);
+      callback(response.data);
+    }).catch(function (error) {
+      console.log(error);
+    });
+  },[])
+
+    return(
+      <View>
+          <FlatList 
+                style={styles.container} 
+                enableEmptySections={true}
+                data={famliyList}
+                keyExtractor= {(item) => {
+                  return item.user_id;
+                }}
+                renderItem={({item}) => {
+                  return (
+                    <TouchableOpacity>
+                      <View style={styles.box} >
+                         <Text style={styles.username}>{item.nickname}</Text>
+                      </View>
+                    </TouchableOpacity>
+                  )
+              }}/>
+      </View>
+    )
+  }
+
+  const styles = StyleSheet.create({
+  header:{
+    backgroundColor: "#0abde3",
+  },
+  headerContent:{
+    padding:30,
+    alignItems: 'center',
+  },
+  avatar: {
+    width: 130,
+    height: 130,
+    borderRadius: 63,
+    borderWidth: 4,
+    borderColor: "#FFFFFF",
+    marginBottom:10,
+  },
+  image:{
+    width: 60,
+    height: 60,
+  },
+  name:{
+    fontSize:22,
+    color:"#FFFFFF",
+    fontWeight:'600',
+  },
+  body: {
+    padding:30,
+    backgroundColor :"#E6E6FA",
+    marginBottom:20
+  },
+  box: {
+    padding:5,
+    marginTop:5,
+    marginBottom:5,
+    backgroundColor: '#FFFFFF',
+    flexDirection: 'row',
+    shadowColor: 'black',
+    shadowOpacity: .2,
+    shadowOffset: {
+      height:1,
+      width:-2
+    },
+    elevation:2
+  },
+  username:{
+    color: "#20B2AA",
+    fontSize:22,
+    alignSelf:'center',
+    marginLeft:10
+  },
+});
+
 
 export default function FamilyManagement() {
     return(
         <NativeBaseProvider>
             <AddFamily/>
+            <FamilyList/>
         </NativeBaseProvider>
     )
 } 
