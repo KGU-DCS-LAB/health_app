@@ -49,10 +49,19 @@ const ChatScreen = () => {
     }
 
     useEffect(() => {
+        let result = [];
         axios.post('http://' + IP_address + ':5000/diseasesRouter/findBySymptoms', {
                 data : {symptoms: selectedSymptom}
             }).then((response) => {
-                setDiseases(response.data.diseases)
+                response.data.map((item, idx) => {
+                    const disease = {
+                        contentType: "disease",
+                        title: item,
+                        value: idx
+                    }
+                    result.push(disease);
+                });
+                setDiseases(result);
             }).catch(function (error) {
                 console.log(error);
             });
@@ -89,8 +98,13 @@ const ChatScreen = () => {
                 GiftedChat.append(previousMessages, 
                     [{
                         _id: Math.round(Math.random() * 1000),
-                        text: '유추되는 질병은 다음과 같습니다.',
+                        text: '유추되는 질병은 다음과 같습니다. 상세 정보를 확인하고 싶은 질병을 선택해주세요.',
                         createdAt: new Date(),
+                        quickReplies: {
+                            type: 'checkbox', 
+                            keepIt: true,
+                            values: diseases,
+                        },
                         user: {
                             _id: 2,
                             name: 'React Native',
