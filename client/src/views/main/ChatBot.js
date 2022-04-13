@@ -6,8 +6,11 @@ import axios from 'axios';
 
 const ChatScreen = () => {
     const [messages, setMessages] = useState([]);
+    const [selectedSymptom, setSelectedSymptom] = useState([]);
     const [symptoms, setSymptoms] = useState([]);
-    const [replies, setReplies] = useState([]);
+    const [bodyPart, setBodypart] = useState([]);
+    const [isTextInput, setIsTextInput] = useState(true);
+    const [diseases, setDiseases] = useState([]);
 
     const getSymptoms = () => {
         let result = [];
@@ -20,7 +23,7 @@ const ChatScreen = () => {
                     }
                     result.push(symptom);
                 });
-                setReplies(result);
+                setBodypart(result);
             }).catch(function (error) {
                 console.log(error);
             });
@@ -33,6 +36,7 @@ const ChatScreen = () => {
             }).then((response) => {
                 response.data.symptoms.map((item, idx) => {
                     const symptom = {
+                        contentType: "symptom",
                         title: item,
                         value: idx
                     }
@@ -42,10 +46,62 @@ const ChatScreen = () => {
             }).catch(function (error) {
                 console.log(error);
             });
-        // if(symptoms.find(x => x.body_part === title)){
-        //     console.log(x);
-        // }
     }
+
+    useEffect(() => {
+        axios.post('http://' + IP_address + ':5000/diseasesRouter/findBySymptoms', {
+                data : {symptoms: selectedSymptom}
+            }).then((response) => {
+                setDiseases(response.data.diseases)
+            }).catch(function (error) {
+                console.log(error);
+            });
+    }, [selectedSymptom])
+
+    useEffect(() => {
+        console.log(diseases)
+        if (!diseases){
+            setMessages(previousMessages =>
+                GiftedChat.append(previousMessages, 
+                    [{
+                        _id: Math.round(Math.random() * 1000),
+                        text: '유추되는 질병이 없습니다.',
+                        createdAt: new Date(),
+                        user: {
+                            _id: 2,
+                            name: 'React Native',
+                            avatar: 'https://placeimg.com/140/140/animals',
+                        },
+                    }]
+                )
+            );
+        } else {
+            let result = [];
+            diseases.map((item, idx) => {
+                const symptom = {
+                    contentType: "disease",
+                    title: item.질병명,
+                    value: item.번호
+                }
+                result.push(symptom);
+            });
+            setMessages(previousMessages =>
+                GiftedChat.append(previousMessages, 
+                    [{
+                        _id: Math.round(Math.random() * 1000),
+                        text: '유추되는 질병은 다음과 같습니다.',
+                        createdAt: new Date(),
+                        user: {
+                            _id: 2,
+                            name: 'React Native',
+                            avatar: 'https://placeimg.com/140/140/animals',
+                        },
+                    }]
+                )
+            );
+        }
+    }, [diseases])
+
 
     useEffect(() => {
         setMessages(previousMessages =>
@@ -55,8 +111,8 @@ const ChatScreen = () => {
                     text: '증상을 선택헤주세요.',
                     createdAt: new Date(),
                     quickReplies: {
-                        type: 'radio', // or 'checkbox',
-                        keepIt: false,
+                        type: 'checkbox', 
+                        keepIt: true,
                         values: symptoms,
                     },
                     user: {
@@ -72,7 +128,7 @@ const ChatScreen = () => {
     useEffect(() => {
         let msg = {
             _id: Math.round(Math.random() * 1000),
-            text: '증상을 선택해주세요.',
+            text: '증상 부위를 선택해주세요.',
             createdAt: new Date(),
             user: {
                 _id: 2,
@@ -83,12 +139,12 @@ const ChatScreen = () => {
         msg.quickReplies = {
             type: 'radio', // or 'checkbox',
             keepIt: true,
-            values: replies,
+            values: bodyPart,
         }
         setMessages(previousMessages =>
             GiftedChat.append(previousMessages, [msg])
         );
-    },[replies]);
+    },[bodyPart]);
 
     useEffect(() => {
         setMessages([
@@ -171,12 +227,22 @@ const ChatScreen = () => {
                 avatar: 'https://placeimg.com/140/140/animals',
             }
         }
-        if (quickReply[0].value == "input") {
+        // console.log(quickReply);
+        if (quickReply[0].contentType === "symptom") {
+            let result = [];
+            quickReply.map((item, idx) => {
+                const symptom = item.title;
+                result.push(symptom);
+            });
+            setSelectedSymptom(result);
+        }else if (quickReply[0].value == "input") {
+            setIsTextInput(true);
             msg.text = '증상을 입력해주세요.'
             setMessages(previousMessages => 
                 GiftedChat.append(previousMessages, [msg])
             );
         } else if (quickReply[0].value == "button") {
+            setIsTextInput(false);
             getSymptoms();
         } else {
             console.log("1");

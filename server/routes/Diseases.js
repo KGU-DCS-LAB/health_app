@@ -73,6 +73,23 @@ router.get('/modify/', function(req, res, next) {
     });
 });
 
+router.post('/findBySymptoms', function(req, res, next) {
+    // 증상으로 질병 가져오기
+    let query = [];
+    const regex = (pattern) => new RegExp(`${pattern}`);
+    req.body.data.symptoms.forEach(symptom => {
+        query.push({ 증상: regex(symptom) })
+    });
+    console.log(query);
+    Disease.find().and(query).select('-_id 번호 질병명').distinct('질병명').then( (diseases) => {
+        res.json(diseases)
+        console.log(diseases);
+    }).catch( (err) => {
+        console.log(err);
+        next(err)
+    });
+});
+
 router.get('/delete/', function(req, res, next) {
     // 삭제
     Disease.remove({diseaseID:'5704'}, function(error,output){
