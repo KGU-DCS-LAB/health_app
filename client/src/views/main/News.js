@@ -149,18 +149,18 @@ export default function NewsComponent(){
     const FamilyListView = () => {
       let [service, setService] = React.useState("");
 
-    //   useEffect(()=>{
-    //     axios.get('http://'+IP_address+':5000/usersRouter/findOne/',{
-    //     params: {
-    //       user_id: userId,
-    //     }
-    //   })
-    // .then((response) => {
-    //   setFamliyList(response.data.user_family_list)
-    // }).catch(function (error) {
-    //   console.log(error);
-    // });
-    // },[])
+      useEffect(()=>{
+        axios.get('http://'+IP_address+':5000/usersRouter/findOne/',{
+        params: {
+          user_id: userId,
+        }
+      })
+    .then((response) => {
+      setFamliyList(response.data.user_family_list)
+    }).catch(function (error) {
+      console.log(error);
+    });
+    },[])
       
     return <Center>
     <Box w="3/4" maxW="300">
