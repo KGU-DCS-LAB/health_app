@@ -46,7 +46,7 @@ const AddFamily = () =>{
 
     const saveFamilyInfo = () => {
 
-        axios.post('http://' + IP_address + ':5000/usersRouter/familySave', {
+        axios.post('https://' + IP_address + ':5000/usersRouter/familySave', {
       data: {
         user_id: userId,
         family_user_id: userEmail,
@@ -69,7 +69,7 @@ const AddFamily = () =>{
             } 
         }
   
-        axios.get('http://'+IP_address+':5000/usersRouter/find')
+        axios.get('https://'+IP_address+':5000/usersRouter/find')
           .then((response) => {
             callback(response.data);
           }).catch(function (error) {
@@ -181,7 +181,7 @@ const AddFamily = () =>{
     }
   
     useEffect(()=>{
-      axios.get('http://'+IP_address+':5000/usersRouter/findOne/',{
+      axios.get('https://'+IP_address+':5000/usersRouter/findOne/',{
         params: {
           user_id: userId,
         }

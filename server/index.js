@@ -13,6 +13,9 @@ const chatbotRouter = require('./routes/Chatbot');
 const bookmarkRouter = require('./routes/Bookmark');
 const symptomsRouter = require('./routes/Symptoms');
 
+var cors = require('cors');
+app.use(cors());
+
 //application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({limit: "50mb", extended: true}));
 
@@ -20,6 +23,7 @@ app.use(bodyParser.urlencoded({limit: "50mb", extended: true}));
 app.use(bodyParser.json({limit: "50mb"}));
 
 const mongoose = require('mongoose');
+const { Bookmark } = require('./models/Bookmark');
 
 mongoose.connect(`mongodb+srv://soyoung:${dbpw.mongodbpw}@cluster0.c7eeq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`, {})
 
@@ -33,6 +37,8 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
+
+
 
 app.use('/usersRouter', usersRouter);
 app.use('/diseasesRouter', diseasesRouter);

@@ -14,7 +14,7 @@ const ChatScreen = () => {
 
     const getSymptoms = () => {
         let result = [];
-        axios.get('http://' + IP_address + ':5000/symptomsRouter/find', {
+        axios.get('https://' + IP_address + ':5000/symptomsRouter/find', {
             }).then((response) => {
                 response.data.map((item, idx) => {
                     const symptom = {

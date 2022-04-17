@@ -106,7 +106,10 @@ saveNews = (bmN) => {
               보관함 추가하기
             </Button>
             <View >
-            <FlatList data={bmSArr} renderItem={({
+            <FlatList 
+            data={bmSArr} 
+            keyExtractor={item => item._id}
+            renderItem={({
             item
           }) => <Link href="#" onPress={() => this.saveNews(item.bookmark_name)}>
             <Box borderBottomWidth="1" _dark={{
@@ -130,7 +133,7 @@ saveNews = (bmN) => {
       </Modal> 
       
         <WebView source={{ uri: this.state.url}}
-        style={{ marginTop: 20 }}/>
+        style={{ marginTop: 20 }} originWhitelist={['https://*']}/>
         
       </View>
       </NativeBaseProvider>

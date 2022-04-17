@@ -36,7 +36,7 @@ router.post('/urlSave', function(req, res) {
 });
 
 router.get('/find', function(req, res, next) {
-    // ÀüÃ¼ µ¥ÀÌÅÍ °¡Á®¿À±â
+    // ì „ì²´ ë°ì´í„° ê°€ì ¸ì˜¤ê¸°
     Bookmark.find().then( (bookmarks) => {
         res.json(bookmarks)
     }).catch( (err) => {
@@ -46,10 +46,11 @@ router.get('/find', function(req, res, next) {
 });
 
 router.get('/findOne/', function(req, res, next) {
-    // Æ¯Á¤ ¾ÆÀÌµğ°ª °¡Á®¿À±â
+    // íŠ¹ì • ì•„ì´ë””ê°’ ê°€ì ¸ì˜¤ê¸°
     const bmName = req.query.bookmark_name;
- 
-    Bookmark.findOne({bookmark_name: bmName}, function(error,news){
+    console.log(bmName);
+
+    Bookmark.findOne({"bookmark_name": bmName}, function(error,news){
         console.log('--- Read one ---');
         if(error){
             console.log(error);

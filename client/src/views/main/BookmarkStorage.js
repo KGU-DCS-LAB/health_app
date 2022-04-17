@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import { View, Modal, Button, NativeBaseProvider, Text, Link, Box, Spacer,  Avatar, Center, VStack, HStack } from 'native-base';
 import { Alert, FlatList, SafeAreaView } from 'react-native';
-import AppLoading from "expo-app-loading";
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 const IP_address = process.env.IP_address
@@ -12,7 +11,6 @@ export default function BookmarkStorage() {
     const [modal, setModal] = useState(false);
     const [storageName, setStorageName] = useState('');
     const [oneDataArr, setOneDataArr] = useState('');
-    const [loading, setLoading] = useState(false);
     
     const callback = (data) => {
         setDataArr(data);
@@ -36,17 +34,21 @@ export default function BookmarkStorage() {
     });
     }
 
-    const getStorageData = async () => {
-      try{
-        const response = await axios.get('http://'+IP_address+':5000/bookmarkRouter/find')
-        callback(response.data);
-        setLoading(true);
-      } catch(err) {
-        console.log(err);
-      }
-    }
+    // useEffect(() => {   
+    //   getStorageData()
+    // }, []);
 
-    const onFinish = () => setLoading(false);
+
+    // const getStorageData = async () => {
+    //   try{
+    //     const response = await axios.get('https://'+IP_address+':5000/bookmarkRouter/find')
+    //     callback(response.data);
+    //     setLoading(true);
+    //   } catch(err) {
+    //     console.log(err);
+    //   }
+    // }
+
 
     let bmSArr = Object.values(dataArr).map(bmS => bmS);
     let newsArr = Object.values(oneDataArr).map(news => news)[2];
@@ -55,7 +57,7 @@ export default function BookmarkStorage() {
       return(
     <View >
     { newsArr.map((item) => (
-      <Link href="#" onPress={() => navigation.navigate('NewsDetail', {
+      <Link href="#" keyExtractor={(item) => item._id} onPress={() => navigation.navigate('NewsDetail', {
             url: item.url,
             title: item.title,
             img: item.img
@@ -114,11 +116,6 @@ export default function BookmarkStorage() {
     return(
         <NativeBaseProvider>
       <View >
-      <AppLoading
-        startAsync={getStorageData}
-        onError={console.warn}
-        onFinish={onFinish}
-      />
       <Button onPress={() => addStorage()}>보관함 추가하기</Button>
 
       <FlatList 
