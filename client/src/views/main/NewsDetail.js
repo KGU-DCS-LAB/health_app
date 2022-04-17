@@ -74,9 +74,7 @@ saveNews = (bmN) => {
           news_img: this.state.img,
       }
     })
-      .then((response) => {
-        Alert.alert('저장되었습니다.')
-      })
+    Alert.alert('저장되었습니다.')
     }
     
 
