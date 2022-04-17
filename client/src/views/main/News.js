@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Heading, Box, Center, VStack, HStack,  Button, Image, Stack, Avatar, Spacer, Link } from 'native-base';
+import { View, Heading, Box, Center, VStack, HStack,  Button, Image, Stack, Avatar, Spacer, Link, Select, CheckIcon } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import { StyleSheet, FlatList, Text, Alert } from 'react-native';
@@ -7,10 +7,12 @@ const IP_address = process.env.IP_address
 import AppLoading from "expo-app-loading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ScrollView } from 'react-native';
+import RNPickerSelect from 'react-native-picker-select';
 
 export default function NewsComponent(){
     const navigation = useNavigation(); 
     const [userId, setUserId] = useState('')
+    const [userName, setUserName] = useState('')
     const [userBirth, setUserBirth] = useState('')
 
     useEffect(() => {
@@ -23,7 +25,8 @@ export default function NewsComponent(){
         .then(value => {
           if(value != null){
             const UserInfo = JSON.parse(value);
-            setUserId(UserInfo.user_name);
+            setUserId(UserInfo.user_id);
+            setUserName(UserInfo.user_name);
             setUserBirth(UserInfo.birthday.split('T')[0]);
           }
         }
@@ -35,6 +38,9 @@ export default function NewsComponent(){
     
     const [dataArr, setDataArr] = useState('');
     const [loading, setLoading] = useState(false);
+    const [myNews, setMyNews] = useState(true);
+    const [familyNews, setFamilyNews] = useState(false);
+    const [famliyList, setFamliyList] = useState();
 
     const callback = (data) => {
       setDataArr(data);
@@ -45,7 +51,9 @@ export default function NewsComponent(){
     function display(){
       return(
     <View styles={{paddingBottom: 20}} >
-      <FlatList data={newsArr} renderItem={({
+      <FlatList data={newsArr} 
+      keyExtractor={item => item.url}
+      renderItem={({
       item
     }) => <Link href="#" onPress={() => navigation.navigate('NewsDetail', {
             url: item.newsUrl,
@@ -128,6 +136,48 @@ export default function NewsComponent(){
     }
     const onFinish = () => setLoading(false);
 
+    const showMyNews = () => {
+      setMyNews(true)
+      setFamilyNews(false)
+    }
+
+    const showFamilyNews = () => {
+      setMyNews(false)
+      setFamilyNews(true)
+    }
+
+    const FamilyListView = () => {
+      let [service, setService] = React.useState("");
+
+    //   useEffect(()=>{
+    //     axios.get('http://'+IP_address+':5000/usersRouter/findOne/',{
+    //     params: {
+    //       user_id: userId,
+    //     }
+    //   })
+    // .then((response) => {
+    //   setFamliyList(response.data.user_family_list)
+    // }).catch(function (error) {
+    //   console.log(error);
+    // });
+    // },[])
+      
+    return <Center>
+    <Box w="3/4" maxW="300">
+      <Select selectedValue={service} minWidth="200" accessibilityLabel="Choose Service" placeholder="Choose Service" _selectedItem={{
+      bg: "teal.600",
+      endIcon: <CheckIcon size="5" />
+    }} mt={1} onValueChange={itemValue => setService(itemValue)}>
+        <Select.Item label="UX Research" value="ux" />
+        <Select.Item label="Web Development" value="web" />
+        <Select.Item label="Cross Platform Development" value="cross" />
+        <Select.Item label="UI Designing" value="ui" />
+        <Select.Item label="Backend Development" value="backend" />
+      </Select>
+    </Box>
+  </Center>;
+    };
+
   return <Center w="100%">
   <AppLoading
         startAsync={setShowDiseasesNews}
@@ -139,17 +189,18 @@ export default function NewsComponent(){
         <Heading mt='5' size="sm" color="coolGray.800" _dark={{
         color: "warmGray.50"
       }} fontWeight="semibold">
-          {userId}님을 위한 건강 뉴스
+          {userName}님을 위한 건강 뉴스
         </Heading>
-        <Box alignSelf="center">
         <HStack space={3} mt="5">
-        <Button mt="2"  w="50%" colorScheme="indigo" >
+        <Button mt="2"  w="50%" colorScheme="indigo" onPress = {() => showMyNews()}>
             나의 뉴스
           </Button>
-          <Button mt="2" w="50%" colorScheme="indigo" >
+          <Button mt="2" w="50%" colorScheme="indigo" onPress = {() => showFamilyNews()}>
             가족 뉴스
           </Button>
         </HStack>
+        {myNews && 
+        <Box>
         <Box alignSelf="center">
         <HStack space={3} mt="3" mb="3">
         <Button mt="2"  style={styles.catSelectBtn} onPress={() => {setShowDiseasesNews()}}>
@@ -163,14 +214,25 @@ export default function NewsComponent(){
           </Button>
         </HStack>
         </Box>
-        </Box>
         {display()}
+        </Box>
+        }
+        {familyNews && 
+        <FamilyListView/>
+        }
+        
       </Box>
       
     </Center>
 }
 
 const styles = StyleSheet.create({
+  container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        // alignItems: 'center',
+        justifyContent: 'center',
+    },
     catSelectBtn: {
       backgroundColor: "#512da8",
     },
