@@ -222,7 +222,6 @@ export default function NewsComponent(){
         }
         
       </Box>
-      
     </Center>
 }
 

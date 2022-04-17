@@ -46,7 +46,7 @@ const AddFamily = () =>{
 
     const saveFamilyInfo = () => {
 
-        axios.post('https://' + IP_address + ':5000/usersRouter/familySave', {
+        axios.post('http://' + IP_address + ':5000/usersRouter/familySave', {
       data: {
         user_id: userId,
         family_user_id: userEmail,
@@ -69,7 +69,7 @@ const AddFamily = () =>{
             } 
         }
   
-        axios.get('https://'+IP_address+':5000/usersRouter/find')
+        axios.get('http://'+IP_address+':5000/usersRouter/find')
           .then((response) => {
             callback(response.data);
           }).catch(function (error) {
@@ -176,24 +176,23 @@ const AddFamily = () =>{
       }
     }
 
-    const callback = (data) => {
-      setFamliyList(data.user_famliy_list)
-    }
+    // const callback = (data) => {
+    //   setFamliyList(data.user_famliy_list)
+    // }
   
     useEffect(()=>{
-      axios.get('https://'+IP_address+':5000/usersRouter/findOne/',{
+      axios.get('http://'+IP_address+':5000/usersRouter/findOne/',{
         params: {
           user_id: userId,
         }
       })
     .then((response) => {
-      console.log(response.data);
-      callback(response.data);
+      // console.log(response.data.user_family_list);
+      setFamliyList(response.data.user_family_list)
     }).catch(function (error) {
       console.log(error);
     });
   },[])
-
     return(
       <View>
           <FlatList 
