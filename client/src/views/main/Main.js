@@ -11,13 +11,13 @@ import MyPage from './MyPage';
 import BookmarkStorage from './BookmarkStorage';
 import FamilyManagement from "./FamilyManagement";
 
-function MainScreen() {
-  const navigation = useNavigation(); 
-  
+function MainHomeScreen() {
+  const navigation = useNavigation();
+
   return (
     <NativeBaseProvider>
       <WeatherComponent />
-      <NewsComponent/>
+      <NewsComponent />
       <Fab renderInPortal={false} shadow={2} size="sm" onPress={() => navigation.navigate('ChatBot')} icon={<Icon color="white" as={<AntDesign name="wechat" />} size="lg" />} />
     </NativeBaseProvider>
   )
@@ -28,11 +28,11 @@ const Drawer = createDrawerNavigator();
 export default function Main() {
 
   return (
-      <Drawer.Navigator initialRouteName="Main">
-        <Drawer.Screen name="Main" component={MainScreen} />
-        <Drawer.Screen name="MyPage" component={MyPage} />
-        <Drawer.Screen name="BookmarkStorage" component={BookmarkStorage} />
-        <Drawer.Screen name="FamilyManagement" component={FamilyManagement} />
-      </Drawer.Navigator>
+    <Drawer.Navigator initialRouteName="MainHome">
+      <Drawer.Screen name="MainHome" component={MainHomeScreen} />
+      <Drawer.Screen name="MyPage" component={MyPage} />
+      <Drawer.Screen name="BookmarkStorage" component={BookmarkStorage} />
+      <Drawer.Screen name="FamilyManagement" component={FamilyManagement} />
+    </Drawer.Navigator>
   )
 }
