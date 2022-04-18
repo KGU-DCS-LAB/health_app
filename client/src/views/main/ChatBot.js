@@ -14,7 +14,7 @@ const ChatScreen = () => {
 
     const getSymptoms = () => {
         let result = [];
-        axios.get('https://' + IP_address + ':5000/symptomsRouter/find', {
+        axios.get('http://' + IP_address + ':5000/symptomsRouter/find', {
             }).then((response) => {
                 response.data.map((item, idx) => {
                     const symptom = {
@@ -50,6 +50,9 @@ const ChatScreen = () => {
 
     useEffect(() => {
         let result = [];
+        if(selectedSymptom.length === 0){
+            return;
+        }
         axios.post('http://' + IP_address + ':5000/diseasesRouter/findBySymptoms', {
                 data : {symptoms: selectedSymptom}
             }).then((response) => {
@@ -68,7 +71,6 @@ const ChatScreen = () => {
     }, [selectedSymptom])
 
     useEffect(() => {
-        console.log(diseases)
         if (!diseases){
             setMessages(previousMessages =>
                 GiftedChat.append(previousMessages, 
@@ -209,7 +211,7 @@ const ChatScreen = () => {
             }
         }).then((response) => {
             const text = response.data.message + '';
-            console.log(response.data);
+            // console.log(response.data);
             setMessages(previousMessages => GiftedChat.append(previousMessages, [
                 {
                     _id: Math.round(Math.random() * 1000),
@@ -259,7 +261,6 @@ const ChatScreen = () => {
             setIsTextInput(false);
             getSymptoms();
         } else {
-            console.log("1");
             getDetail(quickReply[0].title);
         }
     }, [])
