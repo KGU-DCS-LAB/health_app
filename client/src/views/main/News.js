@@ -54,35 +54,38 @@ export default function NewsComponent() {
       <View styles={{ paddingBottom: 20 }} >
         <FlatList data={newsArr}
           keyExtractor={item => item.newsUrl}
-          renderItem={({
-            item
-          }) => <Link href="#" onPress={() => navigation.navigate('NewsDetail', {
-            url: item.newsUrl,
-            title: item.title,
-            img: item.img
-          })} >
-              <Box key={item.newsUrl} borderBottomWidth="1" _dark={{
-                borderColor: "gray.600"
-              }} borderColor="coolGray.200" py="2" >
-                <HStack space={3} justifyContent="space-between">
-                  <Avatar size="48px" source={{
-                    uri: item.img
-                  }} />
-                  <VStack>
-                    <Text numberOfLines={1} ellipsizeMode='tail' _dark={{
-                      color: "warmGray.50"
-                    }} color="coolGray.800" bold >
-                      {item.title}
-                    </Text>
-                    <Text fontSize="xs" _dark={{
-                      color: "warmGray.50"
-                    }} color="coolGray.800" >
-                      {item.time}
-                    </Text>
-                  </VStack>
-                  <Spacer />
-                </HStack>
-              </Box></Link>} />
+          renderItem={
+            ({ item }) => (
+              <Link href="#" onPress={() => navigation.navigate('NewsDetail', {
+                url: item.newsUrl,
+                title: item.title,
+                img: item.img
+              })}>
+                <Box key={item.newsUrl} borderBottomWidth="1" _dark={{
+                  borderColor: "gray.600"
+                }} borderColor="coolGray.200" py="2" >
+                  <HStack space={3} justifyContent="space-between">
+                    <Avatar size="48px" source={{
+                      uri: item.img
+                    }} />
+                    <VStack>
+                      <Text numberOfLines={1} ellipsizeMode='tail' _dark={{
+                        color: "warmGray.50"
+                      }} color="coolGray.800" bold >
+                        {item.title}
+                      </Text>
+                      <Text fontSize="xs" _dark={{
+                        color: "warmGray.50"
+                      }} color="coolGray.800" >
+                        {item.time}
+                      </Text>
+                    </VStack>
+                    <Spacer />
+                  </HStack>
+                </Box>
+              </Link>
+            )}
+        />
       </View>
     )
   }
