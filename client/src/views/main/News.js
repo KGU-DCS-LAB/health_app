@@ -7,7 +7,7 @@ const IP_address = process.env.IP_address
 import AppLoading from "expo-app-loading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ScrollView } from 'react-native';
-import RNPickerSelect from 'react-native-picker-select';
+import SelectDropdown from 'react-native-select-dropdown'
 
 export default function NewsComponent() {
   const navigation = useNavigation();
@@ -17,6 +17,7 @@ export default function NewsComponent() {
 
   useEffect(() => {
     getData();
+    getFamilyList();
   }, [])
 
   const getData = () => {
@@ -40,7 +41,8 @@ export default function NewsComponent() {
   const [loading, setLoading] = useState(false);
   const [myNews, setMyNews] = useState(true);
   const [familyNews, setFamilyNews] = useState(false);
-  const [famliyList, setFamliyList] = useState();
+  const [familyList, setFamliyList] = useState();
+  const [selectedFamily, setSelectedFamily] = useState();
 
   const callback = (data) => {
     setDataArr(data);
@@ -141,46 +143,71 @@ export default function NewsComponent() {
   const onFinish = () => setLoading(false);
 
   const showMyNews = () => {
+    setDataArr('');
     setMyNews(true)
     setFamilyNews(false)
   }
 
   const showFamilyNews = () => {
+    setDataArr('');
     setMyNews(false)
     setFamilyNews(true)
   }
 
-  const FamilyListView = () => {
-    let [service, setService] = React.useState("");
-
-    useEffect(() => {
+  const getFamilyList = () => {
       axios.get('http://' + IP_address + ':5000/usersRouter/findOne/', {
         params: {
           user_id: userId,
         }
       })
         .then((response) => {
+          console.log(response.data.user_family_list);
           setFamliyList(response.data.user_family_list)
         }).catch(function (error) {
           console.log(error);
         });
-    }, [])
+  }
 
-    return <Center>
-      <Box w="3/4" maxW="300">
-        <Select selectedValue={service} minWidth="200" accessibilityLabel="Choose Service" placeholder="Choose Service" _selectedItem={{
-          bg: "teal.600",
-          endIcon: <CheckIcon size="5" />
-        }} mt={1} onValueChange={itemValue => setService(itemValue)}>
-          <Select.Item label="UX Research" value="ux" />
-          <Select.Item label="Web Development" value="web" />
-          <Select.Item label="Cross Platform Development" value="cross" />
-          <Select.Item label="UI Designing" value="ui" />
-          <Select.Item label="Backend Development" value="backend" />
-        </Select>
-      </Box>
-    </Center>;
+  let familyArr = Object.values(familyList).map(item => item.nickname)
+  console.log(familyArr);
+
+  const FamilyListView = () => {
+    const countries = ["Egypt", "Canada", "Australia", "Ireland"]
+    return (
+      <SelectDropdown
+        data={familyArr}
+        onSelect={(selectedItem, index) => {
+          setSelectedFamily(selectedItem)
+          console.log(selectedItem, index)
+        }}
+        buttonTextAfterSelection={(selectedItem, index) => {
+          return selectedItem
+        }}
+        rowTextForSelection={(item, index) => {
+          return item
+        }}
+      />
+    )
   };
+
+  const ShowFamilyNewsList = () => {
+    console.log(selectedFamily);
+    return (
+      <Box>
+          <Box alignSelf="center">
+            <HStack space={3} mt="3" mb="3">
+              <Button mt="2" style={styles.catSelectBtn} onPress={() => { setShowDiseasesNews() }}>
+                질병
+              </Button>
+              <Button mt="2" style={styles.catSelectBtn} onPress={() => { setShowAgeNews() }}>
+                나이
+              </Button>
+            </HStack>
+          </Box>
+          {display()}
+        </Box>
+    )
+  }
 
   return <Center w="100%">
     <AppLoading
@@ -222,7 +249,10 @@ export default function NewsComponent() {
         </Box>
       }
       {familyNews &&
-        <FamilyListView />
+      <View>
+          <FamilyListView />
+        <ShowFamilyNewsList/>
+      </View>
       }
 
     </Box>
