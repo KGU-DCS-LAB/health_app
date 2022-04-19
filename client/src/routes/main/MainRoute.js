@@ -10,6 +10,7 @@ import BookmarkStorage from '../../views/main/BookmarkStorage';
 import FamilyManagement from '../../views/main/FamilyManagement';
 import { createStackNavigator } from '@react-navigation/stack';
 import FamlilyListView from '../../views/main/FamilyList';
+import DiseaseDetail from '../../views/main/DiseaseDetail'
 
 const Stack = createStackNavigator();
 
@@ -54,6 +55,11 @@ const MainRoute = () =>{
             <Stack.Screen
             name='ChatBot'
             component={ChatBot}
+            />
+
+            <Stack.Screen
+                name='DiseaseDetail'
+                component={DiseaseDetail}
             />
 
             <Stack.Screen

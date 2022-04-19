@@ -56,9 +56,8 @@ const LoginComponent = () => {
 
   const setDate = async (user) => {
       try{
-        console.log(user);
         await AsyncStorage.setItem('userInfo', JSON.stringify(user), () => {
-          console.log(JSON.stringify(user));
+          // console.log(JSON.stringify(user));
           console.log('유저정보 저장 완료')
         });
         navigation.navigate('Main')
@@ -91,7 +90,7 @@ const LoginComponent = () => {
                   returnKeyType="next"
                   blurOnSubmit={false} />
                   <InputRightAddon children={"@"} />
-                  <Select selectedValue={domain} accessibilityLabel="Choose Domain" placeholder="Choose Domain" _selectedItem={{
+                  {/* <Select selectedValue={domain} accessibilityLabel="Choose Domain" placeholder="Choose Domain" _selectedItem={{
                     bg: "teal.600",
                     endIcon: <CheckIcon size="5" />
                 }}  onValueChange={itemValue => setDomain(itemValue)}
@@ -102,7 +101,13 @@ const LoginComponent = () => {
                     <Select.Item label="google.com" value="google.com" />
                     <Select.Item label="naver.com" value="naver.com" />
                     <Select.Item label="daum.net" value="daum.net" />
-                  </Select>
+                  </Select> */}
+                  <Input w={{
+                  base: "48%",
+                  md: "100%"
+                  }} onChangeText={itemValue => setDomain(itemValue)}
+                  returnKeyType="next"
+                  blurOnSubmit={false} />
                 </InputGroup>
             </FormControl>
             <FormControl>

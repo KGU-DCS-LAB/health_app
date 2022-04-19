@@ -3,8 +3,10 @@ import { GiftedChat } from 'react-native-gifted-chat'
 import { View, Text, Alert, VStack, HStack, Box, NativeBaseProvider } from "native-base";
 const IP_address = process.env.IP_address
 import axios from 'axios';
+import { useNavigation } from "@react-navigation/native";
 
 const ChatScreen = () => {
+    const navigation = useNavigation();
     const [messages, setMessages] = useState([]);
     const [selectedSymptom, setSelectedSymptom] = useState([]);
     const [symptoms, setSymptoms] = useState([]);
@@ -59,8 +61,8 @@ const ChatScreen = () => {
                 response.data.map((item, idx) => {
                     const disease = {
                         contentType: "disease",
-                        title: item,
-                        value: idx
+                        title: item.질병명,
+                        value: item.링크
                     }
                     result.push(disease);
                 });
@@ -88,14 +90,15 @@ const ChatScreen = () => {
             );
         } else {
             let result = [];
-            diseases.map((item, idx) => {
-                const symptom = {
-                    contentType: "disease",
-                    title: item.질병명,
-                    value: item.번호
-                }
-                result.push(symptom);
-            });
+            // diseases.map((item, idx) => {
+            //     console.log(item.title);
+            //     const symptom = {
+            //         contentType: "disease",
+            //         title: item.title,
+            //         value: item.value
+            //     }
+            //     result.push(symptom);
+            // });
             setMessages(previousMessages =>
                 GiftedChat.append(previousMessages, 
                     [{
@@ -103,7 +106,7 @@ const ChatScreen = () => {
                         text: '유추되는 질병은 다음과 같습니다. 상세 정보를 확인하고 싶은 질병을 선택해주세요.',
                         createdAt: new Date(),
                         quickReplies: {
-                            type: 'checkbox', 
+                            type: 'radio', 
                             keepIt: true,
                             values: diseases,
                         },
@@ -260,6 +263,10 @@ const ChatScreen = () => {
         } else if (quickReply[0].value == "button") {
             setIsTextInput(false);
             getSymptoms();
+        } else if (quickReply[0].contentType === "disease"){
+            navigation.navigate('NewsDetail', {
+                url: quickReply[0].value
+              })
         } else {
             getDetail(quickReply[0].title);
         }
