@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Heading, Box, Center, VStack, HStack, Button, Image, Stack, Avatar, Spacer, Link, Select, CheckIcon } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
-import { StyleSheet, FlatList, Text, Alert } from 'react-native';
+import { StyleSheet, FlatList, Text, Alert, TouchableOpacity } from 'react-native';
 const IP_address = process.env.IP_address
 import AppLoading from "expo-app-loading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -58,7 +58,7 @@ export default function NewsComponent() {
           keyExtractor={item => item.newsUrl}
           renderItem={
             ({ item }) => (
-              <Link href="#" onPress={() => navigation.navigate('NewsDetail', {
+              <TouchableOpacity href="#" onPress={() => navigation.navigate('NewsDetail', {
                 url: item.newsUrl,
                 title: item.title,
                 img: item.img
@@ -85,7 +85,7 @@ export default function NewsComponent() {
                     <Spacer />
                   </HStack>
                 </Box>
-              </Link>
+              </TouchableOpacity>
             )}
         />
       </View>

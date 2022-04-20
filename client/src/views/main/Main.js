@@ -1,5 +1,5 @@
 import React from "react";
-import { NativeBaseProvider, Fab, Icon } from 'native-base';
+import { NativeBaseProvider, Fab, Icon, View } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import { NavigationContainer } from '@react-navigation/native'
@@ -16,8 +16,12 @@ function MainHomeScreen() {
 
   return (
     <NativeBaseProvider>
-      <WeatherComponent />
-      <NewsComponent />
+      <View style={{ flex: 0.4 }}>
+        <WeatherComponent />
+      </View>
+      <View style={{ flex: 0.6 }}>
+        <NewsComponent />
+      </View>
       <Fab renderInPortal={false} shadow={2} size="sm" onPress={() => navigation.navigate('ChatBot')} icon={<Icon color="white" as={<AntDesign name="wechat" />} size="lg" />} />
     </NativeBaseProvider>
   )
