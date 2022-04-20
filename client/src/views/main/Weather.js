@@ -1,10 +1,11 @@
-import React, { useState, createRef } from "react";
+import React, { useState, createRef, useCallback, useRef } from "react";
 import { View, Heading, Text, Box, Center, VStack, HStack, FormControl, Link, Button, NativeBaseProvider, Input, Select, InputGroup, CheckIcon, InputRightAddon, AspectRatio, Image, Stack } from 'native-base';
 import { Alert } from 'react-native';
 import axios from 'axios';
 import { Ionicons } from '@expo/vector-icons';
 import * as Location from "expo-location";
 import { weatherAPI_KEY, kakaoAPI_KEY, HealthWthrIdxAPI_KEY, IP_address } from '@env'
+import Carousel from 'react-native-snap-carousel';
 
 Date.prototype.format = function (f) {
     if (!this.valueOf()) return " ";
@@ -39,54 +40,83 @@ const today = new Date();
 const WeatherComponent = (props) => {
     const today_string = today.format('MM월 dd일 E a/p hh:mm');
 
-    return <Center w="100%">
-        <Box safeArea p="2" py="8" w="95%">
-            <Box w="100%" rounded="lg" overflow="hidden" borderColor="coolGray.200" borderWidth="1" _dark={{
-                borderColor: "coolGray.600",
-                backgroundColor: "gray.700"
-            }} _web={{
-                shadow: 2,
-                borderWidth: 0
-            }} _light={{
-                backgroundColor: "gray.50"
-            }}>
-                <Box>
-                    <Center w="100%" >
-                        {props.state.SKY === '1' && <Ionicons name="sunny-outline" size={50} color="black" />}
-                        {props.state.SKY === '3' && <Ionicons name="partly-sunny-outline" size={50} color="black" />}
-                        {props.state.SKY === '4' && <Ionicons name="cloudy-outline" size={50} color="black" />}
-                        <Text fontSize='lg'>
-                            {props.state.T1H}°
-                        </Text>
-                    </Center>
-                </Box>
-                <Stack p="4" space={3}>
-                    <Stack space={2}>
-                        <Heading size="md" ml="-1">
-                            <Ionicons name="location-sharp" size={24} color="black" />
-                            {props.state.location}
-                        </Heading>
-                        <Text fontSize="xs" _light={{
-                            color: "violet.500"
-                        }} _dark={{
-                            color: "violet.400"
-                        }} fontWeight="500" ml="-0.5" mt="-1" >
-                            {today_string}
+    const exampleItems = [
+        {name:"hi"},{name:"hi2"}
+    ]
+
+    const renderItem = useCallback(({ item, index }) => (
+        <View><Text>{item.name}</Text></View>
+      ), []);
+    
+
+    const CustomCarousel = () => {
+        const [activeIndex, setActiveIndex] = useState(0);
+        const [carouselItems, setCarouselItems] = useState(exampleItems);
+        const ref = useRef(null);
+        return (
+            // <Carousel
+            //     layout="default"
+            //     ref={ref}
+            //     data={carouselItems}
+            //     sliderWidth={350}
+            //     itemWidth={350}
+            //     renderItem={renderItem}
+            //     onSnapToItem={(index) => setActiveIndex(index)}
+            // />
+            <Center w="100%">
+            <Box safeArea p="2" py="8" w="95%">
+                <Box w="100%" rounded="lg" overflow="hidden" borderColor="coolGray.200" borderWidth="1" _dark={{
+                    borderColor: "coolGray.600",
+                    backgroundColor: "gray.700"
+                }} _web={{
+                    shadow: 2,
+                    borderWidth: 0
+                }} _light={{
+                    backgroundColor: "gray.50"
+                }}>
+                    <Box>
+                        <Center w="100%" >
+                            {props.state.SKY === '1' && <Ionicons name="sunny-outline" size={50} color="black" />}
+                            {props.state.SKY === '3' && <Ionicons name="partly-sunny-outline" size={50} color="black" />}
+                            {props.state.SKY === '4' && <Ionicons name="cloudy-outline" size={50} color="black" />}
+                            <Text fontSize='lg'>
+                                {props.state.T1H}°
+                            </Text>
+                        </Center>
+                    </Box>
+                    <Stack p="4" space={3}>
+                        <Stack space={2}>
+                            <Heading size="md" ml="-1">
+                                <Ionicons name="location-sharp" size={24} color="black" />
+                                {props.state.location}
+                            </Heading>
+                            <Text fontSize="xs" _light={{
+                                color: "violet.500"
+                            }} _dark={{
+                                color: "violet.400"
+                            }} fontWeight="500" ml="-0.5" mt="-1" >
+                                {today_string}
+                            </Text>
+                        </Stack>
+                        <Text fontWeight="400">
+                            천식폐질환가능지수: {props.state.getAsthmaIdxV2}
+                            뇌졸중가능지수: {props.state.getStrokeIdxV2}
+                            식중독지수: {props.state.getFoodPoisoningIdxV2}
+                            꽃가루농도위험지수(참나무): {props.state.getOakPollenRiskIdxV2}
+                            꽃가루농도위험지수(소나무): {props.state.getPinePollenRiskIdxV2}
+                            꽃가루농도위험지수(잡초류): {props.state.getWeedsPollenRiskndxV2}
+                            감기가능지수: {props.state.getColdIdxV2}
                         </Text>
                     </Stack>
-                    <Text fontWeight="400">
-                        천식폐질환가능지수: {props.state.getAsthmaIdxV2}
-                        뇌졸중가능지수: {props.state.getStrokeIdxV2}
-                        식중독지수: {props.state.getFoodPoisoningIdxV2}
-                        꽃가루농도위험지수(참나무): {props.state.getOakPollenRiskIdxV2}
-                        꽃가루농도위험지수(소나무): {props.state.getPinePollenRiskIdxV2}
-                        꽃가루농도위험지수(잡초류): {props.state.getWeedsPollenRiskndxV2}
-                        감기가능지수: {props.state.getColdIdxV2}
-                    </Text>
-                </Stack>
+                </Box>
             </Box>
-        </Box>
-    </Center>;
+        </Center>
+        )
+    }
+
+    return (
+        <CustomCarousel />
+    );
 }
 
 export default class extends React.Component {
@@ -197,22 +227,22 @@ export default class extends React.Component {
         const hour = today.format('HH');
         const mins = today.format('mm');
         let base_time = today.format('HHmm');
-        if(parseInt(mins) < 30){
-            base_time = (parseInt(hour)-1) + '30';
+        if (parseInt(mins) < 30) {
+            base_time = (parseInt(hour) - 1) + '30';
         }
         const sky_url = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst?serviceKey=" + weatherAPI_KEY + "&pageNo=1&numOfRows=1000&dataType=JSON&base_date=" + base_date + "&base_time=" + base_time + "&nx=" + this.state.x + "&ny=" + this.state.y;
-        const temp_url = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst?serviceKey="+weatherAPI_KEY+"&pageNo=1&numOfRows=1000&dataType=JSON&base_date=" + base_date + "&base_time=" + base_time + "&nx=" + this.state.x + "&ny=" + this.state.y;
+        const temp_url = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst?serviceKey=" + weatherAPI_KEY + "&pageNo=1&numOfRows=1000&dataType=JSON&base_date=" + base_date + "&base_time=" + base_time + "&nx=" + this.state.x + "&ny=" + this.state.y;
 
         axios.get(sky_url)
             .then((response) => {
                 const value = response.data.response.body.items.item[18];
-                this.setState({SKY: value.fcstValue})
+                this.setState({ SKY: value.fcstValue })
                 console.log("1");
             }).catch(function (error) {
                 // 오류발생시 실행
                 console.log(error);
             });
-        
+
         axios.get(temp_url)
             .then((response) => {
                 const value = response.data.response.body.items
@@ -228,14 +258,14 @@ export default class extends React.Component {
         const hour = today.format("HH");
         const month = parseInt(today.format('MM'));
         let url_type = ['getAsthmaIdxV2', 'getStrokeIdxV2', 'getFoodPoisoningIdxV2'];
-        if(month > 3 && month < 7){
+        if (month > 3 && month < 7) {
             url_type = url_type.concat('getOakPollenRiskIdxV2');
             url_type = url_type.concat('getPinePollenRiskIdxV2');
         }
-        if(month > 7 && month < 11){
+        if (month > 7 && month < 11) {
             url_type = url_type.concat('getWeedsPollenRiskndxV2');
         }
-        if(month > 8 || month < 5){
+        if (month > 8 || month < 5) {
             url_type = url_type.concat('getColdIdxV2');
         }
         const areaNo = '1162060500';
@@ -261,7 +291,7 @@ export default class extends React.Component {
                     } else {
                         code = items.today;
                     }
-                    switch(type) {
+                    switch (type) {
                         case 'getAsthmaIdxV2':
                             this.setState({ getAsthmaIdxV2: code });
                             break;
