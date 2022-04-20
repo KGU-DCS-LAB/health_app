@@ -1,6 +1,6 @@
 import Login from '../../views/user/Login';
 import Home from '../../views/main/Home';
-import SignIn from '../../views/main/SignIn';
+import SignIn from '../../views/user/SignIn';
 import FindPW from '../../views/main/FindPW';
 import Main from '../../views/main/Main';
 import ChangePW from '../../views/main/ChangePW';
