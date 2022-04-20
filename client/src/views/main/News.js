@@ -37,12 +37,12 @@ export default function NewsComponent() {
     }
   }
 
-  const [dataArr, setDataArr] = useState('');
+  const [dataArr, setDataArr] = useState([]);
   const [loading, setLoading] = useState(false);
   const [myNews, setMyNews] = useState(true);
   const [familyNews, setFamilyNews] = useState(false);
-  const [familyList, setFamliyList] = useState();
-  const [selectedFamily, setSelectedFamily] = useState();
+  const [familyList, setFamliyList] = useState([]);
+  const [selectedFamily, setSelectedFamily] = useState([]);
 
   const callback = (data) => {
     setDataArr(data);
@@ -155,17 +155,17 @@ export default function NewsComponent() {
   }
 
   const getFamilyList = () => {
-      axios.get('http://' + IP_address + ':5000/usersRouter/findOne/', {
-        params: {
-          user_id: userId,
-        }
-      })
-        .then((response) => {
-          console.log(response.data.user_family_list);
-          setFamliyList(response.data.user_family_list)
-        }).catch(function (error) {
-          console.log(error);
-        });
+    axios.get('http://' + IP_address + ':5000/usersRouter/findOne/', {
+      params: {
+        user_id: userId,
+      }
+    })
+      .then((response) => {
+        console.log(response.data.user_family_list);
+        setFamliyList(response.data.user_family_list)
+      }).catch(function (error) {
+        console.log(error);
+      });
   }
 
   let familyArr = Object.values(familyList).map(item => item.nickname)
@@ -194,69 +194,71 @@ export default function NewsComponent() {
     console.log(selectedFamily);
     return (
       <Box>
-          <Box alignSelf="center">
-            <HStack space={3} mt="3" mb="3">
-              <Button mt="2" style={styles.catSelectBtn} onPress={() => { setShowDiseasesNews() }}>
-                질병
-              </Button>
-              <Button mt="2" style={styles.catSelectBtn} onPress={() => { setShowAgeNews() }}>
-                나이
-              </Button>
-            </HStack>
-          </Box>
-          {display()}
+        <Box alignSelf="center">
+          <HStack space={3} mt="3" mb="3">
+            <Button mt="2" style={styles.catSelectBtn} onPress={() => { setShowDiseasesNews() }}>
+              질병
+            </Button>
+            <Button mt="2" style={styles.catSelectBtn} onPress={() => { setShowAgeNews() }}>
+              나이
+            </Button>
+          </HStack>
         </Box>
+        {display()}
+      </Box>
     )
   }
 
-  return <Center w="100%">
-    <AppLoading
-      startAsync={setShowDiseasesNews}
-      onError={console.warn}
-      onFinish={onFinish}
-    />
-    <Box safeArea p="1" w="100%" maxW="290" py="8">
-      <View style={{ borderBottomColor: 'black', borderBottomWidth: 3, }} />
-      <Heading mt='5' size="sm" color="coolGray.800" _dark={{
-        color: "warmGray.50"
-      }} fontWeight="semibold">
-        {userName}님을 위한 건강 뉴스
-      </Heading>
-      <HStack space={3} mt="5">
-        <Button mt="2" w="50%" colorScheme="indigo" onPress={() => showMyNews()}>
-          나의 뉴스
-        </Button>
-        <Button mt="2" w="50%" colorScheme="indigo" onPress={() => showFamilyNews()}>
-          가족 뉴스
-        </Button>
-      </HStack>
-      {myNews &&
-        <Box>
-          <Box alignSelf="center">
-            <HStack space={3} mt="3" mb="3">
-              <Button mt="2" style={styles.catSelectBtn} onPress={() => { setShowDiseasesNews() }}>
-                질병
-              </Button>
-              <Button mt="2" style={styles.catSelectBtn} onPress={() => { setShowAgeNews() }}>
-                나이
-              </Button>
-              <Button mt="2" style={styles.catSelectBtn} onPress={() => { setShowFHistoryNews() }}>
-                가족력
-              </Button>
-            </HStack>
+  return (
+    <Center w="100%">
+      <AppLoading
+        startAsync={setShowDiseasesNews}
+        onError={console.warn}
+        onFinish={onFinish}
+      />
+      <Box safeArea p="1" w="100%" maxW="290" py="8">
+        <View style={{ borderBottomColor: 'black', borderBottomWidth: 3, }} />
+        <Heading mt='5' size="sm" color="coolGray.800" _dark={{
+          color: "warmGray.50"
+        }} fontWeight="semibold">
+          {userName}님을 위한 건강 뉴스
+        </Heading>
+        <HStack space={3} mt="5">
+          <Button mt="2" w="50%" colorScheme="indigo" onPress={() => showMyNews()}>
+            나의 뉴스
+          </Button>
+          <Button mt="2" w="50%" colorScheme="indigo" onPress={() => showFamilyNews()}>
+            가족 뉴스
+          </Button>
+        </HStack>
+        {myNews &&
+          <Box>
+            <Box alignSelf="center">
+              <HStack space={3} mt="3" mb="3">
+                <Button mt="2" style={styles.catSelectBtn} onPress={() => { setShowDiseasesNews() }}>
+                  질병
+                </Button>
+                <Button mt="2" style={styles.catSelectBtn} onPress={() => { setShowAgeNews() }}>
+                  나이
+                </Button>
+                <Button mt="2" style={styles.catSelectBtn} onPress={() => { setShowFHistoryNews() }}>
+                  가족력
+                </Button>
+              </HStack>
+            </Box>
+            {display()}
           </Box>
-          {display()}
-        </Box>
-      }
-      {familyNews &&
-      <View>
-          <FamilyListView />
-        <ShowFamilyNewsList/>
-      </View>
-      }
+        }
+        {familyNews &&
+          <View>
+            <FamilyListView />
+            <ShowFamilyNewsList />
+          </View>
+        }
 
-    </Box>
-  </Center>
+      </Box>
+    </Center>
+  )
 }
 
 const styles = StyleSheet.create({
