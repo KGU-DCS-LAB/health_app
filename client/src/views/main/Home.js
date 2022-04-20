@@ -4,16 +4,21 @@ import { StatusBar } from 'expo-status-bar';
 
 
 export default class Home extends Component {
+
+  componentDidMount(){
+    this.goLoginScreen();
+  }
+
     render() {
       return(
         <View style={styles.container}>
           <Text style={styles.assa}>헬스케어</Text>
-          <Button style={styles.startBtn} title="로그인" 
+          {/* <Button style={styles.startBtn} title="로그인" 
             onPress={() => this.goLoginScreen()}
           />
           <Button style={styles.startBtn} title="회원가입" 
             onPress={() => this.goSignInScreen()}
-          />
+          /> */}
           <StatusBar style="auto" />
         </View>
       );

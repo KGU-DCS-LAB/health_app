@@ -1,4 +1,4 @@
-import Login from '../../views/main/Login';
+import Login from '../../views/user/Login';
 import Home from '../../views/main/Home';
 import SignIn from '../../views/main/SignIn';
 import FindPW from '../../views/main/FindPW';
@@ -14,47 +14,47 @@ import DiseaseDetail from '../../views/main/DiseaseDetail'
 
 const Stack = createStackNavigator();
 
-const MainRoute = () =>{
+const MainRoute = () => {
     return (
-        <Stack.Navigator  initialRouteName='Home' screenOptions={{ headerShown: false }} >
-            <Stack.Screen 
-            name='Home'
-            component={Home}
+        <Stack.Navigator initialRouteName='Home' screenOptions={{ headerShown: false }} >
+            <Stack.Screen
+                name='Home'
+                component={Home}
             />
 
             <Stack.Screen
-            name='SignIn'
-            component={SignIn}
+                name='SignIn'
+                component={SignIn}
             />
 
             <Stack.Screen
-            name='Login'
-            component={Login}
+                name='Login'
+                component={Login}
             />
 
             <Stack.Screen
-            name='FindPW'
-            component={FindPW}
+                name='FindPW'
+                component={FindPW}
             />
 
             <Stack.Screen
-            name='Main'
-            component={Main}
+                name='Main'
+                component={Main}
             />
 
             <Stack.Screen
-            name='ChangePW'
-            component={ChangePW}
+                name='ChangePW'
+                component={ChangePW}
             />
 
             <Stack.Screen
-            name='NewsDetail'
-            component={NewsDetail}
+                name='NewsDetail'
+                component={NewsDetail}
             />
 
             <Stack.Screen
-            name='ChatBot'
-            component={ChatBot}
+                name='ChatBot'
+                component={ChatBot}
             />
 
             <Stack.Screen
@@ -63,18 +63,18 @@ const MainRoute = () =>{
             />
 
             <Stack.Screen
-            name='BookmarkStorage'
-            component={BookmarkStorage}
+                name='BookmarkStorage'
+                component={BookmarkStorage}
             />
 
             <Stack.Screen
-            name='FamilyManagement'
-            component={FamilyManagement}
+                name='FamilyManagement'
+                component={FamilyManagement}
             />
 
             <Stack.Screen
-            name='FamlilyListView'
-            component={FamlilyListView}
+                name='FamlilyListView'
+                component={FamlilyListView}
             />
         </Stack.Navigator>
     )
