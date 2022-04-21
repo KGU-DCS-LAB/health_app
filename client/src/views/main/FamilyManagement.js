@@ -54,6 +54,7 @@ const AddFamily = () =>{
       }
     })
             Alert.alert('가족이 추가되었습니다.');
+            console.log("123");
             setModalVisible(false);
     }
 
