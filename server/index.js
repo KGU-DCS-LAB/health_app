@@ -24,6 +24,7 @@ app.use(bodyParser.json({limit: "50mb"}));
 
 const mongoose = require('mongoose');
 const { Bookmark } = require('./models/Bookmark');
+const { User } = require('./models/User');
 
 mongoose.connect(`mongodb+srv://soyoung:${dbpw.mongodbpw}@cluster0.c7eeq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`, {})
 
@@ -38,6 +39,30 @@ app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
 
+// var newUser = new User({
+//       user_id : "ellie5508@naver.com",
+// 			password : "1234",
+// 			user_name : "seonae",
+// 			gender : "여",
+// 			birthday : 2022-02-04,
+// 			gender : "female",
+//       residence: " 의정부",
+// 			user_diseases: [{
+// 				"disease": '코로나',
+// 			}],
+//       user_family_list: [{
+// 				"user_id": 'sypark041754@google.com',
+//         "nickname": "소영",
+// 			}]
+// });
+
+// newUser.save(function(error, data){
+//   if(error){
+//       console.log(error);
+//   }else{
+//       console.log('Saved!');
+//   }
+// });
 
 
 app.use('/usersRouter', usersRouter);

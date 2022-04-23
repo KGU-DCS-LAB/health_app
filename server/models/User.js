@@ -38,10 +38,10 @@ const userSchema = mongoose.Schema({
         type: Number,
         default: 0
     },
-    user_diseases: {
-        type: Array,
-        diseases : [{disease : String}]
-    },
+    user_diseases: [{
+        id: Number,
+        disease : String
+    }],
     user_family_list: [{
         user_id: String,
         nickname: String
