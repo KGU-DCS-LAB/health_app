@@ -24,6 +24,7 @@ export default function NewsComponent() {
   useEffect(() => {
     getData();
     getFamilyList();
+    setShowDiseasesNews()
   }, [])
 
   const getData = () => {
@@ -100,9 +101,23 @@ export default function NewsComponent() {
 
   // console.log(Object.values(dataArr).map(news => (news.time)));
 
-  const setShowDiseasesNews = async (disease) => {
-    console.log('adasdasdasasda');
-    console.log(disease);
+  const setShowDiseasesNews = async () => {
+    console.log('asdsdsdasdasdsd');
+    console.log(myDisease.disease);
+    try {
+      const response = await axios.get('http://' + IP_address + ':5000/newsRouter/news', {
+        params: {
+          keyword: myDisease.disease
+        }
+      })
+      callback(response.data);
+      setLoading(true);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  const setShowFamliyDiseasesNews = async (disease) => {
     try {
       const response = await axios.get('http://' + IP_address + ':5000/newsRouter/news', {
         params: {
@@ -171,8 +186,8 @@ export default function NewsComponent() {
       }
     })
       .then((response) => {
-        console.log(response.data.user_family_list);
-        console.log(response.data.user_diseases);
+        // console.log(response.data.user_family_list);
+        // console.log(response.data.user_diseases);
         setFamliyList(response.data.user_family_list);
         setMyDisease(response.data.user_diseases[0]);
         setUserData(response.data);
@@ -181,9 +196,10 @@ export default function NewsComponent() {
       });
   }
 
-  let familyArr = Object.values(familyList).map(item => item.nickname)
+  
 
   const FamilyListView = () => {
+    let familyArr = Object.values(familyList).map(item => item.nickname)
     const countries = ["Egypt", "Canada", "Australia", "Ireland"]
     setFamilyDisease([]);
     setFamilyAge(0)
@@ -230,7 +246,7 @@ export default function NewsComponent() {
       <Box>
         <Box alignSelf="center">
           <HStack space={3} mt="3" mb="3">
-            <Button mt="2" style={styles.catSelectBtn} onPress={() => { setShowDiseasesNews(familyDisease) }}>
+            <Button mt="2" style={styles.catSelectBtn} onPress={() => { setShowFamliyDiseasesNews(familyDisease) }}>
               질병
             </Button>
             <Button mt="2" style={styles.catSelectBtn} onPress={() => { setShowAgeNews(familyAge) }}>
@@ -269,7 +285,7 @@ export default function NewsComponent() {
           <Box>
             <Box alignSelf="center">
               <HStack space={3} mt="3" mb="3">
-                <Button mt="2" style={styles.catSelectBtn} onPress={() => { setShowDiseasesNews(myDisease.disease) }}>
+                <Button mt="2" style={styles.catSelectBtn} onPress={() => { setShowDiseasesNews() }}>
                   질병
                 </Button>
                 <Button mt="2" style={styles.catSelectBtn} onPress={() => { setShowAgeNews(userBirth) }}>

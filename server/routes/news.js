@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get('/news', function(req,res) {
   let keyword = req.query.keyword
-  // console.log(keyword);
+  console.log(keyword);
     const getHTML = async (keyword) => {
         const browser = await puppeteer.launch({
             headless : true

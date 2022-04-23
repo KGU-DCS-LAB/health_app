@@ -52,10 +52,24 @@ const AddFamily = () =>{
         family_user_id: userEmail,
         nickname: familyINickname
       }
-    })
-            Alert.alert('가족이 추가되었습니다.');
-            console.log("123");
-            setModalVisible(false);
+    }).then((response) => {
+      Alert.alert('가족이 추가되었습니다.');
+      axios.get('http://'+IP_address+':5000/usersRouter/findOne/',{
+        params: {
+          user_id: userId,
+        }
+      })
+    .then((response) => {
+      // console.log(response.data.user_family_list);
+      setFamliyList(response.data.user_family_list)
+    }).catch(function (error) {
+      console.log(error);
+    });
+      setModalVisible(false);
+  }).catch(function (error) {
+    console.log(error);
+  });
+            
     }
 
     const checkIdcomp = () => {
@@ -188,7 +202,7 @@ const AddFamily = () =>{
         }
       })
     .then((response) => {
-      // console.log(response.data.user_family_list);
+      console.log(response.data.user_family_list);
       setFamliyList(response.data.user_family_list)
     }).catch(function (error) {
       console.log(error);
