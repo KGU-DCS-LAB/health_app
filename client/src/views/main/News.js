@@ -8,12 +8,18 @@ import AppLoading from "expo-app-loading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ScrollView } from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown'
+import { log } from "react-native-reanimated";
 
 export default function NewsComponent() {
   const navigation = useNavigation();
   const [userId, setUserId] = useState('')
   const [userName, setUserName] = useState('')
   const [userBirth, setUserBirth] = useState('')
+  const [myDisease, setMyDisease] = useState();
+  const [myFH, setMyFH] = useState();
+  const [familyDisease, setFamilyDisease] = useState();
+  const [familyAge, setFamilyAge] = useState();
+  const [userData, setUserData] = useState();
 
   useEffect(() => {
     getData();
@@ -42,8 +48,8 @@ export default function NewsComponent() {
   const [myNews, setMyNews] = useState(true);
   const [familyNews, setFamilyNews] = useState(false);
   const [familyList, setFamliyList] = useState([]);
-  const [selectedFamily, setSelectedFamily] = useState([]);
-
+  const [selectedFamily, setSelectedFamily] = useState(0);
+ 
   const callback = (data) => {
     setDataArr(data);
   }
@@ -94,11 +100,13 @@ export default function NewsComponent() {
 
   // console.log(Object.values(dataArr).map(news => (news.time)));
 
-  const setShowDiseasesNews = async () => {
+  const setShowDiseasesNews = async (disease) => {
+    console.log('adasdasdasasda');
+    console.log(disease);
     try {
       const response = await axios.get('http://' + IP_address + ':5000/newsRouter/news', {
         params: {
-          keyword: '코로나'
+          keyword: disease
         }
       })
       callback(response.data);
@@ -108,11 +116,13 @@ export default function NewsComponent() {
     }
   }
 
-  const setShowAgeNews = () => {
-    const age = new Date().getFullYear() - userBirth.split('-')[0]
+  const setShowAgeNews = (userAge) => {
+    // console.log(userAge);
+    const age = new Date().getFullYear() - userAge.split('-')[0]
+    // console.log(age%10);
     let ageGroup = ''
-    if (age < 10) ageGroup = '어린이 + 코로나';
-    else if (age >= 10) ageGroup = age / 10 + '0대 + 코로나'
+    if (age < 10) ageGroup = '어린이';
+    else if (age >= 10) ageGroup = parseInt(age / 10) + '0대'
     axios.get('http://' + IP_address + ':5000/newsRouter/news', {
       params: {
         keyword: ageGroup
@@ -162,23 +172,26 @@ export default function NewsComponent() {
     })
       .then((response) => {
         console.log(response.data.user_family_list);
-        setFamliyList(response.data.user_family_list)
+        console.log(response.data.user_diseases);
+        setFamliyList(response.data.user_family_list);
+        setMyDisease(response.data.user_diseases[0]);
+        setUserData(response.data);
       }).catch(function (error) {
         console.log(error);
       });
   }
 
   let familyArr = Object.values(familyList).map(item => item.nickname)
-  console.log(familyArr);
 
   const FamilyListView = () => {
     const countries = ["Egypt", "Canada", "Australia", "Ireland"]
+    setFamilyDisease([]);
+    setFamilyAge(0)
     return (
       <SelectDropdown
         data={familyArr}
         onSelect={(selectedItem, index) => {
-          setSelectedFamily(selectedItem)
-          console.log(selectedItem, index)
+          findFamily(index)
         }}
         buttonTextAfterSelection={(selectedItem, index) => {
           return selectedItem
@@ -189,17 +202,38 @@ export default function NewsComponent() {
       />
     )
   };
+  
+ const findFamily = (index) => {
+  console.log('adasdasdasdsasd');
+  
+  const family_id = familyList[index].user_id;
+  console.log(family_id);
+
+  axios.get('http://' + IP_address + ':5000/usersRouter/findOne/', {
+      params: {
+        user_id: family_id
+      }
+    })
+      .then((response) => {
+        console.log(response.data);
+        setFamilyDisease(response.data.user_diseases[0]);
+        setFamilyAge(new Date().getFullYear() - (response.data.birthday.split('T')[0]).split('-')[0])
+      }).catch(function (error) {
+        console.log(error);
+      });
+ }
+
 
   const ShowFamilyNewsList = () => {
-    console.log(selectedFamily);
+    
     return (
       <Box>
         <Box alignSelf="center">
           <HStack space={3} mt="3" mb="3">
-            <Button mt="2" style={styles.catSelectBtn} onPress={() => { setShowDiseasesNews() }}>
+            <Button mt="2" style={styles.catSelectBtn} onPress={() => { setShowDiseasesNews(familyDisease) }}>
               질병
             </Button>
-            <Button mt="2" style={styles.catSelectBtn} onPress={() => { setShowAgeNews() }}>
+            <Button mt="2" style={styles.catSelectBtn} onPress={() => { setShowAgeNews(familyAge) }}>
               나이
             </Button>
           </HStack>
@@ -235,10 +269,10 @@ export default function NewsComponent() {
           <Box>
             <Box alignSelf="center">
               <HStack space={3} mt="3" mb="3">
-                <Button mt="2" style={styles.catSelectBtn} onPress={() => { setShowDiseasesNews() }}>
+                <Button mt="2" style={styles.catSelectBtn} onPress={() => { setShowDiseasesNews(myDisease.disease) }}>
                   질병
                 </Button>
-                <Button mt="2" style={styles.catSelectBtn} onPress={() => { setShowAgeNews() }}>
+                <Button mt="2" style={styles.catSelectBtn} onPress={() => { setShowAgeNews(userBirth) }}>
                   나이
                 </Button>
                 <Button mt="2" style={styles.catSelectBtn} onPress={() => { setShowFHistoryNews() }}>
