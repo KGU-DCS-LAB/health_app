@@ -6,6 +6,8 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Location from "expo-location";
 import { weatherAPI_KEY, kakaoAPI_KEY, HealthWthrIdxAPI_KEY, IP_address } from '@env'
 import Carousel from 'react-native-snap-carousel';
+import WeatherCard from "../../components/main/WeatherCard";
+import HealthCard from "../../components/main/HealthCard";
 
 Date.prototype.format = function (f) {
     if (!this.valueOf()) return " ";
@@ -35,82 +37,142 @@ String.prototype.string = function (len) { var s = '', i = 0; while (i++ < len) 
 String.prototype.zf = function (len) { return "0".string(len - this.length) + this; };
 Number.prototype.zf = function (len) { return this.toString().zf(len); };
 
-const today = new Date();
+
 
 const WeatherComponent = (props) => {
-    const today_string = today.format('MM월 dd일 E a/p hh:mm');
+
 
     const exampleItems = [
-        {name:"hi"},{name:"hi2"}
+        { card: <WeatherCard state={props.state} /> },
+        { card: <HealthCard state={props.state} /> },
     ]
 
+
+    // const WeatherCard = () => {
+    //     return (
+    //         <>
+    //             <Box>
+    //                 <Center w="100%" >
+    //                     {props.state.SKY === '1' && <Ionicons name="sunny-outline" size={50} color="black" />}
+    //                     {props.state.SKY === '3' && <Ionicons name="partly-sunny-outline" size={50} color="black" />}
+    //                     {props.state.SKY === '4' && <Ionicons name="cloudy-outline" size={50} color="black" />}
+    //                     <Text fontSize='lg'>
+    //                         {props.state.T1H}°
+    //                     </Text>
+    //                 </Center>
+    //             </Box>
+
+    //             <Stack space={2}>
+    //                 <Heading size="md" ml="-1">
+    //                     <Ionicons name="location-sharp" size={24} color="black" />
+    //                     {props.state.location}
+    //                 </Heading>
+    //                 <Text fontSize="xs" _light={{
+    //                     color: "violet.500"
+    //                 }} _dark={{
+    //                     color: "violet.400"
+    //                 }} fontWeight="500" ml="-0.5" mt="-1" >
+    //                     {today_string}
+    //                 </Text>
+    //             </Stack>
+
+    //         </>
+    //     )
+    // }
+
+    // const HealthCard = () => {
+    //     return (
+    //         <Text fontWeight="400">
+    //             천식폐질환가능지수: {props.state.getAsthmaIdxV2}
+    //             뇌졸중가능지수: {props.state.getStrokeIdxV2}
+    //             식중독지수: {props.state.getFoodPoisoningIdxV2}
+    //             꽃가루농도위험지수(참나무): {props.state.getOakPollenRiskIdxV2}
+    //             꽃가루농도위험지수(소나무): {props.state.getPinePollenRiskIdxV2}
+    //             꽃가루농도위험지수(잡초류): {props.state.getWeedsPollenRiskndxV2}
+    //             감기가능지수: {props.state.getColdIdxV2}
+    //         </Text>
+    //     )
+    // }
+
     const renderItem = useCallback(({ item, index }) => (
-        <View><Text>{item.name}</Text></View>
-      ), []);
-    
+        // <View><Text>{item.name}</Text></View>
+        <View style={{ backgroundColor: '#dcdde1', marginVertical: 10, borderRadius: 10 }}>
+            {/* <Text style={{ fontSize: 20, fontWeight: 'bold', margin: 10 }} >{item.card}</Text> */}
+            {item.card}
+        </View>
+    ), []);
+
 
     const CustomCarousel = () => {
         const [activeIndex, setActiveIndex] = useState(0);
         const [carouselItems, setCarouselItems] = useState(exampleItems);
         const ref = useRef(null);
         return (
-            // <Carousel
-            //     layout="default"
-            //     ref={ref}
-            //     data={carouselItems}
-            //     sliderWidth={350}
-            //     itemWidth={350}
-            //     renderItem={renderItem}
-            //     onSnapToItem={(index) => setActiveIndex(index)}
-            // />
-            <Center w="100%">
-            <Box safeArea p="2" py="8" w="95%">
-                <Box w="100%" rounded="lg" overflow="hidden" borderColor="coolGray.200" borderWidth="1" _dark={{
-                    borderColor: "coolGray.600",
-                    backgroundColor: "gray.700"
-                }} _web={{
-                    shadow: 2,
-                    borderWidth: 0
-                }} _light={{
-                    backgroundColor: "gray.50"
-                }}>
-                    <Box>
-                        <Center w="100%" >
-                            {props.state.SKY === '1' && <Ionicons name="sunny-outline" size={50} color="black" />}
-                            {props.state.SKY === '3' && <Ionicons name="partly-sunny-outline" size={50} color="black" />}
-                            {props.state.SKY === '4' && <Ionicons name="cloudy-outline" size={50} color="black" />}
-                            <Text fontSize='lg'>
-                                {props.state.T1H}°
-                            </Text>
-                        </Center>
+            <>
+                <Center w="100%">
+                    <Box safeArea p="2" py="8" w="95%">
+                        <Carousel
+                            layout="default"
+                            ref={ref}
+                            data={carouselItems}
+                            sliderWidth={350}
+                            itemWidth={350}
+                            renderItem={renderItem}
+                            onSnapToItem={(index) => setActiveIndex(index)}
+                        />
                     </Box>
-                    <Stack p="4" space={3}>
-                        <Stack space={2}>
-                            <Heading size="md" ml="-1">
-                                <Ionicons name="location-sharp" size={24} color="black" />
-                                {props.state.location}
-                            </Heading>
-                            <Text fontSize="xs" _light={{
-                                color: "violet.500"
-                            }} _dark={{
-                                color: "violet.400"
-                            }} fontWeight="500" ml="-0.5" mt="-1" >
-                                {today_string}
-                            </Text>
-                        </Stack>
-                        <Text fontWeight="400">
-                            천식폐질환가능지수: {props.state.getAsthmaIdxV2}
-                            뇌졸중가능지수: {props.state.getStrokeIdxV2}
-                            식중독지수: {props.state.getFoodPoisoningIdxV2}
-                            꽃가루농도위험지수(참나무): {props.state.getOakPollenRiskIdxV2}
-                            꽃가루농도위험지수(소나무): {props.state.getPinePollenRiskIdxV2}
-                            꽃가루농도위험지수(잡초류): {props.state.getWeedsPollenRiskndxV2}
-                            감기가능지수: {props.state.getColdIdxV2}
-                        </Text>
-                    </Stack>
-                </Box>
-            </Box>
-        </Center>
+                </Center>
+                {/* <Center w="100%">
+                    <Box safeArea p="2" py="8" w="95%">
+                        <Box w="100%" rounded="lg" overflow="hidden" borderColor="coolGray.200" borderWidth="1" _dark={{
+                            borderColor: "coolGray.600",
+                            backgroundColor: "gray.700"
+                        }} _web={{
+                            shadow: 2,
+                            borderWidth: 0
+                        }} _light={{
+                            backgroundColor: "gray.50"
+                        }}>
+                            <Box>
+                                <Center w="100%" >
+                                    {props.state.SKY === '1' && <Ionicons name="sunny-outline" size={50} color="black" />}
+                                    {props.state.SKY === '3' && <Ionicons name="partly-sunny-outline" size={50} color="black" />}
+                                    {props.state.SKY === '4' && <Ionicons name="cloudy-outline" size={50} color="black" />}
+                                    <Text fontSize='lg'>
+                                        {props.state.T1H}°
+                                    </Text>
+                                </Center>
+                            </Box>
+                            <Stack p="4" space={3}>
+                                <Stack space={2}>
+                                    <Heading size="md" ml="-1">
+                                        <Ionicons name="location-sharp" size={24} color="black" />
+                                        {props.state.location}
+                                    </Heading>
+                                    <Text fontSize="xs" _light={{
+                                        color: "violet.500"
+                                    }} _dark={{
+                                        color: "violet.400"
+                                    }} fontWeight="500" ml="-0.5" mt="-1" >
+                                        {today_string}
+                                    </Text>
+                                </Stack>
+                                <Text fontWeight="400">
+                                    천식폐질환가능지수: {props.state.getAsthmaIdxV2}
+                                    뇌졸중가능지수: {props.state.getStrokeIdxV2}
+                                    식중독지수: {props.state.getFoodPoisoningIdxV2}
+                                    꽃가루농도위험지수(참나무): {props.state.getOakPollenRiskIdxV2}
+                                    꽃가루농도위험지수(소나무): {props.state.getPinePollenRiskIdxV2}
+                                    꽃가루농도위험지수(잡초류): {props.state.getWeedsPollenRiskndxV2}
+                                    감기가능지수: {props.state.getColdIdxV2}
+                                </Text>
+                            </Stack>
+                        </Box>
+                    </Box>
+                </Center> */}
+
+
+            </>
         )
     }
 
