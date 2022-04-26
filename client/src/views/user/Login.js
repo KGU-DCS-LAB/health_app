@@ -36,7 +36,7 @@ const LoginComponent = () => {
     const userLogin = () => {
       let userEmail = UserId + "@" + domain;
 
-      const callback = async (arr) => {
+      const callback = (arr) => {
         const user = arr.find(x => x.user_id === userEmail && x.password == UserPassword)
           if(user == null){
             Alert.alert('이메일 또는 비밀번호가 잘못 입력되었습니다.');

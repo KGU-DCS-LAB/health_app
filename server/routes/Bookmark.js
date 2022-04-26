@@ -28,7 +28,7 @@ router.post('/urlSave', function(req, res) {
             if(error){
                 console.log(error);
                 return res.json({status: 'error', error})
-            }else{
+            } else {
                 console.log('Saved!')
                 return res.json({status: 'success'})
             }
