@@ -60,13 +60,35 @@ export default function NewsComponent() {
     setDataArr(data);
   }
 
+  const DATA = [
+    {
+      id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
+      title: 'First Item',
+    },
+    {
+      id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
+      title: 'Second Item',
+    },
+    {
+      id: '58694a0f-3da1-471f-bd96-145571e29d72',
+      title: 'Third Item',
+    },
+  ];
+
+  const Item = ({ title }) => (
+    <View style={styles.item}>
+      <Text style={styles.title}>{title}</Text>
+    </View>
+  );
+
   let newsArr = Object.values(dataArr).map(news => news);
 
   function display() {
     // console.log(newsArr);
     return (
-      <View styles={{ paddingBottom: 20 }} >
-        <FlatList data={newsArr}
+      <View>
+        <FlatList contentContainerStyle={{ flex: 1 }}
+        data={newsArr}
           keyExtractor={item => item.newsUrl}
           renderItem={
             ({ item }) => (
@@ -107,6 +129,9 @@ export default function NewsComponent() {
   // console.log(Object.values(dataArr).map(news => (news.time)));
 
   const setShowDiseasesNews = async () => {
+    setNewsMenu1('blue')
+    setNewsMenu2('gray')
+    setNewsMenu3('gray')
     try {
       const response = await axios.get('http://' + IP_address + ':5000/newsRouter/news', {
         params: {
@@ -180,7 +205,8 @@ export default function NewsComponent() {
   const onFinish = () => setLoading(false);
 
   const showMyNews = () => {
-    setDataArr('');
+    // setDataArr('');
+    setShowDiseasesNews();
     setMyNews(true)
     setFamilyNews(false)
     setFamilyNewsColor('gray')
@@ -188,13 +214,27 @@ export default function NewsComponent() {
   }
 
   const showFamilyNews = () => {
-    setDataArr('');
+    findFamily(0)
+    console.log('asdasdasdasdasd');
+    // setDataArr('');
     setMyNews(false)
     setFamilyNews(true)
     setFamilyNewsColor('blue')
     setMyNewsColor('gray')
     setNewsMenu1('blue')
     setNewsMenu2('gray')
+    callbackFamilyNews()
+  }
+
+  function callbackFamilyNews() {
+    setShowFamliyDiseasesNews(familyDisease);
+  }
+
+  function callbackMyData(data) {
+    setUserData(data);
+    setFamliyList(data.user_family_list);
+    setMyDisease(data.user_diseases);
+    setShowDiseasesNews();
   }
 
   const getFamilyList = () => {
@@ -206,10 +246,8 @@ export default function NewsComponent() {
       .then((response) => {
         // console.log(response.data.user_family_list);
         // console.log(response.data.user_diseases);
-        setFamliyList(response.data.user_family_list);
-        setMyDisease(response.data.user_diseases);
-        setShowDiseasesNews()
-        setUserData(response.data);
+        
+        callbackMyData(response.data)
       }).catch(function (error) {
         console.log(error);
       });
@@ -236,6 +274,11 @@ export default function NewsComponent() {
       />
     )
   };
+
+  const callbackFamily = (data) => {
+    setFamilyDisease(data.user_diseases);
+    setFamilyAge(data.birthday.split('T')[0])
+  }
   
  const findFamily = (index) => {
   console.log(index);
@@ -250,10 +293,9 @@ export default function NewsComponent() {
     })
       .then((response) => {
         console.log(response.data);
-        console.log(response.data.user_diseases);
-        console.log(response.data.birthday.split('T')[0]);
-        setFamilyDisease(response.data.user_diseases);
-        setFamilyAge(response.data.birthday.split('T')[0])
+        // console.log(response.data.user_diseases);
+        // console.log(response.data.birthday.split('T')[0]);
+        callbackFamily(response.data)
       }).catch(function (error) {
         console.log(error);
       });
@@ -263,7 +305,7 @@ export default function NewsComponent() {
   const ShowFamilyNewsList = () => {
     
     return (
-      <Box>
+      <View>
         <Box alignSelf="center">
           <HStack space={3} mt="3" mb="3">
             <Button mt="2" colorScheme={newsMenu1} onPress={() => { setShowFamliyDiseasesNews(familyDisease) }}>
@@ -275,18 +317,18 @@ export default function NewsComponent() {
           </HStack>
         </Box>
         {display()}
-      </Box>
+      </View>
     )
   }
 
   return (
-    <Center w="100%">
+    <Center w="100%" >
       <AppLoading
         startAsync={setShowDiseasesNews}
         onError={console.warn}
         onFinish={onFinish}
       />
-      <Box safeArea p="1" w="100%" maxW="290" py="8">
+      <View safeArea p="1" w="100%" maxW="290" py="8">
         <View style={{ borderBottomColor: 'black', borderBottomWidth: 3, }} />
         <Heading mt='5' size="sm" color="coolGray.800" _dark={{
           color: "warmGray.50"
@@ -325,8 +367,10 @@ export default function NewsComponent() {
             <ShowFamilyNewsList />
           </View>
         }
-
-      </Box>
+        {/* <TouchableOpacity>
+        <Text>더보기</Text>
+        </TouchableOpacity> */}
+      </View>
     </Center>
   )
 }
@@ -334,9 +378,9 @@ export default function NewsComponent() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    // alignItems: 'center',
-    justifyContent: 'center',
+    // backgroundColor: '#fff',
+    // // alignItems: 'center',
+    // justifyContent: 'center',
   },
 
   wrapper: {},
