@@ -9,6 +9,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ScrollView } from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown'
 import { log } from "react-native-reanimated";
+import Icon from 'react-native-vector-icons/AntDesign';
 
 export default function NewsComponent() {
   const navigation = useNavigation();
@@ -20,6 +21,7 @@ export default function NewsComponent() {
   const [familyDisease, setFamilyDisease] = useState();
   const [familyAge, setFamilyAge] = useState();
   const [userData, setUserData] = useState();
+  const [keyword, setKeyword] = useState('');
 
   useEffect(() => {
     getData();
@@ -36,6 +38,7 @@ export default function NewsComponent() {
             setUserId(UserInfo.user_id);
             setUserName(UserInfo.user_name);
             setMyDisease(UserInfo.user_diseases)
+            setKeyword(UserInfo.user_diseases);
             setUserBirth(UserInfo.birthday.split('T')[0]);
           }
         }
@@ -60,34 +63,13 @@ export default function NewsComponent() {
     setDataArr(data);
   }
 
-  const DATA = [
-    {
-      id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-      title: 'First Item',
-    },
-    {
-      id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-      title: 'Second Item',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145571e29d72',
-      title: 'Third Item',
-    },
-  ];
-
-  const Item = ({ title }) => (
-    <View style={styles.item}>
-      <Text style={styles.title}>{title}</Text>
-    </View>
-  );
-
   let newsArr = Object.values(dataArr).map(news => news);
 
   function display() {
     // console.log(newsArr);
     return (
       <View>
-        <FlatList contentContainerStyle={{ flex: 1 }}
+        <FlatList 
         data={newsArr}
           keyExtractor={item => item.newsUrl}
           renderItem={
@@ -138,6 +120,7 @@ export default function NewsComponent() {
           keyword: myDisease
         }
       })
+      setKeyword(myDisease)
       callback(response.data);
       setLoading(true);
     } catch (err) {
@@ -149,6 +132,7 @@ export default function NewsComponent() {
     setNewsMenu1('blue')
     setNewsMenu2('gray')
     setNewsMenu3('gray')
+    setKeyword(disease)
     try {
       const response = await axios.get('http://' + IP_address + ':5000/newsRouter/news', {
         params: {
@@ -168,6 +152,7 @@ export default function NewsComponent() {
     setNewsMenu1('gray')
     setNewsMenu2('blue')
     setNewsMenu3('gray')
+    setKeyword(userAge)
     // console.log(age%10);
     let ageGroup = ''
     if (age < 10) ageGroup = '어린이';
@@ -190,6 +175,7 @@ export default function NewsComponent() {
     setNewsMenu1('gray')
     setNewsMenu2('gray')
     setNewsMenu3('blue')
+    setKeyword('췌장암')
     axios.get('http://' + IP_address + ':5000/newsRouter/news', {
       params: {
         keyword: '췌장암'
@@ -208,6 +194,7 @@ export default function NewsComponent() {
     // setDataArr('');
     setShowDiseasesNews();
     setMyNews(true)
+    setKeyword(myDisease)
     setFamilyNews(false)
     setFamilyNewsColor('gray')
     setMyNewsColor('blue')
@@ -219,6 +206,7 @@ export default function NewsComponent() {
     // setDataArr('');
     setMyNews(false)
     setFamilyNews(true)
+    setKeyword(familyDisease)
     setFamilyNewsColor('blue')
     setMyNewsColor('gray')
     setNewsMenu1('blue')
@@ -316,6 +304,16 @@ export default function NewsComponent() {
             </Button>
           </HStack>
         </Box>
+        <View>
+            <TouchableOpacity onPress={() => navigation.navigate('NewsList', {
+                keyword: keyword
+              })}>
+            <HStack>
+              <Text>뉴스 더보기</Text>
+              <Icon name="doubleright" size={15}  color="#4F8EF7" />
+            </HStack>
+            </TouchableOpacity>
+          </View>
         {display()}
       </View>
     )
@@ -342,6 +340,7 @@ export default function NewsComponent() {
           <Button mt="2" w="50%" colorScheme={familyNewsColor} onPress={() => showFamilyNews()}>
             가족 뉴스
           </Button>
+          
         </HStack>
         {myNews &&
           <Box>
@@ -356,8 +355,19 @@ export default function NewsComponent() {
                 <Button mt="2" colorScheme={newsMenu3} onPress={() => { setShowFHistoryNews() }}>
                   가족력
                 </Button>
+                
               </HStack>
             </Box>
+            <View>
+            <TouchableOpacity onPress={() => navigation.navigate('NewsList', {
+                keyword: keyword
+              })}>
+            <HStack>
+              <Text>뉴스 더보기</Text>
+              <Icon name="doubleright" size={15}  color="#4F8EF7" />
+            </HStack>
+            </TouchableOpacity>
+          </View>
             {display()}
           </Box>
         }
