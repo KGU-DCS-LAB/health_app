@@ -7,7 +7,7 @@ const { Symptom } = require("../models/Symptom");
 router.get('/find', function(req, res, next) {
     // 전체 데이터 가져오기
     Symptom.find().then( (symptoms) => {
-        // console.log(diseases);
+        // console.log(symptoms);
         res.json(symptoms)
     }).catch( (err) => {
         console.log(err);

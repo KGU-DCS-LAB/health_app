@@ -4,68 +4,68 @@ const bodyParser = require('body-parser');
 const { Disease } = require("../models/Disease");
 
 /* GET. */
-router.get('/find', function(req, res, next) {
+router.get('/find', function (req, res, next) {
     // 전체 데이터 가져오기
-    Disease.find().then( (diseases) => {
+    Disease.find().then((diseases) => {
         // console.log(diseases);
         res.json(diseases)
-    }).catch( (err) => {
+    }).catch((err) => {
         console.log(err);
         next(err)
     });
 });
 
-router.get('/findName', function(req, res, next) {
+router.get('/findName', function (req, res, next) {
     // 전체 데이터 가져오기
     // Disease.find({ $text : { $search : req.body.data.keyword } } ).sort( { "_id": 1 }).select('-_id 질병명').then( (diseases) => {
-    Disease.find().select('-_id 번호 질병명 동의어').distinct('질병명').then( (diseases) => {
+    Disease.find().select('-_id 번호 질병명 동의어').distinct('질병명').then((diseases) => {
         res.json(diseases)
-    }).catch( (err) => {
+    }).catch((err) => {
         console.log(err);
         next(err)
     });
 });
 
 /* POST 미구현*/
-router.post('/save', function(req, res) {
+router.post('/save', function (req, res) {
     console.log(req.body);
     // 데이터 저장
     var newDisease = new Disease(req.body.data);
-    newDisease.save(function(error, data){
-        if(error){
+    newDisease.save(function (error, data) {
+        if (error) {
             console.log(error);
-            return res.json({status: 'duplicated', error})
-        }else{
+            return res.json({ status: 'duplicated', error })
+        } else {
             console.log('Saved!')
-            return res.json({status: 'success'})
+            return res.json({ status: 'success' })
         }
     });
 });
 
-router.get('/findOne/', function(req, res, next) {
+router.get('/findOne/', function (req, res, next) {
     // 특정 아이디값 가져오기
-    Disease.findOne({diseaseID:'5704'}, function(error,disease){
+    Disease.findOne({ diseaseID: '5704' }, function (error, disease) {
         console.log('--- Read one ---');
-        if(error){
+        if (error) {
             console.log(error);
-        }else{
+        } else {
             console.log(disease);
         }
     });
 });
 
-router.get('/modify/', function(req, res, next) {
+router.get('/modify/', function (req, res, next) {
     // 특정아이디 수정하기
-    Disease.findById({diseaseID:'5704'}, function(error,disease){
+    Disease.findById({ diseaseID: '5704' }, function (error, disease) {
         console.log('--- Update(PUT) ---');
-        if(error){
+        if (error) {
             console.log(error);
-        }else{
+        } else {
             disease.name = '--modified--';
-            disease.save(function(error,modified_disease){
-                if(error){
+            disease.save(function (error, modified_disease) {
+                if (error) {
                     console.log(error);
-                }else{
+                } else {
                     console.log(modified_disease);
                 }
             });
@@ -73,7 +73,7 @@ router.get('/modify/', function(req, res, next) {
     });
 });
 
-function setQuery(arr, callback){
+function setQuery(arr, callback) {
     let query = [];
     const regex = (pattern) => new RegExp(`${pattern}`);
     arr.forEach(symptom => {
@@ -82,23 +82,44 @@ function setQuery(arr, callback){
     callback(query);
 }
 
-router.post('/findBySymptoms', function(req, res, next) {
-    // 증상으로 질병 가져오기
-    setQuery(req.body.data.symptoms, function(query){
-        Disease.find().and(query).select('-_id 번호 질병명 링크').then( (diseases) => {
-            res.json(diseases)
-        }).catch( (err) => {
+function getData(symptoms) {
+    let response = [];
+    setQuery(symptoms, function (query) {
+        Disease.find().and(query).select('-_id 번호 질병명 링크').then((diseases) => {
+            // res.json({usingAnd: diseases})
+            response.push({ usingAnd: JSON.stringify(diseases) })
+            console.log(response);
+        }).catch((err) => {
             console.log(err);
             next(err)
         });
     });
+    setQuery(symptoms, function (query) {
+        Disease.find().or(query).select('-_id 번호 질병명 링크').then((diseases) => {
+            // res.json({usingOr: diseases})
+            response.push({ usingOr: JSON.stringify(diseases) })
+            console.log(response);
+        }).catch((err) => {
+            console.log(err);
+            next(err)
+        });
+    });
+    return response;
+}
+
+router.post('/findBySymptoms', function (req, res, next) {
+    // 증상으로 질병 가져오기
+    const result = getData(req.body.data.symptoms)
+
+    console.log(JSON.stringify(result));
+    res.json(result)
 });
 
-router.get('/delete/', function(req, res, next) {
+router.get('/delete/', function (req, res, next) {
     // 삭제
-    Disease.remove({diseaseID:'5704'}, function(error,output){
+    Disease.remove({ diseaseID: '5704' }, function (error, output) {
         console.log('--- Delete ---');
-        if(error){
+        if (error) {
             console.log(error);
         }
 

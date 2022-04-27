@@ -56,20 +56,23 @@ const ChatScreen = () => {
             return;
         }
         axios.post('http://' + IP_address + ':5000/diseasesRouter/findBySymptoms', {
-                data : {symptoms: selectedSymptom}
-            }).then((response) => {
-                response.data.map((item, idx) => {
-                    const disease = {
-                        contentType: "disease",
-                        title: item.질병명,
-                        value: item.링크
-                    }
-                    result.push(disease);
-                });
-                setDiseases(result);
-            }).catch(function (error) {
-                console.log(error);
+            data: { symptoms: selectedSymptom }
+        }).then((response) => {
+            console.log(response.data);
+            response.data.usingAnd.map((item, idx) => {
+                const disease = {
+                    contentType: "disease",
+                    title: item.질병명,
+                    value: item.링크
+                }
+                result.push(disease);
             });
+            if(result){
+                setDiseases(result);
+            }
+        }).catch(function (error) {
+            console.log(error);
+        });
     }, [selectedSymptom])
 
     useEffect(() => {
@@ -261,6 +264,7 @@ const ChatScreen = () => {
                 GiftedChat.append(previousMessages, [msg])
             );
         } else if (quickReply[0].value == "button") {
+            console.log("button");
             setIsTextInput(false);
             getSymptoms();
         } else if (quickReply[0].contentType === "disease"){
