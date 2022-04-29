@@ -8,7 +8,7 @@ const IndexView = (props) => {
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <p>
-            myPlug : Data Management Systems
+            healthCare : Data Management Systems
           </p>
           <Link
            className="App-link"

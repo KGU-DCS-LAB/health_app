@@ -8,7 +8,7 @@ function Header(){
               className="navbar-brand"
               to="/"
               >
-                MDMS
+                HDMS
               </Link>
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
