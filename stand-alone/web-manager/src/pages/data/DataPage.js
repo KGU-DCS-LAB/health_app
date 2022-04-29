@@ -1,14 +1,10 @@
 import { useParams } from 'react-router-dom';
 import Header from '../../components/common/Header';
-import GetKecoRawAll from '../../views/data/GetKecoRawAll';
-import UpdateKecoRawAllView from '../../views/data/UpdateKecoRawAllView';
+import ExcelParserView from '../../views/data/ExcelParserView';
 
 const data = {
-  get_keco_raw_all:{
-    html:<GetKecoRawAll/>,
-  },
-  update_keco_raw_all:{
-    html:<UpdateKecoRawAllView/>,
+  excel_parser:{
+    html:<ExcelParserView/>,
   },
 };
 
