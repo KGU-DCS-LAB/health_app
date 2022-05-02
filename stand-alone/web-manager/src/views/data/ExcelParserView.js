@@ -1,7 +1,6 @@
 
 const readUploadFile = (e) => {
     const diseaseName = e.target.value.split("_")[2].split(".")[0];
-    console.log(diseaseName)
     e.preventDefault();
     const xlsx = require('xlsx');
     const result = {}
@@ -25,8 +24,6 @@ const readUploadFile = (e) => {
                 for (let k = 5; k < json.length; k++){
                     const datas = json[k]
                     if(datas.__EMPTY === '남'){
-                        console.log(datas[key])
-
                         male.push({age: datas.__EMPTY_1, num: datas[key]})
                     }
                     if(datas.__EMPTY === '여'){
@@ -37,8 +34,8 @@ const readUploadFile = (e) => {
                 male = [];
                 female = [];
             }
-            console.log(result.patientCount);
-            console.log(json);
+            console.log(result);
+            // console.log(json);
         };
         reader.readAsArrayBuffer(e.target.files[0]);
     }
