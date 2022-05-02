@@ -12,6 +12,7 @@ const areasRouter = require('./routes/Areas');
 const chatbotRouter = require('./routes/Chatbot');
 const bookmarkRouter = require('./routes/Bookmark');
 const symptomsRouter = require('./routes/Symptoms');
+const statisticalDataRouter = require('./routes/StatisticalDatas');
 
 var cors = require('cors');
 app.use(cors());
@@ -72,3 +73,4 @@ app.use('/newsRouter', newsRouter);
 app.use('/chatbotRouter', chatbotRouter);
 app.use('/bookmarkRouter', bookmarkRouter);
 app.use('/symptomsRouter', symptomsRouter);
+app.use('/statisticalDataRouter', statisticalDataRouter);
