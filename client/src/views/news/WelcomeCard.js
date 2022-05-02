@@ -3,12 +3,13 @@ import { View, Heading, Text, Box, Center, VStack, HStack, FormControl, Link, Bu
 import Carousel from 'react-native-snap-carousel';
 import WeatherCard from "../../components/main/WeatherCard";
 import HealthCard from "../../components/main/HealthCard";
+import { StyleSheet } from "react-native";
 
-const WeatherComponent = (props) => {
+const WelcomeCard = (props) => {
 
     const exampleItems = [
-        { card: <WeatherCard/> },
-        { card: <HealthCard/> },
+        { card: <WeatherCard /> },
+        { card: <HealthCard /> },
     ]
 
     const renderItem = useCallback(({ item, index }) => (
@@ -25,7 +26,7 @@ const WeatherComponent = (props) => {
         return (
             <>
                 <Center w="100%">
-                    <Box safeArea p="2" py="8" w="95%">
+                    <Box safeArea p="2" py="0" w="95%">
                         <Carousel
                             layout="default"
                             ref={ref}
@@ -42,12 +43,14 @@ const WeatherComponent = (props) => {
     }
 
     return (
-        <CustomCarousel />
+        <Box alignItems="center" py="1" px="3">
+            <CustomCarousel />
+        </Box>
     );
 }
 
 export default class extends React.Component {
     render() {
-        return <WeatherComponent state={this.state} />
+        return <WelcomeCard state={this.state} />
     }
 }

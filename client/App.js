@@ -5,16 +5,19 @@ import { SSRProvider } from '@react-aria/ssr';
 
 // �깉 肄붾뱶 �떆�옉
 import MainRoute from './src/routes/main/MainRoute'
+import { NativeBaseProvider } from 'native-base';
 
 export default function App() {
 
   return (
     <SafeAreaView style={styles.AndroidSafeArea}>
-      <NavigationContainer>
-        <SSRProvider>
-          <MainRoute/>
-        </SSRProvider>
-      </NavigationContainer>
+      <NativeBaseProvider>
+        <NavigationContainer>
+          <SSRProvider>
+            <MainRoute />
+          </SSRProvider>
+        </NavigationContainer>
+      </NativeBaseProvider>
     </SafeAreaView>
   );
 }

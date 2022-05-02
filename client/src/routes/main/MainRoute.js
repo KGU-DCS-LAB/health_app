@@ -4,13 +4,13 @@ import SignIn from '../../views/user/SignIn';
 import FindPW from '../../views/main/FindPW';
 import Main from '../../views/main/Main';
 import ChangePW from '../../views/main/ChangePW';
-import NewsDetail from '../../views/main/NewsDetail';
+import NewsDetail from '../../views/news/NewsDetail';
 import ChatBot from '../../views/main/ChatBot';
 import BookmarkStorage from '../../views/main/BookmarkStorage';
 import FamilyManagement from '../../views/main/FamilyManagement';
 import { createStackNavigator } from '@react-navigation/stack';
 import DiseaseDetail from '../../views/main/DiseaseDetail'
-import NewsList from '../../views/main/NewsList'
+import NewsList from '../../views/news/NewsList'
 
 const Stack = createStackNavigator();
 

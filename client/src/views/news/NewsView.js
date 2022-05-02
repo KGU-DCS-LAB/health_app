@@ -11,7 +11,7 @@ import SelectDropdown from 'react-native-select-dropdown'
 import { log } from "react-native-reanimated";
 import Icon from 'react-native-vector-icons/AntDesign';
 
-export default function NewsComponent() {
+export default function NewsView() {
   const navigation = useNavigation();
   const [userId, setUserId] = useState('')
   const [userName, setUserName] = useState('')
