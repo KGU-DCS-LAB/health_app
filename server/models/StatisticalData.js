@@ -7,7 +7,7 @@ const statisticalData = mongoose.Schema({
         unique: 1,
         required: true
     },
-    patientCount: [{
+    statistics: [{
         month: String,
         count: [{
             total: String,

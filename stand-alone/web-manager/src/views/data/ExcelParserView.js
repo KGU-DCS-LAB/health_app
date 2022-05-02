@@ -15,7 +15,7 @@ const readUploadFile = (e) => {
             const json = xlsx.utils.sheet_to_json(worksheet);
 
             result.diseaseName = diseaseName;
-            result.patientCount = [];
+            result.statistics = [];
             const months = json[2];
             const total = json[4];
             let male = []
@@ -31,7 +31,7 @@ const readUploadFile = (e) => {
                         female.push({age: datas.__EMPTY_1, num: datas[key]})
                     }
                 }
-                result.patientCount.push({month: months[key], count: {total: total[key], male: male, female: female}})
+                result.statistics.push({month: months[key], count: {total: total[key], male: male, female: female}})
                 male = [];
                 female = [];
             }
