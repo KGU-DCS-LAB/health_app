@@ -58,19 +58,19 @@ export default function NewsView() {
   const [newsMenu1, setNewsMenu1] = useState('blue')
   const [newsMenu2, setNewsMenu2] = useState('gray')
   const [newsMenu3, setNewsMenu3] = useState('gray')
- 
+
   const callback = (data) => {
     setDataArr(data);
   }
 
   let newsArr = Object.values(dataArr).map(news => news);
 
-  function display() {
+  const DisplayNews = () => {
     // console.log(newsArr);
     return (
       <View>
-        <FlatList 
-        data={newsArr}
+        <FlatList
+          data={newsArr}
           keyExtractor={item => item.newsUrl}
           renderItem={
             ({ item }) => (
@@ -234,14 +234,14 @@ export default function NewsView() {
       .then((response) => {
         // console.log(response.data.user_family_list);
         // console.log(response.data.user_diseases);
-        
+
         callbackMyData(response.data)
       }).catch(function (error) {
         console.log(error);
       });
   }
 
-  
+
 
   const FamilyListView = () => {
     let familyArr = Object.values(familyList).map(item => item.nickname)
@@ -267,14 +267,14 @@ export default function NewsView() {
     setFamilyDisease(data.user_diseases);
     setFamilyAge(data.birthday.split('T')[0])
   }
-  
- const findFamily = (index) => {
-  console.log(index);
-  
-  const family_id = familyList[index].user_id;
-  // console.log(family_id);
 
-  axios.get('http://' + IP_address + ':5000/usersRouter/findOne/', {
+  const findFamily = (index) => {
+    console.log(index);
+
+    const family_id = familyList[index].user_id;
+    // console.log(family_id);
+
+    axios.get('http://' + IP_address + ':5000/usersRouter/findOne/', {
       params: {
         user_id: family_id
       }
@@ -287,11 +287,11 @@ export default function NewsView() {
       }).catch(function (error) {
         console.log(error);
       });
- }
+  }
 
 
   const ShowFamilyNewsList = () => {
-    
+
     return (
       <View>
         <Box alignSelf="center">
@@ -305,16 +305,16 @@ export default function NewsView() {
           </HStack>
         </Box>
         <View>
-            <TouchableOpacity onPress={() => navigation.navigate('NewsList', {
-                keyword: keyword
-              })}>
+          <TouchableOpacity onPress={() => navigation.navigate('NewsList', {
+            keyword: keyword
+          })}>
             <HStack>
               <Text>뉴스 더보기</Text>
-              <Icon name="doubleright" size={15}  color="#4F8EF7" />
+              <Icon name="doubleright" size={15} color="#4F8EF7" />
             </HStack>
-            </TouchableOpacity>
-          </View>
-        {display()}
+          </TouchableOpacity>
+        </View>
+        <DisplayNews/>
       </View>
     )
   }
@@ -340,7 +340,6 @@ export default function NewsView() {
           <Button mt="2" w="50%" colorScheme={familyNewsColor} onPress={() => showFamilyNews()}>
             가족 뉴스
           </Button>
-          
         </HStack>
         {myNews &&
           <Box>
@@ -355,20 +354,19 @@ export default function NewsView() {
                 <Button mt="2" colorScheme={newsMenu3} onPress={() => { setShowFHistoryNews() }}>
                   가족력
                 </Button>
-                
               </HStack>
             </Box>
             <View>
-            <TouchableOpacity onPress={() => navigation.navigate('NewsList', {
+              <TouchableOpacity onPress={() => navigation.navigate('NewsList', {
                 keyword: keyword
               })}>
-            <HStack>
-              <Text>뉴스 더보기</Text>
-              <Icon name="doubleright" size={15}  color="#4F8EF7" />
-            </HStack>
-            </TouchableOpacity>
-          </View>
-            {display()}
+                <HStack>
+                  <Text>뉴스 더보기</Text>
+                  <Icon name="doubleright" size={15} color="#4F8EF7" />
+                </HStack>
+              </TouchableOpacity>
+            </View>
+            <DisplayNews/>
           </Box>
         }
         {familyNews &&
