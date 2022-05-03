@@ -8,11 +8,11 @@ const incidenceRate = mongoose.Schema({
         rate: {
             male: [{
                 age: String,
-                rate: Number
+                rate: String
             }],
             female: [{
                 age: String,
-                rate: Number
+                rate: String
             }]
         }
     }]

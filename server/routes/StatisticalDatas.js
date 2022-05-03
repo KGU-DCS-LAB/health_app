@@ -57,18 +57,19 @@ const findDiseases = (data, callback) => {
 }
 
 router.get('/calcRate', function(req, res) {
-    let diseases = []
+    let returnText = '';
     StatisticalData.find().then( (datas) => {
         datas.forEach((data) => {
             // findDiseases(data, function(disease){diseases = disease; console.log(diseases)})
             clacAndSave(data, function(result){
                 findDiseases(data, function(disease){
                     save(disease, result, function(txt){{
-                        return res.json({ status: txt })
+                        returnText = txt
                     }})
                 })
             })
         })
+        return res.json({status: returnText});
     }).catch( (err) => {
         console.log(err);
         next(err)
@@ -83,13 +84,13 @@ function save(disease, data, callback){
         newIrStorage.save(function (error, data) {
             if (error) {
                 console.log(error);
-                callback("duplicated")
+                // callback("duplicated")
             } else {
                 console.log('Saved!')
-                callback('success')
             }
         });
     })
+    callback('success');
 }
 
 function clacAndSave(data, callback){
@@ -104,20 +105,27 @@ function clacAndSave(data, callback){
         const count = statistic.count;
         const total = count.total
 
+        let rate = 0;
         count.male.forEach((m) => {
+            rate = 0;
             if(m.num === '-'){
-                male.push({age: m.age, rate: 0})
+                male.push({age: m.age, rate: rate})
             }else {
-                const rate = parseInt(m.num) / parseInt(total) * 100;
+                const div = parseInt(m.num) / parseInt(total);
+                if(div > 0){
+                    console.log(statistic.month, " ", m.age, " ", div);
+                }
+                rate = (parseInt(m.num) / parseInt(total)) / 100;
                 male.push({age: m.age, rate: rate})
             }
         })
         // console.log(male)
         count.female.forEach((f) => {
+            rate = 0;
             if(f.num === '-'){
-                female.push({age: f.age, rate: 0})
+                female.push({age: f.age, rate: rate})
             }else {
-                const rate = parseInt(f.num) / parseInt(total) * 100;
+                rate = parseInt(f.num) / parseInt(total) * 100;
                 female.push({age: f.age, rate: rate})
             }
         })
@@ -139,8 +147,8 @@ const avgOfRage = (datas) => {
     for (let i=0; i<12; i++){
         const month = incidence[i].month.split(" ")[1];
         male = incidence[i].rate.male;
-        for (let k=12; k<incidence.length; k += 12){
-            for(let j=0; j<male.length; j++){
+        for(let j=0; j<male.length; j++){
+            for (let k=12; k<incidence.length; k += 12){
                 male[j]['rate'] = male[j].rate + incidence[k].rate.male[j].rate
             }
         }
