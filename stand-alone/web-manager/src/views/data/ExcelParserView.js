@@ -21,30 +21,45 @@ const readUploadFile = (e) => {
 
 async function postData(result, diseaseName) {
     try {
-      //응답 성공 
-      const response = await axios.post('http://172.30.1.1:5000/statisticalDataRouter/save',{
+        //응답 성공 
+        const response = await axios.post('http://172.16.203.208:5000/statisticalDataRouter/save', {
             //보내고자 하는 데이터 
-          data: result,
-          diseaseName: diseaseName
-      });
-      console.log(response);
+            data: result,
+            diseaseName: diseaseName
+        });
+        console.log(response);
     } catch (error) {
-      //응답 실패
-      console.error(error);
+        //응답 실패
+        console.error(error);
     }
-  }
+}
+
+const calcRate = () => {
+    axios.get("http://172.16.203.208:5000/statisticalDataRouter/calcRate")
+        .then(function (response) {
+            // response  
+        }).catch(function (error) {
+            // 오류발생시 실행
+        }).then(function () {
+            // 항상 실행
+        });
+}
 
 const ExcelParserView = () => {
     return (
-        <form>
-            <label htmlFor="upload">Upload File</label>
-            <input
-                type="file"
-                name="upload"
-                id="upload"
-                onChange={readUploadFile}
-            />
-        </form>
+        <div>
+            <form>
+                <label htmlFor="upload">Upload File</label>
+                <input
+                    type="file"
+                    name="upload"
+                    id="upload"
+                    onChange={readUploadFile}
+                />
+                {/* <button onClick={readUploadFile}>저장</button> */}
+            </form>
+            <button onClick={calcRate}>발병률 계산</button>
+        </div>
     )
 }
 export default ExcelParserView;

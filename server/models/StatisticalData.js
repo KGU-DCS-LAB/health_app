@@ -9,7 +9,7 @@ const statisticalData = mongoose.Schema({
     },
     statistics: [{
         month: String,
-        count: [{
+        count: {
             total: String,
             male: [{
                 age: String,
@@ -19,7 +19,7 @@ const statisticalData = mongoose.Schema({
                 age: String,
                 num: String
             }]
-        }]
+        }
     }]
 }
 )

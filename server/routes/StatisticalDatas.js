@@ -25,14 +25,11 @@ function formatDatas(json, diseaseName, callback) {
         male = [];
         female = [];
     }
-    console.log(result);
-    // console.log(json);
     callback(result);
 }
 
 router.post('/save', function (req, res) {
     const json = req.body.data;
-    console.log(req.body.data);
     formatDatas(json, req.body.diseaseName, function(result) {
         const newSdStorage = new StatisticalData(result);
         newSdStorage.save(function (error, data) {
@@ -45,6 +42,16 @@ router.post('/save', function (req, res) {
             }
         });
     })
+});
+
+router.get('/calcRate', function(req, res) {
+    console.log('claculate!');
+    StatisticalData.find().then( (datas) => {
+        console.log(datas[0]);
+    }).catch( (err) => {
+        console.log(err);
+        next(err)
+    });
 });
 
 module.exports = router;
