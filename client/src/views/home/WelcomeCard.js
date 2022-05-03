@@ -13,7 +13,7 @@ const WelcomeCard = (props) => {
     ]
 
     const renderItem = useCallback(({ item, index }) => (
-        <View style={{ backgroundColor: '#dcdde1', marginVertical: 10, borderRadius: 10 }}>
+        <View style={styles.card}>
             {item.card}
         </View>
     ), []);
@@ -25,8 +25,8 @@ const WelcomeCard = (props) => {
         const ref = useRef(null);
         return (
             <>
-                <Center w="100%">
-                    <Box safeArea p="2" py="0" w="95%">
+                {/* <Center w="100%"> */}
+                    {/* <Box > */}
                         <Carousel
                             layout="default"
                             ref={ref}
@@ -36,14 +36,14 @@ const WelcomeCard = (props) => {
                             renderItem={renderItem}
                             onSnapToItem={(index) => setActiveIndex(index)}
                         />
-                    </Box>
-                </Center>
+                    {/* </Box> */}
+                {/* </Center> */}
             </>
         )
     }
 
     return (
-        <Box alignItems="center" py="1" px="3">
+        <Box alignItems="center">
             <CustomCarousel />
         </Box>
     );
@@ -54,3 +54,14 @@ export default class extends React.Component {
         return <WelcomeCard state={this.state} />
     }
 }
+
+const styles = StyleSheet.create({
+
+    card: {
+        backgroundColor: '#dcdde1',
+        marginVertical: 10,
+        borderRadius: 10,
+        height:200,
+    },
+
+});
