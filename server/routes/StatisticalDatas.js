@@ -1,6 +1,8 @@
 const express = require('express')
 const router = express.Router();
 const { StatisticalData } = require("../models/StatisticalData");
+const { IncidenceRate } = require("../models/IncidenceRate");
+const { Disease } = require('../models/Disease');
 
 function formatDatas(json, diseaseName, callback) {
     const result = {}
@@ -44,11 +46,27 @@ router.post('/save', function (req, res) {
     })
 });
 
+const findDiseases = (data, callback) => {
+    Disease.find().or([{질병명: {$regex:data.diseaseName}}, {동의어: {$regex:data.diseaseName}}]).select('번호 질병명').then((diseases) => {
+        // res.json({usingOr: diseases})
+        callback(diseases)
+    }).catch((err) => {
+        console.log(err);
+        next(err)
+    });
+}
+
 router.get('/calcRate', function(req, res) {
+    let diseases = []
     StatisticalData.find().then( (datas) => {
         datas.forEach((data) => {
+            // findDiseases(data, function(disease){diseases = disease; console.log(diseases)})
             clacAndSave(data, function(result){
-                console.log('done')
+                findDiseases(data, function(disease){
+                    save(disease, result, function(txt){{
+                        return res.json({ status: txt })
+                    }})
+                })
             })
         })
     }).catch( (err) => {
@@ -57,9 +75,26 @@ router.get('/calcRate', function(req, res) {
     });
 });
 
+function save(disease, data, callback){
+    disease.forEach((d) => {
+        data.diseaseName = d.질병명;
+        data.diseaseNum = d.번호;
+        const newIrStorage = new IncidenceRate(data);
+        newIrStorage.save(function (error, data) {
+            if (error) {
+                console.log(error);
+                callback("duplicated")
+            } else {
+                console.log('Saved!')
+                callback('success')
+            }
+        });
+    })
+}
+
 function clacAndSave(data, callback){
     const result = {}
-    result.calculate = [];
+    result.incidence = [];
     let male = []
     let female = []
     const statistics = data.statistics;
@@ -67,49 +102,55 @@ function clacAndSave(data, callback){
         // const month = statistic.month.split(' ')[1];
         // console.log(month);
         const count = statistic.count;
+        const total = count.total
 
         count.male.forEach((m) => {
             if(m.num === '-'){
                 male.push({age: m.age, rate: 0})
             }else {
-                const rate = m.num / count.total * 100
+                const rate = parseInt(m.num) / parseInt(total) * 100;
                 male.push({age: m.age, rate: rate})
             }
         })
-        console.log(male)
+        // console.log(male)
         count.female.forEach((f) => {
             if(f.num === '-'){
                 female.push({age: f.age, rate: 0})
             }else {
-                const rate = f.num / count.total * 100
+                const rate = parseInt(f.num) / parseInt(total) * 100;
                 female.push({age: f.age, rate: rate})
             }
         })
-        console.log(female)
-        result.calculate.push({month: statistic.month, rate: {male: male, female: female}})
+        result.incidence.push({month: statistic.month, rate: {male: male, female: female}})
         male = [];
         female = [];
     })
     // console.log(result);
-    avgOfRage(result);
+    const avg = avgOfRage(result);
+    callback(avg);
 }
 
 const avgOfRage = (datas) => {
     const result = {}
-    result.calculate = [];
+    result.incidence = [];
     let male = []
     let female = []
-    const calculate = datas.calculate;
+    const incidence = datas.incidence;
     for (let i=0; i<12; i++){
-        const month = calculate[i].month.split(" ")[1];
-        male = calculate[i].rate.male;
-        for (let k=12; k<calculate.length; k += 12){
+        const month = incidence[i].month.split(" ")[1];
+        male = incidence[i].rate.male;
+        for (let k=12; k<incidence.length; k += 12){
             for(let j=0; j<male.length; j++){
-                // console.log(calculate[k].rate.male[j])
-                // male[j]['rate'] = male[j].rate + calculate[k].rate.male[j].rate
+                male[j]['rate'] = male[j].rate + incidence[k].rate.male[j].rate
             }
         }
+        for(let j=0; j<male.length; j++){
+            male[j]['rate'] = male[j].rate / 3
+        }
+        console.log(male);
+        result.incidence.push({month: month, rate: {male: male, female: female}})
     }
+    return result;
 }
 
 module.exports = router;

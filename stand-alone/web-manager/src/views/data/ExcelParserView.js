@@ -22,7 +22,7 @@ const readUploadFile = (e) => {
 async function postData(result, diseaseName) {
     try {
         //응답 성공 
-        const response = await axios.post('http://172.16.203.208:5000/statisticalDataRouter/save', {
+        const response = await axios.post('http://192.168.201.151:5000/statisticalDataRouter/save', {
             //보내고자 하는 데이터 
             data: result,
             diseaseName: diseaseName
@@ -35,7 +35,7 @@ async function postData(result, diseaseName) {
 }
 
 const calcRate = () => {
-    axios.get("http://172.16.203.208:5000/statisticalDataRouter/calcRate")
+    axios.get("http://192.168.201.151:5000/statisticalDataRouter/calcRate")
         .then(function (response) {
             // response  
         }).catch(function (error) {
