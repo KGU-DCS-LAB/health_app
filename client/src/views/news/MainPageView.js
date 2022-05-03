@@ -1,4 +1,5 @@
 import { AntDesign } from "@expo/vector-icons";
+import { useNavigation } from '@react-navigation/native';
 import { Fab, Icon } from "native-base";
 import { ScrollView, Text, View } from "react-native";
 import NewsView from "./NewsView";
@@ -6,6 +7,8 @@ import NewsView from "./NewsView";
 import WelcomeCard from "./WelcomeCard";
 
 const MainPageView = () => {
+    const navigation = useNavigation();
+
     return (
         <View style={{ flex: 1 }}>
             <WelcomeCard />

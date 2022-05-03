@@ -1,7 +1,8 @@
 import React, {useState, useEffect, useCallback} from "react";
 import { GiftedChat } from 'react-native-gifted-chat'
 import { View, Text, Alert, VStack, HStack, Box, NativeBaseProvider } from "native-base";
-const IP_address = process.env.IP_address
+// const IP_address = process.env.IP_address
+import { IP_address } from '@env'
 import axios from 'axios';
 import { useNavigation } from "@react-navigation/native";
 
@@ -58,16 +59,27 @@ const ChatScreen = () => {
         axios.post('http://' + IP_address + ':5000/diseasesRouter/findBySymptoms', {
             data: { symptoms: selectedSymptom }
         }).then((response) => {
-            console.log(response.data);
-            response.data.usingAnd.map((item, idx) => {
-                const disease = {
-                    contentType: "disease",
-                    title: item.질병명,
-                    value: item.링크
-                }
-                result.push(disease);
-            });
-            if(result){
+            const size = response.data[0].usingAnd.length;
+            // console.log(size);
+            if(size !== 0){
+                response.data[0].usingAnd.map((item, idx) => {
+                    const disease = {
+                        contentType: "disease",
+                        title: item.질병명,
+                        value: item.링크
+                    }
+                    result.push(disease);
+                });
+                setDiseases(result);
+            } else {
+                response.data[1].usingOr.map((item, idx) => {
+                    const disease = {
+                        contentType: "disease",
+                        title: item.질병명,
+                        value: item.링크
+                    }
+                    result.push(disease);
+                });
                 setDiseases(result);
             }
         }).catch(function (error) {
@@ -172,7 +184,7 @@ const ChatScreen = () => {
         setMessages([
             {
                 _id: 2,
-                text: '증상 입력 방법을 선택하세요.',
+                text: '증상 입력 방법을 선택하세요.'+IP_address,
                 createdAt: new Date(),
                 quickReplies: {
                     type: 'radio', // or 'checkbox',

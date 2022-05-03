@@ -82,37 +82,34 @@ function setQuery(arr, callback) {
     callback(query);
 }
 
-function getData(symptoms) {
+function getData(symptoms, callback) {
     let response = [];
     setQuery(symptoms, function (query) {
         Disease.find().and(query).select('-_id 번호 질병명 링크').then((diseases) => {
             // res.json({usingAnd: diseases})
-            response.push({ usingAnd: JSON.stringify(diseases) })
-            console.log(response);
+            response.push({ usingAnd: diseases })
+            // callback(response);
         }).catch((err) => {
             console.log(err);
             next(err)
         });
-    });
-    setQuery(symptoms, function (query) {
         Disease.find().or(query).select('-_id 번호 질병명 링크').then((diseases) => {
             // res.json({usingOr: diseases})
-            response.push({ usingOr: JSON.stringify(diseases) })
-            console.log(response);
+            response.push({ usingOr: diseases })
+            callback(response);
         }).catch((err) => {
             console.log(err);
             next(err)
         });
     });
-    return response;
 }
 
 router.post('/findBySymptoms', function (req, res, next) {
     // 증상으로 질병 가져오기
-    const result = getData(req.body.data.symptoms)
-
-    console.log(JSON.stringify(result));
-    res.json(result)
+    getData(req.body.data.symptoms, function(result){
+        console.log(JSON.stringify(result));
+        res.json(result)
+    })
 });
 
 router.get('/delete/', function (req, res, next) {
