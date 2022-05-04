@@ -92,9 +92,7 @@ const ShortNewsCard = (props) => {
                         건강 뉴스
                     </Heading>
                     <Spacer />
-                    <TouchableOpacity onPress={() => navigation.navigate('NewsView', {
-                        // keyword: keyword
-                    })}>
+                    <TouchableOpacity onPress={() => navigation.navigate('News')}>
                         <HStack>
                             <Text>뉴스 더보기</Text>
                             <Icon name="doubleright" size={15} color="#4F8EF7" />

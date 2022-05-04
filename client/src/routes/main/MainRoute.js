@@ -12,8 +12,15 @@ import { createStackNavigator } from '@react-navigation/stack';
 import DiseaseDetail from '../../views/main/DiseaseDetail'
 import NewsView from '../../views/news/NewsView';
 // import NewsList from '../../views/news/NewsList'
+import NewsRoute from '../news/NewsRoute'
 
 const Stack = createStackNavigator();
+
+const NewsScreen = ({navigation}) => {
+    return (
+        <NewsRoute navigation={navigation}/>
+    )
+}
 
 const MainRoute = () => {
     return (
@@ -78,9 +85,15 @@ const MainRoute = () => {
                 component={NewsList}
             /> */}
 
-<Stack.Screen
+            <Stack.Screen
                 name='NewsView'
                 component={NewsView}
+            />
+
+            <Stack.Screen
+                name="News"
+                component={NewsScreen}
+                
             />
         </Stack.Navigator>
     )
