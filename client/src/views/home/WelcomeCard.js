@@ -25,19 +25,15 @@ const WelcomeCard = (props) => {
         const ref = useRef(null);
         return (
             <>
-                {/* <Center w="100%"> */}
-                    {/* <Box > */}
-                        <Carousel
-                            layout="default"
-                            ref={ref}
-                            data={carouselItems}
-                            sliderWidth={350}
-                            itemWidth={350}
-                            renderItem={renderItem}
-                            onSnapToItem={(index) => setActiveIndex(index)}
-                        />
-                    {/* </Box> */}
-                {/* </Center> */}
+                <Carousel
+                    layout="default"
+                    ref={ref}
+                    data={carouselItems}
+                    sliderWidth={350}
+                    itemWidth={350}
+                    renderItem={renderItem}
+                    onSnapToItem={(index) => setActiveIndex(index)}
+                />
             </>
         )
     }
@@ -58,10 +54,12 @@ export default class extends React.Component {
 const styles = StyleSheet.create({
 
     card: {
-        backgroundColor: '#dcdde1',
+        backgroundColor: '#FAECC5',
         marginVertical: 10,
         borderRadius: 10,
-        height:200,
+        height: 200,
+        padding: 20,
+        marginHorizontal: 10,
     },
 
 });
