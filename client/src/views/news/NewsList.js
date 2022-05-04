@@ -2,22 +2,27 @@ import React, { useState, useEffect } from "react";
 import { View, Heading, Box, Center, VStack, HStack, Button, Image, Stack, Avatar, Spacer, Link, Select, CheckIcon } from 'native-base';
 import { useIsFocused } from '@react-navigation/native';
 import axios from 'axios';
-import { StyleSheet, FlatList, Text, Alert, TouchableOpacity } from 'react-native';
+import { StyleSheet, FlatList, Text, Alert, SafeAreaView, StatusBar, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import SelectDropdown from 'react-native-select-dropdown'
 import AppLoading from "expo-app-loading";
+import { useNavigation } from '@react-navigation/native';
 
 const IP_address = process.env.IP_address
 
 
 const NewsList = ({user, newsMenu}) => {
+    const navigation = useNavigation();
     const isFocused = useIsFocused(); // isFoucesd Define
     const [userData, setUserData] = useState([])
     const [keyword, setKeyword] = useState('');
     const [items, setItems] = useState([]);
+    const [userDisease, setUserDisease] = useState('')
+    const [userBirth, setUserBirth] = useState('')
+    // const [loading, setLoading] = useState(false);
 
-    // console.log(user);
-    // console.log(newsMenu);
+    console.log(user);
+    console.log(newsMenu);
 
     const getUserData = () => {
       let result = []
@@ -27,14 +32,10 @@ const NewsList = ({user, newsMenu}) => {
         }
       })
         .then((response) => {
-          console.log(response.data);
-          if (response.data.length > 0) {
-            response.data.forEach((item) => {
-                result.push(item);
-            });
-        }
-        setUserData(result);
-        // console.log(result);
+        setUserData(response.data);
+        setUserDisease(response.data.user_diseases);
+        setUserBirth(response.data.birthday);
+        menuSelect();
         }).catch(function (error) {
           console.log(error);
         });
@@ -44,29 +45,33 @@ const NewsList = ({user, newsMenu}) => {
       switch (newsMenu) {
         case "질병":
           return (
-            setKeyword(userData.user_diseases)
+            setKeyword(userDisease)
           )
         case "나이":
           return(
-            setKeyword(userData.birthday.split('T')[0])
+            setKeyword(userBirth.split('T')[0])
           )
       }
+      console.log(userData.birthday);
       getNews();
     }
 
     const getNews = () => {
+      console.log(userBirth);
       if(newsMenu == '나이'){
+        console.log(userBirth);
         let ageGroup = ''
-        if (age < 10) {
+        let userAge = new Date().getFullYear() - userBirth.split('-')[0];
+        console.log(userAge);
+        if (userAge < 10) {
           ageGroup = '어린이'
         }
-        else if (age >= 10) {
-          ageGroup = parseInt(age / 10) + '0대'
+        else if (userAge >= 10) {
+          ageGroup = parseInt(userAge / 10) + '0대'
         }
         setKeyword(ageGroup);
       } 
-      console.log('sdfsf'+keyword);
-
+      console.log(keyword);
       let result = []
       axios.get('http://' + IP_address + ':5000/newsRouter/news', {
       params: {
@@ -76,13 +81,8 @@ const NewsList = ({user, newsMenu}) => {
       .then((response) => {
         console.log('=================');
         console.log(response.data);
-        if (response.data.length > 0) {
-          response.data.forEach((item) => {
-              result.push(item);
-          });
-      }
-      setItems(result);
-      console.log(result);
+      setItems(response.data);
+      console.log(response.data);
       }).catch(function (error) {
         // 오류발생시 실행
         console.log(error);
@@ -91,11 +91,12 @@ const NewsList = ({user, newsMenu}) => {
 
     const [ref, setRef] = useState(null);
 
-    //첫 렌더링에만 호출됨
     useEffect(() => {
         getUserData();
         menuSelect();
+        getNews();
     }, [isFocused]);
+
 
     const renderItem = ({ item }) => {
         return (
@@ -130,34 +131,32 @@ const NewsList = ({user, newsMenu}) => {
         );
     };
 
-    const onFinish = () => setLoading(false);
+    // const onFinish = () => setLoading(false);
 
     return (
-        <View style={styles.container}>
-          <AppLoading
-            startAsync={getNews}
-            onError={console.warn}
-            onFinish={onFinish}
-            /> 
-            <FlatList
-                data={items}
-                ref={(ref) => {
-                    setRef(ref);
-                }}
-                renderItem={renderItem}
-                keyExtractor={(item) => item._id}
-                // extraData={selectedId}
-            />
-        </View>
+        <SafeAreaView style={styles.container}>
+      <FlatList
+        data={items}
+        renderItem={renderItem}
+        keyExtractor={item => item._id}
+      />
+    </SafeAreaView>
     )
 }
 export default NewsList;
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        // alignItems: 'center',
-        justifyContent: 'center',
-    },
+  container: {
+    flex: 1,
+    marginTop: StatusBar.currentHeight || 0,
+  },
+  item: {
+    backgroundColor: '#f9c2ff',
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
+  },
+  title: {
+    fontSize: 32,
+  },
 });

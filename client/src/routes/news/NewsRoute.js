@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useRef } from 'react';
-import { Button, View, Text, SafeAreaView, ScrollView, StyleSheet, Pressable, Alert } from 'react-native';
 import { createDrawerNavigator, DrawerItemList, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import NewsMainView from '../../views/news/NewsView';
 

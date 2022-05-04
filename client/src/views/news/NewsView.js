@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { View, Heading, Box, Center, VStack, HStack, Button, useColorModeValue, Stack, Avatar, Spacer, Link, Select, CheckIcon, Pressable } from 'native-base';
+import { Heading, Box, Center, VStack, HStack, Button, useColorModeValue, Stack, Avatar, Spacer, Link, Select, CheckIcon, Pressable } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
-import { StyleSheet, FlatList, Text, Alert, TouchableOpacity } from 'react-native';
+import { StyleSheet, FlatList, View, Text, Alert, useWindowDimensions, SafeAreaView  } from 'react-native';
 const IP_address = process.env.IP_address
 import AppLoading from "expo-app-loading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -61,7 +61,7 @@ export default function NewsView() {
   // const [newsMenu1, setNewsMenu1] = useState('blue')
   // const [newsMenu2, setNewsMenu2] = useState('gray')
   // const [newsMenu3, setNewsMenu3] = useState('gray')
-  const [newsMenu, setNewsMenu] = useState('질병');
+  const [newsMenu, setNewsMenu] = useState('');
 
   // const callback = (data) => {
   //   setDataArr(data);
@@ -326,74 +326,70 @@ export default function NewsView() {
   //   )
   // }
 
-  const FirstRoute = () => <Center flex={1} my="4">
-    This is Tab 1
-  </Center>;
+const FirstRoute = () => {
+  // setNewsMenu('질병')
+  return (
+<NewsList user={userId} newsMenu={newsMenu}/>
+  )
+}
 
-const SecondRoute = () => <Center flex={1} my="4">
-    This is Tab 2
-  </Center>;
+const SecondRoute = () => {
+  // setNewsMenu('나이')
+  return (
+<NewsList user={userId} newsMenu={newsMenu}/>
+  )
+}
+  
 
-const initialLayout = {
-  width: '100%'
-};
-const renderScene = SceneMap({
-  first: FirstRoute,
-  second: SecondRoute,
-});
+function Tab() {
+  const layout = useWindowDimensions();
 
-function TabView() {
   const [index, setIndex] = React.useState(0);
-  const [routes] = React.useState([{
-    key: "first",
-    title: "질병"
-  }, {
-    key: "second",
-    title: "나이"
-  }]);
+  const [routes] = React.useState([
+    { key: 'first', title: '질병' },
+    { key: 'second', title: '나이' },
+  ]);
 
-  const renderTabBar = props => {
-    const inputRange = props.navigationState.routes.map((x, i) => i);
-    return <Box flexDirection="row">
-        {props.navigationState.routes.map((route, i) => {
-        const opacity = props.position.interpolate({
-          inputRange,
-          outputRange: inputRange.map(inputIndex => inputIndex === i ? 1 : 0.5)
-        });
-        const color = index === i ? useColorModeValue("#000", "#e5e5e5") : useColorModeValue("#1f2937", "#a1a1aa");
-        const borderColor = index === i ? "cyan.500" : useColorModeValue("coolGray.200", "gray.400");
-        return <Box borderBottomWidth="3" borderColor={borderColor} flex={1} alignItems="center" p="3">
-              <Pressable onPress={() => {
-            console.log(i);
-            setIndex(i);
-          }}>
-                <Animated.Text style={{
-              color
-            }}>{route.title}</Animated.Text>
-              </Pressable>
-            </Box>;
-      })}
-      </Box>;
+  const renderScene = ({ route }) => {
+    switch (route.key) {
+      case 'first':
+        return <NewsList user={userId} newsMenu={route.title}/>
+      case 'second':
+        return <NewsList user={userId} newsMenu={route.title}/>
+    }
   };
 
-  return <TabView navigationState={{
-    index,
-    routes
-  }} renderScene={renderScene} renderTabBar={renderTabBar} onIndexChange={setIndex} initialLayout={initialLayout} style={{
-    marginTop: StatusBar.currentHeight
-  }} />;
+  // const renderScene = SceneMap({
+  //   first: FirstRoute,
+  //   second: SecondRoute,
+  // });
+
+  return (
+    <TabView
+      navigationState={{ index, routes }}
+      renderScene={renderScene}
+      onIndexChange={setIndex}
+      initialLayout={{ width: layout.width }}
+      renderLabel={() => 
+          setNewsMenu(routes[index].title)
+        }
+    />
+  );
 }
 
   const MenuView = () => {
     return (
-      <View style={{ height: 150 }}>
-        <Text>{userName}님을 위한 건강 뉴스</Text>
-        <TabView/>
+      <View style={{ height: '100%' }}>
+        <Tab/>
       </View>
     )
   }
 
   return (
+    <>
+        <MenuView/>
+        {/* <NewsList user={userId} newsMenu={newsMenu}/> */}
+    </>
     // <Center w="100%" >
     //   {/* <AppLoading
     //     startAsync={setShowDiseasesNews}
@@ -406,10 +402,7 @@ function TabView() {
     //     }} fontWeight="semibold">
     //       {userName}님을 위한 건강 뉴스
     //     </Heading>
-    <>
-        <MenuView/>
-        <NewsList user={userId} newsMenu={newsMenu}/>
-    </>
+    
         
         /* <HStack space={3} mt="5">
           <Button mt="2" w="50%" colorScheme={myNewsColor} onPress={() => showMyNews()}>
@@ -464,27 +457,15 @@ function TabView() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: '#fff',
-    // // alignItems: 'center',
-    // justifyContent: 'center',
+    marginTop: StatusBar.currentHeight || 0,
   },
-
-  wrapper: {},
-  slide1: {
-    flex: 1,
-    backgroundColor: '#9DD6EB'
+  item: {
+    backgroundColor: '#f9c2ff',
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
   },
-  slide2: {
-    flex: 1,
-    backgroundColor: '#97CAE5'
-  },
-  slide3: {
-    flex: 1,
-    backgroundColor: '#92BBD9'
-  },
-  text: {
-    color: '#fff',
-    fontSize: 30,
-    fontWeight: 'bold'
+  title: {
+    fontSize: 32,
   },
 });
