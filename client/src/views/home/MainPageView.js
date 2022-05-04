@@ -23,7 +23,6 @@ const MainPageView = () => {
                 {/* 질병관련소식 카드가 있으면 좋을듯 함 */}
                 <FamilyProfileCard />
             </ScrollView>
-            {/* <NewsView /> */}
             <Fab renderInPortal={false} shadow={2} size="sm" onPress={() => navigation.navigate('ChatBot')} icon={<Icon color="white" as={<AntDesign name="wechat" />} size="lg" />} />
         </View>
     )
