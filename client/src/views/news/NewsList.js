@@ -42,6 +42,7 @@ const NewsList = ({user, newsMenu}) => {
     }
 
     const menuSelect = () => {
+      const age = new Date().getFullYear() - userBirth.split('T')[0].split('-')[0];
       switch (newsMenu) {
         case "질병":
           return (
@@ -49,7 +50,7 @@ const NewsList = ({user, newsMenu}) => {
           )
         case "나이":
           return(
-            setKeyword(userBirth.split('T')[0])
+            setKeyword((age<10) ? userDisease+"+어린이" : userDisease+ "+"+ parseInt(age/10)+"0대")
           )
       }
       console.log(userData.birthday);
@@ -58,20 +59,14 @@ const NewsList = ({user, newsMenu}) => {
 
     const getNews = () => {
       console.log(userBirth);
-      if(newsMenu == '나이'){
-        console.log(userBirth);
-        let ageGroup = ''
-        let userAge = new Date().getFullYear() - userBirth.split('-')[0];
-        console.log(userAge);
-        if (userAge < 10) {
-          ageGroup = '어린이'
-        }
-        else if (userAge >= 10) {
-          ageGroup = parseInt(userAge / 10) + '0대'
-        }
-        setKeyword(ageGroup);
-      } 
+      if (keyword < 10) {
+        setKeyword(userDisease+"+어린이");
+      }
+      else if (keyword >= 10) {
+        setKeyword(userDisease+ "+20대");
+      }
       console.log(keyword);
+
       let result = []
       axios.get('http://' + IP_address + ':5000/newsRouter/news', {
       params: {

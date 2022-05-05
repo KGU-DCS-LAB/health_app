@@ -17,7 +17,7 @@ router.get('/news', function(req,res) {
 
         await page.goto('https://search.naver.com/search.naver?where=news&sm=tab_pge&query='+encodeURI(keyword)+'&sort=0&photo=0&field=0&pd=0&ds=&de=&cluster_rank=352&mynews=0&office_type=0&office_section_code=0&news_office_checked=&nso=so:r,p:all,a:all&start=1');
         data.push(await parsing(page));
-        console.log(data);
+        // console.log(data);
     
         // for(let idx = 1; idx<=121; idx+=10){
         //     await page.goto('https://search.naver.com/search.naver?where=news&sm=tab_pge&query='+encodeURI(keyword)+'&sort=0&photo=0&field=0&pd=0&ds=&de=&cluster_rank=352&mynews=0&office_type=0&office_section_code=0&news_office_checked=&nso=so:r,p:all,a:all&start='+idx);
