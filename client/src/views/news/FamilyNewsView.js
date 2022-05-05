@@ -15,24 +15,14 @@ import { TabView, SceneMap } from "react-native-tab-view";
 import { useIsFocused } from '@react-navigation/native';
 
 export default function FamilyNewsList() {
-  const navigation = useNavigation();
   const [userId, setUserId] = useState('')
   const [familyId, setFamilyId] = useState('');
-  const [userName, setUserName] = useState('')
-  const [userBirth, setUserBirth] = useState('')
-  const [myDisease, setMyDisease] = useState();
-  const [myFH, setMyFH] = useState();
-  const [familyDisease, setFamilyDisease] = useState();
-  const [familyAge, setFamilyAge] = useState();
-  const [userData, setUserData] = useState();
-  const [keyword, setKeyword] = useState('');
   const isFocused = useIsFocused();
+  const [familyList, setFamliyList] = useState([]);
 
   useEffect(() => {
     getData();
     getUserData();
-    // getFamilyList();
-    // setShowDiseasesNews()
   }, [isFocused, userId])
 
   const getData = () => {
@@ -41,11 +31,7 @@ export default function FamilyNewsList() {
         .then(value => {
           if (value != null) {
             const UserInfo = JSON.parse(value);
-            // console.log(UserInfo);
             setUserId(UserInfo.user_id);
-            // setMyDisease(UserInfo.user_diseases)
-            // setKeyword(UserInfo.user_diseases);
-            // setUserBirth(UserInfo.birthday.split('T')[0]);
           }
         }
         )
@@ -53,187 +39,6 @@ export default function FamilyNewsList() {
       console.log(error);
     }
   }
-
-  // const [dataArr, setDataArr] = useState([]);
-  // const [loading, setLoading] = useState(false);
-  // const [myNews, setMyNews] = useState(true);
-  // const [familyNews, setFamilyNews] = useState(false);
-  const [familyList, setFamliyList] = useState([]);
-  // const [myNewsColor, setMyNewsColor] = useState("blue");
-  // const [familyNewsColor, setFamilyNewsColor] = useState("gray");
-  // const [newsMenu1, setNewsMenu1] = useState('blue')
-  // const [newsMenu2, setNewsMenu2] = useState('gray')
-  // const [newsMenu3, setNewsMenu3] = useState('gray')
-  const [newsMenu, setNewsMenu] = useState('');
-
-  // const callback = (data) => {
-  //   setDataArr(data);
-  // }
-
-  // let newsArr = Object.values(dataArr).map(news => news);
-
-  // const DisplayNews = () => {
-  //   // console.log(newsArr);
-  //   return (
-  //     <View>
-  //       <FlatList
-  //         data={newsArr}
-  //         keyExtractor={item => item.newsUrl}
-  //         renderItem={
-  //           ({ item }) => (
-  //             <TouchableOpacity href="#" onPress={() => navigation.navigate('NewsDetail', {
-  //               url: item.newsUrl,
-  //               title: item.title,
-  //               img: item.img
-  //             })}>
-  //               <Box key={item.newsUrl} borderBottomWidth="1" _dark={{
-  //                 borderColor: "gray.600"
-  //               }} borderColor="coolGray.200" py="2" >
-  //                 <HStack space={3} justifyContent="space-between">
-  //                   <Avatar size="48px" source={{
-  //                     uri: item.img
-  //                   }} />
-  //                   <VStack>
-  //                     <Text numberOfLines={1} ellipsizeMode='tail' _dark={{
-  //                       color: "warmGray.50"
-  //                     }} color="coolGray.800" bold >
-  //                       {item.title}
-  //                     </Text>
-  //                     <Text fontSize="xs" _dark={{
-  //                       color: "warmGray.50"
-  //                     }} color="coolGray.800" >
-  //                       {item.time}
-  //                     </Text>
-  //                   </VStack>
-  //                   <Spacer />
-  //                 </HStack>
-  //               </Box>
-  //             </TouchableOpacity>
-  //           )}
-  //       />
-  //     </View>
-  //   )
-  // }
-
-  // console.log(Object.values(dataArr).map(news => (news.time)));
-
-  // const setShowDiseasesNews = async () => {
-  //   // setNewsMenu('질병')
-  //   // setNewsMenu1('blue')
-  //   // setNewsMenu2('gray')
-  //   // setNewsMenu3('gray')
-  //   try {
-  //     const response = await axios.get('http://' + IP_address + ':5000/newsRouter/news', {
-  //       params: {
-  //         keyword: myDisease
-  //       }
-  //     })
-  //     setKeyword(myDisease)
-  //     callback(response.data);
-  //     setLoading(true);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }
-
-  // const setShowFamliyDiseasesNews = async (disease) => {
-  //   setNewsMenu('가족질병')
-  //   setNewsMenu1('blue')
-  //   setNewsMenu2('gray')
-  //   setNewsMenu3('gray')
-  //   setKeyword(disease)
-  //   try {
-  //     const response = await axios.get('http://' + IP_address + ':5000/newsRouter/news', {
-  //       params: {
-  //         keyword: disease
-  //       }
-  //     })
-  //     callback(response.data);
-  //     setLoading(true);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }
-
-  // const setShowAgeNews = (userAge) => {
-  //   console.log(userAge);
-  //   setNewsMenu('나이')
-  //   const age = new Date().getFullYear() - userAge.split('-')[0]
-  //   setNewsMenu1('gray')
-  //   setNewsMenu2('blue')
-  //   setNewsMenu3('gray')
-  //   setKeyword(userAge)
-  //   // console.log(age%10);
-  //   let ageGroup = ''
-  //   if (age < 10) ageGroup = '어린이';
-  //   else if (age >= 10) ageGroup = parseInt(age / 10) + '0대'
-  //   axios.get('http://' + IP_address + ':5000/newsRouter/news', {
-  //     params: {
-  //       keyword: ageGroup
-  //     }
-  //   })
-  //     .then((response) => {
-  //       callback(response.data);
-  //     }).catch(function (error) {
-  //       // 오류발생시 실행
-  //       console.log(error);
-  //     })
-
-  // }
-
-  const setShowFHistoryNews = () => {
-    // setNewsMenu1('gray')
-    // setNewsMenu2('gray')
-    // setNewsMenu3('blue')
-    // setKeyword('췌장암')
-    // axios.get('http://' + IP_address + ':5000/newsRouter/news', {
-    //   params: {
-    //     keyword: '췌장암'
-    //   }
-    // })
-    //   .then((response) => {
-    //     callback(response.data);
-    //   }).catch(function (error) {
-    //     // 오류발생시 실행
-    //     console.log(error);
-    //   })
-  }
-  // const onFinish = () => setLoading(false);
-
-  // const showMyNews = () => {
-  //   // setDataArr('');
-  //   setShowDiseasesNews();
-  //   setMyNews(true)
-  //   setKeyword(myDisease)
-  //   setFamilyNews(false)
-  //   setFamilyNewsColor('gray')
-  //   setMyNewsColor('blue')
-  // }
-
-  // const showFamilyNews = () => {
-  //   findFamily(0)
-  //   console.log('asdasdasdasdasd');
-  //   // setDataArr('');
-  //   setMyNews(false)
-  //   setFamilyNews(true)
-  //   setKeyword(familyDisease)
-  //   setFamilyNewsColor('blue')
-  //   setMyNewsColor('gray')
-  //   setNewsMenu1('blue')
-  //   setNewsMenu2('gray')
-  //   callbackFamilyNews()
-  // }
-
-  // function callbackFamilyNews() {
-  //   setShowFamliyDiseasesNews(familyDisease);
-  // }
-
-  // function callbackMyData(data) {
-  //   setUserData(data);
-  //   setFamliyList(data.user_family_list);
-  //   setMyDisease(data.user_diseases);
-  //   setShowDiseasesNews();
-  // }
 
   const getUserData = () => {
     axios.get('http://' + IP_address + ':5000/usersRouter/findOne/', {
@@ -277,11 +82,6 @@ export default function FamilyNewsList() {
     )
   };
 
-  // const callbackFamily = (data) => {
-  //   setFamilyDisease(data.user_diseases);
-  //   setFamilyAge(data.birthday.split('T')[0])
-  // }
-
   const findFamily = (index) => {
     console.log(index);
 
@@ -289,56 +89,10 @@ export default function FamilyNewsList() {
     setFamilyId(family_id)
     console.log(family_id)
   }
-
-
-  // const ShowFamilyNewsList = () => {
-
-  //   return (
-  //     <View>
-  //       <Box alignSelf="center">
-  //         <HStack space={3} mt="3" mb="3">
-  //           <Button mt="2" colorScheme={newsMenu1} onPress={() => { setShowFamliyDiseasesNews(familyDisease) }}>
-  //             질병
-  //           </Button>
-  //           <Button mt="2" colorScheme={newsMenu2} onPress={() => { setShowAgeNews(familyAge) }}>
-  //             나이
-  //           </Button>
-  //         </HStack>
-  //       </Box>
-  //       <View>
-  //         <TouchableOpacity onPress={() => navigation.navigate('NewsList', {
-  //           keyword: keyword
-  //         })}>
-  //           <HStack>
-  //             <Text>뉴스 더보기</Text>
-  //             <Icon name="doubleright" size={15} color="#4F8EF7" />
-  //           </HStack>
-  //         </TouchableOpacity>
-  //       </View>
-  //       <NewsList user={userId} newsMenu={newsMenu}/>
-  //     </View>
-  //   )
-  // }
   
 
 function Tab() {
   const layout = useWindowDimensions();
-
-//   const [index, setIndex] = React.useState(0);
-//   const [routes] = React.useState([
-//     { key: 'first', title: '질병' },
-//     { key: 'second', title: '나이' },
-//   ]);
-//   console.log(familyList)
-
-//   const renderScene = ({ route }) => {
-//     switch (route.key) {
-//       case 'first':
-//         return <NewsList user={userId} newsMenu='질병'/>
-//       case 'second':
-//         return <NewsList user={userId} newsMenu='질병'/>
-//     }
-//   };
 
   return (
       <FamilyListView
