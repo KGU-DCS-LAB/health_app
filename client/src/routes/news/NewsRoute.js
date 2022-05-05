@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { createDrawerNavigator, DrawerItemList, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import NewsMainView from '../../views/news/NewsView';
+import FamilyNewsView from '../../views/news/FamilyNewsView';
 
 const NewsMainScreen = (props) => {
   return (
@@ -11,7 +12,7 @@ const NewsMainScreen = (props) => {
 
 function FamilyNewsScreen() {
   return (
-    <NewsMainView/>
+    <FamilyNewsView/>
   );
 }
 

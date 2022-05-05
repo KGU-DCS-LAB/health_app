@@ -20,7 +20,7 @@ const ShortNewsCard = (props) => {
     useEffect(() => {
         getData();
         setShowDiseasesNews();
-    }, [isFocused, items])
+    }, [isFocused, newsOk])
 
     const getData = () => {
         try {
