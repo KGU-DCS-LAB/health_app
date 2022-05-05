@@ -325,20 +325,6 @@ export default function NewsView() {
   //     </View>
   //   )
   // }
-
-const FirstRoute = () => {
-  // setNewsMenu('질병')
-  return (
-<NewsList user={userId} newsMenu={newsMenu}/>
-  )
-}
-
-const SecondRoute = () => {
-  // setNewsMenu('나이')
-  return (
-<NewsList user={userId} newsMenu={newsMenu}/>
-  )
-}
   
 
 function Tab() {
@@ -358,11 +344,6 @@ function Tab() {
         return <NewsList user={userId} newsMenu={route.title}/>
     }
   };
-
-  // const renderScene = SceneMap({
-  //   first: FirstRoute,
-  //   second: SecondRoute,
-  // });
 
   return (
     <TabView

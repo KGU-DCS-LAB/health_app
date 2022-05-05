@@ -25,7 +25,6 @@ const NewsList = ({user, newsMenu}) => {
     console.log(newsMenu);
 
     const getUserData = () => {
-      let result = []
       axios.get('http://' + IP_address + ':5000/usersRouter/findOne/', {
         params: {
           user_id: user,
@@ -67,7 +66,6 @@ const NewsList = ({user, newsMenu}) => {
       }
       console.log(keyword);
 
-      let result = []
       axios.get('http://' + IP_address + ':5000/newsRouter/news', {
       params: {
         keyword: keyword
