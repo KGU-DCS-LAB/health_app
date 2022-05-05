@@ -115,7 +115,7 @@ function clacAndSave(data, callback){
                 if(div > 0){
                     console.log(statistic.month, " ", m.age, " ", div);
                 }
-                rate = (parseInt(m.num) / parseInt(total)) / 100;
+                rate = (parseInt(m.num) / parseInt(total)) * 100;
                 male.push({age: m.age, rate: rate})
             }
         })
