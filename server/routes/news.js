@@ -4,9 +4,11 @@ const express = require('express')
 const router = express.Router();
 
 
+
 router.get('/news', function(req,res) {
   let keyword = req.query.keyword
   console.log(keyword);
+  require('events').EventEmitter.defaultMaxListeners = 100; 
     const getHTML = async (keyword) => {
         const browser = await puppeteer.launch({
             headless : true

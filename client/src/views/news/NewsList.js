@@ -51,6 +51,10 @@ const NewsList = ({user, newsMenu}) => {
           return(
             setKeyword((age<10) ? userDisease+"+어린이" : userDisease+ "+"+ parseInt(age/10)+"0대")
           )
+        case "가족력":
+          return(
+            setKeyword("췌장암")
+          )
       }
       console.log(userData.birthday);
       getNews();
@@ -62,7 +66,7 @@ const NewsList = ({user, newsMenu}) => {
         setKeyword(userDisease+"+어린이");
       }
       else if (keyword >= 10) {
-        setKeyword(userDisease+ "+20대");
+        setKeyword(userDisease+ "+대");
       }
       console.log(keyword);
 

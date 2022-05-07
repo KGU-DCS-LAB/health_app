@@ -334,6 +334,7 @@ function Tab() {
   const [routes] = React.useState([
     { key: 'first', title: '질병' },
     { key: 'second', title: '나이' },
+    { key: 'third', title: '가족력' },
   ]);
 
   const renderScene = ({ route }) => {
@@ -341,6 +342,8 @@ function Tab() {
       case 'first':
         return <NewsList user={userId} newsMenu={route.title}/>
       case 'second':
+        return <NewsList user={userId} newsMenu={route.title}/>
+      case 'third':
         return <NewsList user={userId} newsMenu={route.title}/>
     }
   };
