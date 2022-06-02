@@ -5,8 +5,8 @@ import { Alert } from 'react-native';
 import axios from 'axios';
 import AsyncStorage  from "@react-native-async-storage/async-storage";
 
-// const IP_address = process.env.IP_address
-import { IP_address } from '@env';
+const IP_address = process.env.IP_address
+// import { IP_address } from '@env';
 
 const LoginComponent = () => {
     const navigation = useNavigation(); 

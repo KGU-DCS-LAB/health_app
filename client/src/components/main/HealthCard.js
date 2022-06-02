@@ -5,6 +5,8 @@ import axios from 'axios';
 
 const HealthCard = (props) => {
 
+    console.log(HealthWthrIdxAPI_KEY)
+
     const [asthmaIdxV2, setAsthmaIdxV2] = useState('');
     const [strokeIdxV2, setStrokeIdxV2] = useState('');
     const [foodPoisoningIdxV2, setFoodPoisoningIdxV2] = useState('');
@@ -80,7 +82,7 @@ const HealthCard = (props) => {
                     const items = response.data.response.body.items.item[0];
                     // console.log(items);
                     if (parseInt(hour) < 6) {
-                        code = items.tmorrow;
+                        code = items.tomorrow;
                     } else {
                         code = items.today;
                     }

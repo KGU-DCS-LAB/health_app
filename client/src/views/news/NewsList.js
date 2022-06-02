@@ -9,7 +9,7 @@ import AppLoading from "expo-app-loading";
 import { useNavigation } from '@react-navigation/native';
 
 const IP_address = process.env.IP_address
-
+// import { IP_address } from '@env'
 
 const NewsList = ({user, newsMenu}) => {
     const navigation = useNavigation();
@@ -22,7 +22,6 @@ const NewsList = ({user, newsMenu}) => {
     // const [loading, setLoading] = useState(false);
 
     console.log(user);
-    console.log(newsMenu);
 
     const getUserData = () => {
       axios.get('http://' + IP_address + ':5000/usersRouter/findOne/', {
@@ -31,10 +30,11 @@ const NewsList = ({user, newsMenu}) => {
         }
       })
         .then((response) => {
-        setUserData(response.data);
-        setUserDisease(response.data.user_diseases);
-        setUserBirth(response.data.birthday);
-        menuSelect();
+          console.log(response.data)
+          setUserData(response.data);
+          setUserDisease(response.data.user_diseases);
+          setUserBirth(response.data.birthday);
+          menuSelect();
         }).catch(function (error) {
           console.log(error);
         });

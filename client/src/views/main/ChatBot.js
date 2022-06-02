@@ -1,8 +1,8 @@
 import React, {useState, useEffect, useCallback} from "react";
 import { GiftedChat } from 'react-native-gifted-chat'
 import { View, Text, Alert, VStack, HStack, Box, NativeBaseProvider } from "native-base";
-// const IP_address = process.env.IP_address
-import { IP_address } from '@env'
+const IP_address = process.env.IP_address
+// import { IP_address } from '@env'
 import axios from 'axios';
 import { useNavigation } from "@react-navigation/native";
 
@@ -16,6 +16,7 @@ const ChatScreen = () => {
     const [diseases, setDiseases] = useState([]);
 
     const getSymptoms = () => {
+        console.log(IP_address);
         let result = [];
         axios.get('http://' + IP_address + ':5000/symptomsRouter/find', {
             }).then((response) => {
@@ -142,7 +143,7 @@ const ChatScreen = () => {
             GiftedChat.append(previousMessages, 
                 [{
                     _id: Math.round(Math.random() * 1000),
-                    text: '증상을 선택헤주세요.',
+                    text: '증상을 선택해주세요.',
                     createdAt: new Date(),
                     quickReplies: {
                         type: 'checkbox', 
@@ -184,7 +185,7 @@ const ChatScreen = () => {
         setMessages([
             {
                 _id: 2,
-                text: '증상 입력 방법을 선택하세요.'+IP_address,
+                text: '증상 입력 방법을 선택하세요.',
                 createdAt: new Date(),
                 quickReplies: {
                     type: 'radio', // or 'checkbox',
@@ -277,6 +278,7 @@ const ChatScreen = () => {
             );
         } else if (quickReply[0].value == "button") {
             console.log("button");
+            console.log(IP_address);
             setIsTextInput(false);
             getSymptoms();
         } else if (quickReply[0].contentType === "disease"){
